@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-import modele.Ouvrage;
+import modele.User;
 
 public class UserDAO extends AbstractDataBaseDAO {
     
@@ -27,6 +27,21 @@ public class UserDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
+    }
+    
+    public User getUser(String username) {
+        User user = null;
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM lgUser WHERE username = ?");) {
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            user = new User(rs.getString("username"), rs.getString("password"));
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        return user;
     }
     
 }
