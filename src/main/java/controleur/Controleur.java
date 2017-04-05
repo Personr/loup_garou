@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.Ouvrage;
-
 /**
  * Le contrôleur de l'application.
  */
@@ -106,8 +105,7 @@ public class Controleur extends HttpServlet {
         // Peut etre d'autres tests à checker avant de valider l'acces 
         //request.getParameter("login");
         //request.getParameter("password");
-        
-        request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
+        response.sendRedirect("/homecontroleur");
         //controleurParties.doGet(afficherlistepartie);
     }
     

@@ -47,7 +47,9 @@ public class HomeControleur extends HttpServlet {
         OuvrageDAO ouvrageDAO = new OuvrageDAO(ds);
 
         try {
-            if (action.equals("partie")) {
+            if (action == null) {
+                actionAfficher(request, response, ouvrageDAO);
+            } if (action.equals("partie")) {
                 actionPartieAfficher(request, response, ouvrageDAO);
             } else {
                 invalidParameters(request, response);
@@ -94,4 +96,10 @@ public class HomeControleur extends HttpServlet {
         }
         
     }
+
+    private void actionAfficher(HttpServletRequest request, HttpServletResponse response, OuvrageDAO ouvrageDAO)
+            throws IOException, ServletException{
+        request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
+    }
+    
 }
