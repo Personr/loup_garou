@@ -18,6 +18,7 @@ public class Game {
     private final int maxPlayers;
     private final int nbPlayers;
     private final int started;
+    private final int finished;
     private final String creator;
     private final java.sql.Time dayTime;
     private final java.sql.Time nightTime;
@@ -29,13 +30,15 @@ public class Game {
     private final java.sql.Time startTime;  
 
     public Game(int gameId, int minPlayers, int maxPlayers, int nbPlayers, int started, 
+            Time startTime, int finished,
             String creator, Time dayTime, Time nightTime, float pContamination, 
-            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp, Time startTime) {
+            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp) {
         this.gameId = gameId;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
         this.nbPlayers = nbPlayers;
         this.started = started;
+        this.finished = finished;
         this.creator = creator;
         this.dayTime = dayTime;
         this.nightTime = nightTime;

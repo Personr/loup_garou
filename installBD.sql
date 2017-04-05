@@ -1,5 +1,6 @@
 CREATE SEQUENCE playerIdSeq;
 CREATE SEQUENCE messageIdSeq;
+CREATE SEQUENCE gameIdSeq;
 
 CREATE TABLE lgUser (
        username varchar(100) PRIMARY KEY NOT NULL,
@@ -7,7 +8,7 @@ CREATE TABLE lgUser (
 );
 
 CREATE TABLE game (
-       gameID int PRIMARY KEY NOT NULL,
+       gameID int DEFAULT gameIdSeq.nextval PRIMARY KEY,
        minPlayer int NOT NULL,
        maxPlayer int NOT NULL,
        nbPlayer int,
@@ -19,15 +20,16 @@ CREATE TABLE game (
        creator varchar(100) REFERENCES lgUser (username),
        dayTime date NOT NULL,
        nightTime date NOT NULL,
-       pContamination int CONSTRAINT pContaminationValid
-       		   CHECK (pContamination IN(0, 1)) NOT NULL,
-       pVoyance int CONSTRAINT pVoyanceValid
-       		   CHECK (pVoyance IN(0, 1)) NOT NULL,
-       pInsomnie int CONSTRAINT pInsomnieValid 
-       		   CHECK (pInsomnie IN(0, 1)) NOT NULL,
-       pSpiritisme int CONSTRAINT pSpiritismeValid 
-       		   CHECK (pSpiritisme IN(0, 1)) NOT NULL,
-       lgProp float NOT NULL
+       pContamination float CONSTRAINT pContaminationValid
+       		   CHECK (pContamination >= 0.0 AND pContamination <= 1.0) NOT NULL,
+       pVoyance float CONSTRAINT pVoyanceValid
+       		   CHECK (pVoyance >= 0.0 AND pVoyance <= 1.0) NOT NULL,
+       pInsomnie float CONSTRAINT pInsomnieValid 
+       		   CHECK (pInsomnie >= 0.0 AND pInsomnie <= 1.0) NOT NULL,
+       pSpiritisme float CONSTRAINT pSpiritismeValid 
+       		   CHECK (pSpiritisme >= 0.0 AND pSpiritisme <= 1.0) NOT NULL,
+       lgProp float NOT NULL,
+       CONSTRAINT maxSuperieurToMin CHECK (maxPlayer >= minPlayer) 
 );
 
 CREATE TABLE player (
@@ -52,6 +54,7 @@ CREATE TABLE message (
        id number(6) DEFAULT messageIdSeq.nextval PRIMARY KEY,
        gameID int REFERENCES  Game (gameID),
        createdAt date,
+       username varchar(100) REFERENCES lgUser (username),
        text varchar(300),
        isLG int CONSTRAINT messageIsLGValid
        		   CHECK (isLG IN(0, 1)) NOT NULL
@@ -64,4 +67,17 @@ DROP TABLE player;
 DROP TABLE game;
 DROP TABLE lgUser;
 --------------------------------------------------------------------------------------
+
+
+INSERT INTO lgUser (username, password) VALUES ('val', 'val');
+
+INSERT INTO game (minPlayer, maxPlayer, nbPlayer, 
+       	    	 started, startTime, finished, creator, dayTime, 
+		 nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp) 
+ 	VALUES (2, 5, 4, 0, TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0, 'val', TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
+
+INSERT INTO message (username, text, isLG) VALUES ('val', 'mon premier message', 0);
+
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme) VALUES ('val', 6, 0, 1, 0, 0, 0, 0);
+
 

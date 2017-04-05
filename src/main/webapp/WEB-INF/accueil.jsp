@@ -26,5 +26,4 @@
       <!--<input type="submit" name="Account" />-->
   </form>
   ${message}
-</body>
 </html>

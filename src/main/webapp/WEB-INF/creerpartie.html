@@ -1,0 +1,22 @@
+<html>
+ <head> 
+   <meta charset="UTF-8" /> 	
+   <link rel="stylesheet" type="text/css" href="styles.css" />
+   <title>Création d’une partie</title>	    
+ </head>
+  <body>
+    <h1>Création d’une partie </h1>
+      <form method="post" action="homecontroleur" accept-charset="UTF-8">
+
+  Nombre de participants : <input type="text" name="nombre_participants" /><br/>
+  Durée du jour : <input type="text" name="durée_jour" /><br/>
+  Durée de la nuit : <input type="text" name="durée_nuit" /><br/>
+  Horaire de début de la partie: <input type="text" name="horaire_debut" /><br/>
+  Probabilité qu'un pouvoir soit donné : <input type="text" name="proba_pouvoir" /><br/>
+  Proportion de loups_garous : <input type="text" name="proportion_loup_garou" /><br/>
+
+  <input type="hidden" name="action" value="createpartie" />
+  <input type="submit" value="Creer"/>
+</form>
+</body>
+</html>
