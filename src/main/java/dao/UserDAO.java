@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 import modele.User;
+import java.io.*;
 
 public class UserDAO extends AbstractDataBaseDAO {
     
@@ -17,18 +18,24 @@ public class UserDAO extends AbstractDataBaseDAO {
         super(ds);
     }
     
-    public void ajouterUser(String username, String password) {
+    //return false if user already exists
+    public boolean ajouterUser(String username, String password) {
+        if (getUser(username) != null || username.length() == 0 || password.length() == 0) {
+            return false;
+        }
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO lgUser (auteur, titre) VALUES (?, ?)");) {
+                PreparedStatement st = conn.prepareStatement("INSERT INTO lgUser (username, password) VALUES (?, ?)");) {
             st.setString(1, username);
             st.setString(2, password);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
+        return true;
     }
     
+    //return null if user doesn't exist
     public User getUser(String username) {
         User user = null;
         try (
@@ -36,12 +43,30 @@ public class UserDAO extends AbstractDataBaseDAO {
                 PreparedStatement st = conn.prepareStatement("SELECT * FROM lgUser WHERE username = ?");) {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
-            rs.next();
-            user = new User(rs.getString("username"), rs.getString("password"));
+            
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"));
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
         return user;
+    }
+    
+    //return true if good creditentials
+    public boolean verifyUser(String username, String password) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM lgUser WHERE username = ? AND password = ?");) {
+            st.setString(1, username);
+            st.setString(2, password);
+            ResultSet rs = st.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
     }
     
 }
