@@ -20,9 +20,9 @@ public class UserDAO extends AbstractDataBaseDAO {
     public void ajouterUser(String username, String password) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO bibliographie (auteur, titre) VALUES (?, ?)");) {
-            st.setString(1, auteur);
-            st.setString(2, titre);
+                PreparedStatement st = conn.prepareStatement("INSERT INTO lgUser (auteur, titre) VALUES (?, ?)");) {
+            st.setString(1, username);
+            st.setString(2, password);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
