@@ -103,16 +103,15 @@ public class HomeControleur extends HttpServlet {
     }
 
     private void actionAfficher(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO)
-            throws IOException, ServletException{
-                /* On interroge la base de données pour obtenir la liste des games en cours */
+            throws IOException, ServletException {
+        /* On interroge la base de données pour obtenir la liste des games en cours */
         List<Game> games = gameDAO.getListeGames();
         /* On ajoute cette liste à la requête en tant qu’attribut afin de la transférer à la vue
          * Rem. : ne pas confondre attribut (= objet ajouté à la requête par le programme
          * avant un forward, comme ici)
          * et paramètre (= chaîne représentant des données de formulaire envoyées par le client) */
-        request.setAttribute("games", games);
+        request.setAttribute("game", games);
         /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
-        
         request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
     }
     
@@ -141,5 +140,5 @@ public class HomeControleur extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
         
     }
-    
+
 }

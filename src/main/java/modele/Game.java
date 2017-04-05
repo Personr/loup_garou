@@ -50,6 +50,7 @@ public class Game {
         this.startTime = startTime;
     }
     
+    
     public int getFinished() {
         return finished;
     }

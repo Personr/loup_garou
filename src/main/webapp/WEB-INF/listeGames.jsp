@@ -18,17 +18,20 @@
 
         <table>
             <tr>
-                <th>Nom de la partie</th>
-                <th>Nombre de joueurs</th>
+                <th>Partie n°</th>
+                <th>Créateur</th>
+                <th>Nb joueurs</th>
+                <th>Date lancement</th>
             </tr>
             <c:forEach items="${game}" var="game">
                 <tr>
                     <td>${game.gameId}</td>
+                    <td>${game.creator}</td>
                     <td>${game.nbPlayers}</td>
+                    <td>${game.startTime}</td>
                 </tr>
             </c:forEach>
-        </table>
-       
+        </table> 
         
     </body>
 </html>
