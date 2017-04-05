@@ -47,7 +47,9 @@ public class HomeControleur extends HttpServlet {
         OuvrageDAO ouvrageDAO = new OuvrageDAO(ds);
 
         try {
-            if (action.equals("partie")) {
+            if (action.equals("enterlist")) {
+                actionPartieAfficher(request, response, ouvrageDAO);
+            } else if (action.equals("partie")) {
                 actionPartieAfficher(request, response, ouvrageDAO);
             } else {
                 invalidParameters(request, response);
