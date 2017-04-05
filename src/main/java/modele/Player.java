@@ -11,6 +11,8 @@ package modele;
  */
 public class Player {
     
+    private final int id;
+    private final int gameId;
     private final String username;
     private final int isLg;
     private final int alive;
@@ -19,7 +21,9 @@ public class Player {
     private final int hasVoyance;
     private final int hasSpiritisme;
 
-    public Player(String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme) {
+    public Player(int id, int gameId, String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme) {
+        this.id = id;
+        this.gameId = gameId;
         this.username = username;
         this.isLg = isLg;
         this.alive = alive;
@@ -27,6 +31,14 @@ public class Player {
         this.hasInsomnie = hasInsomnie;
         this.hasVoyance = hasVoyance;
         this.hasSpiritisme = hasSpiritisme;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public int getGameId() {
+        return gameId;
     }
 
     public String getUsername() {
@@ -59,7 +71,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{" + "username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
+        return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
     }
     
 }
