@@ -1,15 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
 <html>
  <head> 
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />	
+    <title>JEU LOUP GAROU</title>
  </head>
   <body>
     <h1>Création d'un nouveau compte</h1>
     <p>
-      <form method="GET" action="http://localhost:9090/traitement.html">
+      <form method="get" action="controleur" accept-charset="UTF-8">
 	Pseudo : <input type="text" name="nom"><br/>
 	Mdp : <input type="text" name="prenom"><br/>
-          
-	<input type="submit" value="Soumettre"/>
+      <input type="hidden" name="action" value="createaccount" />
+      <input type="submit" value="Soumettre"/>
       </form>
     </p>
   </body>

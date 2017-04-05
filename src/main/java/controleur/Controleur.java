@@ -54,6 +54,14 @@ public class Controleur extends HttpServlet {
                 actionAfficher(request, response, ouvrageDAO);
             } else if (action.equals("getOuvrage")) {
                 actionGetOuvrage(request, response, ouvrageDAO);
+            } else if (action.equals("login")) {
+                actionLoginAfficher(request, response, ouvrageDAO);    
+            } else if (action.equals("compte")) {
+                actionCompteAfficher(request, response, ouvrageDAO);
+            } else if (action.equals("enterlist")) {
+                actionLogin(request, response, ouvrageDAO);
+            } else if (action.equals("createaccount")) {
+                actionCompte(request, response, ouvrageDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -80,6 +88,39 @@ public class Controleur extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/accueil.html").forward(request, response);
     }
 
+    private void actionLoginAfficher(HttpServletRequest request,
+            HttpServletResponse response,
+            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/login.html").forward(request, response);
+    }
+    private void actionCompteAfficher(HttpServletRequest request,
+            HttpServletResponse response,
+            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/register_get.html").forward(request, response);
+    }
+    
+    private void actionLogin(HttpServletRequest request,
+            HttpServletResponse response,
+            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+        //tester si le login et mdp sont dans la BDD, si oui acceder à l'accueil !!
+        // Peut etre d'autres tests à checker avant de valider l'acces 
+        //request.getParameter("login");
+        //request.getParameter("password");
+        
+        request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
+        //controleurParties.doGet(afficherlistepartie);
+    }
+    
+    private void actionCompte(HttpServletRequest request,
+            HttpServletResponse response,
+            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+        
+        //mettre a jour la BDD,si compte deja cree avant, juste lancer login.html
+        
+        request.getRequestDispatcher("/WEB-INF/login.html").forward(request, response);
+        //controleurParties.doGet(afficherlistepartie);
+    }
+    
     /**
      *
      * Récupère les informations sur un ouvrage donné par son identifiant.
@@ -127,7 +168,7 @@ public class Controleur extends HttpServlet {
             } else if (action.equals("supprimer")) {
                 actionSupprimer(request, response, ouvrageDAO);
             } else if (action.equals("modifier")) {
-                actionModifier(request, response, ouvrageDAO);
+                actionModifier(request, response, ouvrageDAO);   
             } else {
                 invalidParameters(request, response);
                 return;
@@ -140,6 +181,8 @@ public class Controleur extends HttpServlet {
         }
     }
 
+    
+    
     /**
      * Ajout d'un ouvrage.
      */
