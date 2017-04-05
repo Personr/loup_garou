@@ -70,14 +70,14 @@ public class Controleur extends HttpServlet {
             HttpServletResponse response,
             OuvrageDAO ouvrageDAO) throws ServletException, IOException {
         /* On interroge la base de données pour obtenir la liste des ouvrages */
-        List<Ouvrage> ouvrages = ouvrageDAO.getListeOuvrages();
+        //List<Ouvrage> ouvrages = ouvrageDAO.getListeOuvrages();
         /* On ajoute cette liste à la requête en tant qu’attribut afin de la transférer à la vue
          * Rem. : ne pas confondre attribut (= objet ajouté à la requête par le programme
          * avant un forward, comme ici)
          * et paramètre (= chaîne représentant des données de formulaire envoyées par le client) */
-        request.setAttribute("ouvrages", ouvrages);
+        //request.setAttribute("ouvrages", ouvrages);
         /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
-        request.getRequestDispatcher("/WEB-INF/listAll.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/accueil.html").forward(request, response);
     }
 
     /**
