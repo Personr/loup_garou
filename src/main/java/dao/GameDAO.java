@@ -12,7 +12,7 @@ public class GameDAO extends AbstractDataBaseDAO {
     public GameDAO(DataSource ds) {
         super(ds);
     }
-
+    
     /**
      * Renvoie la liste des parties de la table game.
      */

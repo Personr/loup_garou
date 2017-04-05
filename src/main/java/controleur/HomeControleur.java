@@ -2,6 +2,7 @@ package controleur;
 
 import dao.DAOException;
 import dao.OuvrageDAO;
+import dao.GameDAO;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.Ouvrage;
-
+import modele.Game;
 /**
  *
  * @author cazardn
@@ -44,11 +45,11 @@ public class HomeControleur extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        OuvrageDAO ouvrageDAO = new OuvrageDAO(ds);
+        GameDAO gameDAO = new GameDAO(ds);
 
         try {
             if (action.equals("partie")) {
-                actionPartieAfficher(request, response, ouvrageDAO);
+                actionPartieAfficher(request, response, gameDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -59,13 +60,13 @@ public class HomeControleur extends HttpServlet {
 
     private void actionPartieAfficher(HttpServletRequest request,
             HttpServletResponse response,
-            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+            GameDAO gameDAO) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/creerpartie.html").forward(request, response);
     }
 
     private void actionPartie(HttpServletRequest request,
             HttpServletResponse response,
-            OuvrageDAO ouvrageDAO) throws ServletException, IOException {
+            GameDAO gameDAO) throws ServletException, IOException {
 
         //On met a jour la bdd des parties ? Avec les paramètres
         request.getRequestDispatcher("/WEB-INF/login.html").forward(request, response);//A retourner sur ListePartie
@@ -83,15 +84,33 @@ public class HomeControleur extends HttpServlet {
         if (action == null) {
             return;
         }
-        OuvrageDAO ouvrageDAO = new OuvrageDAO(ds);
+        GameDAO gameDAO = new GameDAO(ds);
         
         try {
-            if (action.equals("createpartie")) {
-                actionPartie(request, response, ouvrageDAO);
-            }            
+            if (action.equals("enterlist")) {
+                actionAfficher(request, response, gameDAO);
+            } else if (action.equals("createpartie")) {
+                actionPartie(request, response, gameDAO);
+            } else {
+                invalidParameters(request, response);
+            }           
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
         
     }
+
+    private void actionAfficher(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO)
+            throws IOException, ServletException {
+        /* On interroge la base de données pour obtenir la liste des games en cours */
+        List<Game> games = gameDAO.getListeGames();
+        /* On ajoute cette liste à la requête en tant qu’attribut afin de la transférer à la vue
+         * Rem. : ne pas confondre attribut (= objet ajouté à la requête par le programme
+         * avant un forward, comme ici)
+         * et paramètre (= chaîne représentant des données de formulaire envoyées par le client) */
+        request.setAttribute("game", games);
+        /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
+        request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
+    }
+
 }

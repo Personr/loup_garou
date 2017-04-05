@@ -20,16 +20,16 @@ import modele.User;
  */
 @WebServlet(name = "LoginControleur", urlPatterns = {"/loginControleur"})
 public class LoginControleur extends HttpServlet {
-    
+
     @Resource(name = "jdbc/bibliography")
     private DataSource ds;
 
     /* pages d’erreurs */
     private void invalidParameters(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/controleurErreur.jsp").forward(request, response);        
+        request.getRequestDispatcher("/WEB-INF/controleurErreur.jsp").forward(request, response);
     }
-    
+
     private void erreurBD(HttpServletRequest request,
             HttpServletResponse response, DAOException e)
             throws ServletException, IOException {
@@ -44,15 +44,15 @@ public class LoginControleur extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        
+
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        
+
         try {
             if (action == null) {
                 actionAfficher(request, response);
             } else if (action.equals("login")) {
-                actionLoginAfficher(request, response);    
+                actionLoginAfficher(request, response);
             } else if (action.equals("compte")) {
                 actionCompteAfficher(request, response);
             } else {
@@ -69,7 +69,9 @@ public class LoginControleur extends HttpServlet {
      */
     private void actionAfficher(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+        if (!response.isCommitted()) {
+            request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+        }
     }
 
     private void actionLoginAfficher(HttpServletRequest request,
@@ -77,12 +79,12 @@ public class LoginControleur extends HttpServlet {
         request.setAttribute("message", request.getParameter("message"));
         request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
     }
+
     private void actionCompteAfficher(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("message", request.getParameter("message"));
         request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
     }
-    
 
     /**
      * Actions possibles en POST : ajouter, supprimer, modifier. Une fois
@@ -92,7 +94,7 @@ public class LoginControleur extends HttpServlet {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        
+
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         // le paramètre "action" est obligatoire en POST
@@ -101,7 +103,7 @@ public class LoginControleur extends HttpServlet {
             return;
         }
         UserDAO userDAO = new UserDAO(ds);
-        
+
         try {
             if (action.equals("enterlist")) {
                 actionLogin(request, response, userDAO);
@@ -113,34 +115,38 @@ public class LoginControleur extends HttpServlet {
             }
             /* Une fois l’action effectuée, on revient à la page d’accueil */
             actionAfficher(request, response);
-            
+
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
     }
-    
+
     private void actionLogin(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO) throws ServletException, IOException {
         //tester si le login et mdp sont dans la BDD, si oui acceder à l'accueil !!
         if (userDAO.verifyUser(request.getParameter("username"), request.getParameter("password"))) {
-            request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("homecontroleur");
+           // if (!response.isCommitted()) {
+            dispatcher.forward(request, response);
+           // }
+            //request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
             //controleurParties.doGet(afficherlistepartie);
         } else {
             actionLoginAfficher(request, response);
-        }        
+        }
     }
-    
+
     private void actionCompte(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO) throws ServletException, IOException {
-        
+
         if (userDAO.ajouterUser(request.getParameter("username"), request.getParameter("password"))) {
             request.setAttribute("message", "Le compte a été créé");
             actionAfficher(request, response);
         } else {
             actionCompteAfficher(request, response);
-        }   
+        }
     }
-    
+
 }
