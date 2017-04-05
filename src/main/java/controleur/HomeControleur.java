@@ -89,8 +89,10 @@ public class HomeControleur extends HttpServlet {
         try {
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO);
+            } else if (action.equals("creategame")) {
+                actionCreatePartieAfficher(request, response, gameDAO);
             } else if (action.equals("createpartie")) {
-                actionPartie(request, response, gameDAO);
+                actionCreatePartie(request, response, gameDAO);
             } else {
                 invalidParameters(request, response);
             }           
@@ -112,6 +114,32 @@ public class HomeControleur extends HttpServlet {
         /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
         
         request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
+    }
+    
+    private void actionCreatePartieAfficher(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        request.getRequestDispatcher("/WEB-INF/creerpartie.html").forward(request, response);
+        
+    }
+    
+    private void actionCreatePartie(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        int nbJoueurs = Integer.parseInt(request.getParameter("nombre_participants"));
+        int dureeJour = Integer.parseInt(request.getParameter("durée_jour"));
+        int dureeNuit = Integer.parseInt(request.getParameter("durée_nuit"));
+        
+        int horaireDebutPartie = Integer.parseInt(request.getParameter("horaire_debut"));
+        float probaPouvoir = Float.parseFloat(request.getParameter("proba_pouvoir"));
+        float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
+        
+        //gameDao.createPartie(nbJoueurs, dureeJour, dureeNuit, horaireDebutPartie, probaPouvoir, proportionLoupsGarous);
+        
+        request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
+        
     }
     
 }

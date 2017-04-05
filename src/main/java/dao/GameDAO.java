@@ -53,6 +53,31 @@ public class GameDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
+    
+    public void creerPartie(int nbJoueurs, int dureeJour, int dureeNuit, int horaireDebutPartie, float probaPouvoir, float proportionLoupsGarous) {
+        try (
+                Connection conn = getConn();
+
+// 	VALUES (2, 5, 4, 0, TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 
+//                0, 'val', TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 
+//                TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
+                PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp)"
+                        + " VALUES (2,10, ?, 0, NOW(), 0, 'val', ?, ?, ?, ?, ?, ?, ?)");) {
+            st.setInt(1, nbJoueurs);
+            st.setInt(2, dureeJour);
+            st.setInt(3, dureeNuit);
+            st.setFloat(4, probaPouvoir);
+            st.setFloat(5, probaPouvoir);
+            st.setFloat(6, probaPouvoir);
+            st.setFloat(7, probaPouvoir);
+            st.setFloat(8, proportionLoupsGarous);
+            st.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
 
     /**
      * Récupère l'ouvrage d'identifiant id dans la table bibliographie.
