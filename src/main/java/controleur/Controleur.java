@@ -105,7 +105,9 @@ public class Controleur extends HttpServlet {
         // Peut etre d'autres tests à checker avant de valider l'acces 
         //request.getParameter("login");
         //request.getParameter("password");
-        response.sendRedirect("/homecontroleur");
+            
+        RequestDispatcher dispatcher = request.getRequestDispatcher("homecontroleur");
+        dispatcher.forward(request,response);
         //controleurParties.doGet(afficherlistepartie);
     }
     
