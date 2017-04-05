@@ -8,12 +8,15 @@
   <body>
     <h1>Création d'un nouveau compte</h1>
     <p>
-      <form method="get" action="controleur" accept-charset="UTF-8">
-	Pseudo : <input type="text" name="nom"><br/>
-	Mdp : <input type="text" name="prenom"><br/>
+      <form method="post" action="loginControleur" accept-charset="UTF-8">
+	Pseudo : <input type="text" name="username"><br/>
+	Mdp : <input type="password" name="password"><br/>
       <input type="hidden" name="action" value="createaccount" />
+      <input type="hidden" name="message" value="Ce username n'est pas disponible" />
+      <a href="loginControleur">Annuler</a>
       <input type="submit" value="Soumettre"/>
       </form>
     </p>
+    ${message}
   </body>
 </html>
