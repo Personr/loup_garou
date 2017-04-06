@@ -17,7 +17,6 @@ import javax.sql.DataSource;
 import modele.Ouvrage;
 import modele.Game;
 import tools.SessionManager;
-import static tools.SessionManager.getUserSession;
 /**
  *
  * @author cazardn
@@ -145,7 +144,7 @@ public class HomeControleur extends HttpServlet {
         float pInsomnie = Float.parseFloat(request.getParameter("pInsomnie"));
         
         float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
-        String creator = getUserSession("username", request);
+        String creator = SessionManager.getSessionParameter("username", request);
         
         gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous);
         
