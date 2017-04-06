@@ -27,9 +27,9 @@ public class SessionManager {
      * @param request
      * @return username
      */
-    public static String getUserSession(String username, HttpServletRequest request) {
+    public static String getSessionParameter(String parameter, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        return (String) session.getAttribute(username);
+        return (String) session.getAttribute(parameter);
         
     }
     
