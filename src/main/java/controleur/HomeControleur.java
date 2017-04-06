@@ -56,7 +56,13 @@ public class HomeControleur extends HttpServlet {
             } else if (action.equals("creategame")) {
                 actionCreatePartieAfficher(request, response, gameDAO);
              } else if (action.equals("seerules")) {
-            actionSeeRules(request, response, gameDAO);
+                actionSeeRules(request, response, gameDAO);
+            } else if (action.equals("nouveaujoueur")) {
+                actionNouveauJoueur(request, response, gameDAO);
+            } else if (action.equals("admin")) {
+                actionAdminAfficher(request, response, gameDAO);
+            } else if (action.equals("supprimerparties")) {
+            actionAdminSupprimer(request, response, gameDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -70,6 +76,67 @@ public class HomeControleur extends HttpServlet {
             GameDAO gameDAO) throws ServletException, IOException {
         
         request.getRequestDispatcher("/WEB-INF/creerpartie.jsp").forward(request, response);
+        
+    }
+    
+    private void actionAdminAfficher(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+        
+    }
+    private void actionAdminSupprimer(HttpServletRequest request,
+        HttpServletResponse response,
+        GameDAO gameDAO) throws ServletException, IOException {
+        gameDAO.deleteGames();
+        request.setAttribute("message", "Parties Supprimees");
+        actionAfficher(request,response,gameDAO);
+    }
+    
+//    private void actionAttendrePartie(HttpServletRequest request,
+//            HttpServletResponse response,
+//            GameDAO gameDAO) throws ServletException, IOException {
+//        
+//        request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+//        
+//    }
+    
+    private void actionNouveauJoueur(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        //on veut mettre a jour la BDD lorsqu'un joueur rentre dans une partie puis le rediriger sur une page d'attente
+        //gameID username
+        //partie -> les proba de pouvoirs 
+        //alive = 1
+        //is LG ?
+        //id -> 
+        
+        if(request.getParameter("gameId") != null){
+            String username = SessionManager.getUserSession(request);
+            int gameID = Integer.parseInt(request.getParameter("gameId"));
+            
+            if(gameDAO.nouveauJoueur(username,gameID) && gameDAO.incrementerNbJoueurs(gameID)){
+                request.setAttribute("inGame", true); 
+                Game game = gameDAO.getGame(gameID);
+                SessionManager.setGameSession(game, request);
+                actionAfficher(request,response,gameDAO);
+                
+            }else{
+                request.setAttribute("message", "trop de joueurs");
+                actionAfficher(request,response, gameDAO);
+            }
+            
+        }else{
+            request.setAttribute("message", "mauvais ID de partie");
+            actionAfficher(request,response, gameDAO);
+        }
+        
+        
+        
+        
+        
         
     }
     
