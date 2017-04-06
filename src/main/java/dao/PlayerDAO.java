@@ -8,6 +8,8 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import modele.Player;
 
@@ -17,19 +19,18 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         super(ds);
     }
     
-    public List<Player> getListePlayers() {
-        List<Player> result = new ArrayList<Player>();
+    public Map<String, Player> getListePlayers() {
+        Map<String, Player> result = new HashMap<String, Player>();
         try (
-	     Connection conn = getConn();
-	     Statement st = conn.createStatement();
-	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM player");
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player");) {
+            ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Player player =
-                    new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                            rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                            rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"));
-                result.add(player);
+                Player player
+                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"));
+                result.put(rs.getString("username"), player);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

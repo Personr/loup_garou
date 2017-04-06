@@ -14,12 +14,12 @@ public class Player {
     private final int id;
     private final int gameId;
     private final String username;
-    private final int isLg;
+    private int isLg;
     private final int alive;
-    private final int hasContamination;
-    private final int hasInsomnie;
-    private final int hasVoyance;
-    private final int hasSpiritisme;
+    private int hasContamination;
+    private int hasInsomnie;
+    private int hasVoyance;
+    private int hasSpiritisme;
 
     public Player(int id, int gameId, String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme) {
         this.id = id;
@@ -32,8 +32,26 @@ public class Player {
         this.hasVoyance = hasVoyance;
         this.hasSpiritisme = hasSpiritisme;
     }
-    
-    
+
+    public void setIsLg(int isLg) {
+        this.isLg = isLg;
+    }
+
+    public void setHasContamination(int hasContamination) {
+        this.hasContamination = hasContamination;
+    }
+
+    public void setHasInsomnie(int hasInsomnie) {
+        this.hasInsomnie = hasInsomnie;
+    }
+
+    public void setHasVoyance(int hasVoyance) {
+        this.hasVoyance = hasVoyance;
+    }
+
+    public void setHasSpiritisme(int hasSpiritisme) {
+        this.hasSpiritisme = hasSpiritisme;
+    }
     
     public int getId() {
         return id;

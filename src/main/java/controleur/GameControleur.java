@@ -65,10 +65,12 @@ public class GameControleur extends HttpServlet {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO);
             } else if (action.equals("getGame")) {
-                actionAfficher(request, response, gameDAO, userDAO);
+                actionAfficher(request, response);
+            } else if (action.equals("startGame")) {
+                actionStartGame(request, response, playerDAO, gameDAO);
                 
-             } else if (action.equals("getGame")) {
-                actionPouvoir(request, response, gameDAO, userDAO);
+//             } else if (action.equals("getGame")) {
+//                actionPouvoir(request, response, gameDAO, userDAO);
                    
             } else {
                 invalidParameters(request, response);
@@ -83,19 +85,16 @@ public class GameControleur extends HttpServlet {
      * Affiche la page d’accueil d'une game
      */
     private void actionAfficher(HttpServletRequest request,
-            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException {
         //Game game = gameDAO.getGame(Integer.parseInt(request.getParameter("id")));
         //request.setAttribute("game", game);
-        if (request.getParameter("view").equals("aller")) {
-            String username = SessionManager.getUserSession(request);
-            Game userGame = (Game) SessionManager.getGameSession(request);
-            
-            request.setAttribute("gameId", userGame.getGameId());
-            request.setAttribute("username", username);
-            request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
-        } else {
-            invalidParameters(request, response);
-        }
+        String username = SessionManager.getUserSession(request);
+        Game userGame = (Game) SessionManager.getGameSession(request);
+
+        request.setAttribute("gameId", userGame.getGameId());
+        request.setAttribute("username", username);
+        request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
+
     }
     
     /**
@@ -120,11 +119,24 @@ public class GameControleur extends HttpServlet {
         
         /* On interroge la base de données pour obtenir la liste des messages */
         int gameId = Integer.parseInt(request.getParameter("gameId"));
-        List<Message> messages = messageDAO.getListeMessages(0, gameId);
+        int isLg = Integer.parseInt(request.getParameter("isLg"));
+        List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
         
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
+        request.setAttribute("isLg", isLg);
         request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
+    }
+    
+    private void actionStartGame(HttpServletRequest request,
+            HttpServletResponse response,
+            PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
+        
+        Game game = (Game) request.getAttribute("game");
+        game.startGame(playerDAO, gameDAO);
+        SessionManager.setGameSession(game, request);
+        
+        actionAfficher(request, response);
     }
 
     /**
@@ -147,7 +159,7 @@ public class GameControleur extends HttpServlet {
         try {
             
             if (action.equals("enterlist")) {
-                actionAfficher(request, response, gameDAO, userDAO);
+                actionAfficher(request, response);
             } else if (action.equals("newMessage")) {
                 actionNewMessage(request, response, messageDAO);
             } else {
@@ -169,9 +181,10 @@ public class GameControleur extends HttpServlet {
         String username = request.getParameter("username");
         String text = request.getParameter("text");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
+        int isLg = Integer.parseInt(request.getParameter("isLg"));
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
         
-        Message message = new Message(0, gameId, currentDate, username, text, 0);
+        Message message = new Message(0, gameId, currentDate, username, text, isLg);
         messageDAO.ajouterMessage(message);
         
         actionAfficherChat(request, response, messageDAO);
