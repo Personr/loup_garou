@@ -10,14 +10,12 @@
         <h1>T'ES DANS LE CHAT DE LA GAME n°${gameId} !</h1>
         <table>
             <tr>
-                <th>Message n°</th>
                 <th>Auteur</th>
                 <th>Date</th>
                 <th>Texte</th>
             </tr>
             <c:forEach items="${messages}" var="message">
                 <tr>
-                    <td>${message.id}</td>
                     <td>${message.username}</td>
                     <td>${message.date}</td>
                     <td>${message.text}</td>
