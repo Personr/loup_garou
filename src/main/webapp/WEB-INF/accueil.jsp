@@ -12,16 +12,22 @@
   <li> <a href="/login.html">J'ai un compte je m'identifie </a></li>
   <li> <a href="/register_get.html"> Je crée mon compte </a></li>
   </ul>-->
-  <form method="get" action="controleur" accept-charset="UTF-8">
+  <form method="get" action="loginControleur" accept-charset="UTF-8">
       <button type="submit">J'ai un compte je m'identifie</button>
       <input type="hidden" name="action" value="login" />
+      <input type="hidden" name="message" value="" />
       <!--<input type="submit" name="Login" />-->
   </form>
   
-  <form method="get" action="controleur" accept-charset="UTF-8">
+  <form method="get" action="loginControleur" accept-charset="UTF-8">
       <button type="submit">Je crée mon compte</button>
       <input type="hidden" name="action" value="compte" />
+      <input type="hidden" name="message" value="" />
       <!--<input type="submit" name="Account" />-->
   </form>
+<<<<<<< HEAD:src/main/webapp/WEB-INF/accueil.html
 </body>
+=======
+  ${message}
+>>>>>>> 907bd8c00af4606ddbd6cbc93b31bc666d6fda04:src/main/webapp/WEB-INF/accueil.jsp
 </html>
