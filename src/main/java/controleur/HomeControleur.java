@@ -72,7 +72,7 @@ public class HomeControleur extends HttpServlet {
             GameDAO gameDAO) throws ServletException, IOException {
 
         //On met a jour la bdd des parties ? Avec les paramètres
-        request.getRequestDispatcher("/WEB-INF/login.html").forward(request, response);//A retourner sur ListePartie
+        request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);//A retourner sur ListePartie
         //controleurParties.doGet(afficherlistepartie);
     }
 
