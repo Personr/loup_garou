@@ -25,5 +25,9 @@
       <input type="hidden" name="message" value="" />
       <!--<input type="submit" name="Account" />-->
   </form>
+<<<<<<< HEAD:src/main/webapp/WEB-INF/accueil.html
+</body>
+=======
   ${message}
+>>>>>>> 907bd8c00af4606ddbd6cbc93b31bc666d6fda04:src/main/webapp/WEB-INF/accueil.jsp
 </html>
