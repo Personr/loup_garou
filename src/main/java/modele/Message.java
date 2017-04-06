@@ -20,7 +20,7 @@ public class Message {
     private final int isLg;
     private final String username;
 
-    public Message(int id, int gameId, Date date, String text, int isLg, String username) {
+    public Message(int id, int gameId, Date date, String username, String text, int isLg) {
         this.id = id;
         this.gameId = gameId;
         this.date = date;
