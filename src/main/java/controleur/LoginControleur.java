@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.User;
+import tools.SessionManager;
 
 /**
  * Le contrôleur de l'application.
@@ -125,7 +126,13 @@ public class LoginControleur extends HttpServlet {
             HttpServletResponse response,
             UserDAO userDAO) throws ServletException, IOException {
         //tester si le login et mdp sont dans la BDD, si oui acceder à l'accueil !!
-        if (userDAO.verifyUser(request.getParameter("username"), request.getParameter("password"))) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        if (userDAO.verifyUser(username, password)) {
+            //create a session for the user
+            SessionManager.setUserSession(username, request);
+            
             RequestDispatcher dispatcher = request.getRequestDispatcher("homecontroleur");
            // if (!response.isCommitted()) {
             dispatcher.forward(request, response);
