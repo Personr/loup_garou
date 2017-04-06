@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import modele.Ouvrage;
 import modele.Game;
 import tools.SessionManager;
+import static tools.SessionManager.getUserSession;
 /**
  *
  * @author cazardn
@@ -138,10 +139,17 @@ public class HomeControleur extends HttpServlet {
         int dureeNuit = Integer.parseInt(request.getParameter("durée_nuit"));
         
         int horaireDebutPartie = Integer.parseInt(request.getParameter("horaire_debut"));
-        float probaPouvoir = Float.parseFloat(request.getParameter("proba_pouvoir"));
-        float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
+        float pContamination = Float.parseFloat(request.getParameter("pContamination"));
+        float pSpiritisme = Float.parseFloat(request.getParameter("pSpiritisme"));
+        float pVoyance = Float.parseFloat(request.getParameter("pVoyance"));
+        float pInsomnie = Float.parseFloat(request.getParameter("pInsomnie"));
         
-        gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, probaPouvoir, proportionLoupsGarous);
+        float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
+        String creator = getUserSession("username", request);
+        
+        gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous);
+        
+        
         List<Game> games = gameDAO.getListeGames();
         request.setAttribute("game", games);
         request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
