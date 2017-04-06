@@ -11,7 +11,7 @@
         <h2> Liste des parties en cours </h2>
         
         
-        <form method="post" action="homecontroleur" accept-charset="UTF-8">
+        <form method="get" action="homecontroleur" accept-charset="UTF-8">
             <button type="submit">Créer une partie</button>
             <input type="hidden" name="action" value="creategame" />
         </form>
@@ -24,13 +24,13 @@
                 <th>Date lancement</th>
                 <th><!-- Participer --></th>
             </tr>
-            <c:forEach items="${game}" var="game">
+            <c:forEach items="${games}" var="game">
                 <tr>
                     <td>${game.gameId}</td>
                     <td>${game.creator}</td>
                     <td>${game.nbPlayers}</td>
                     <td>${game.startTime}</td>
-                    <td><a href="gamecontroleur?action=getGame&view=aller&id=${game.gameId}">Rejoindre !</a></td>
+                    <td><a href="gamecontroleur?action=getGame&view=aller&gameId=${game.gameId}">Rejoindre !</a></td>
                 </tr>
             </c:forEach>
         </table> 

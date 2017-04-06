@@ -14,6 +14,7 @@
     </ul>
     
     <input type="hidden" name="action" value="enterlist" />
+    <input type="hidden" name="view" value="aller" />
     <input type="hidden" name="message" value="Identifiants invalides" />
     <a href="loginControleur">Annuler</a>
     <input type="submit" name="Login"/>

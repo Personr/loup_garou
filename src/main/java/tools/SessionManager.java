@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import modele.Game;
 
 /**
  *
@@ -21,16 +22,20 @@ public class SessionManager {
         session.setAttribute("username", username);
     }
     
-    /**
-     *
-     * @param username
-     * @param request
-     * @return username
-     */
-    public static String getSessionParameter(String parameter, HttpServletRequest request) {
+    public static String getUserSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        return (String) session.getAttribute(parameter);
+        return (String) session.getAttribute("username");
         
+    }
+    
+    public static void setGameSession(Game game, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("game", game);
+    }
+    
+    public static Game getGameSession(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return (Game) session.getAttribute("game");
     }
     
     public static void checkUserSession(HttpServletRequest request, HttpServletResponse response)
