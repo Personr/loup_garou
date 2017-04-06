@@ -13,5 +13,13 @@
       <input type="hidden" name="username" value=${username} />
       <input type="submit" name="chat" value="voir le Chat"/>
   </form>
+     
+  <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+      <input type="hidden" name="action" value="activatePower" />
+      <input type="hidden" name="gameId" value=${gameId} />
+      <input type="hidden" name="username" value=${username} />
+      <input type="submit" name="power" value="Activez votre pouvoir"/>
+  </form>
+  
 </body>
 </html>

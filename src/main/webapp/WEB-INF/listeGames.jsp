@@ -18,6 +18,11 @@
             <button type="submit">Voir les règles</button>
             <input type="hidden" name="action" value="seerules" />
         </form>
+        
+        <form method="get" action="homecontroleur" accept-charset="UTF-8">
+            <button type="submit">BOUTONS POUR LES ADMINS</button>
+            <input type="hidden" name="action" value="admin" />
+        </form>
                 
         <table>
             <tr>
@@ -33,10 +38,10 @@
                     <td>${game.creator}</td>
                     <td>${game.nbPlayers}</td>
                     <td>${game.startTime}</td>
-                    <td><a href="gamecontroleur?action=getGame&view=aller&gameId=${game.gameId}">Rejoindre !</a></td>
+                    <td><a href="homecontroleur?action=nouveaujoueur&gameId=${game.gameId}">Rejoindre !</a></td>
                 </tr>
             </c:forEach>
         </table> 
-        
+        ${message}
     </body>
 </html>

@@ -2,10 +2,10 @@
  <head> 
    <meta charset="UTF-8" /> 	
    <link rel="stylesheet" type="text/css" href="styles.css" />
-   <title>Création d’une partie</title>	    
+   <title>Creation d une partie</title>	    
  </head>
   <body>
-    <h1>Création d’une partie </h1>
+    <h1>Creation d une partie </h1>
       <form method="post" action="homecontroleur" accept-charset="UTF-8">
 
   Nombre de joueurs MIN (2 - 20) : <input type="text" name="nombre_participants_min" /><br/>
@@ -14,7 +14,7 @@
   Heure de la nuit (0 - 23): <input type="text" name="duree_nuit" /><br/>
   Horaire de début de la partie (0 - 23): <input type="text" name="horaire_debut" /><br/>
   
-  Probabilité qu'un pouvoir soit donné (0 -1): <ol>
+  Probabilite qu'un pouvoir soit donne (0 -1): <ol>
                                                 <li>Contamination <input type="text" name="pContamination" /><br/></li>
                                                 <li>Spiritisme <input type="text" name="pSpiritisme" /><br/></li>
                                                 <li>Voyance <input type="text" name="pVoyance" /><br/></li>

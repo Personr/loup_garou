@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import modele.User;
 import dao.MessageDAO;
 import dao.GameDAO;
+import dao.PlayerDAO;
 import modele.Game;
 import tools.SessionManager;
 import modele.Message;
@@ -58,13 +59,17 @@ public class GameControleur extends HttpServlet {
         MessageDAO messageDAO = new MessageDAO(ds);
         GameDAO gameDAO = new GameDAO(ds);
         UserDAO userDAO = new UserDAO(ds);
-        
+        PlayerDAO playerDAO = new PlayerDAO(ds);
 
         try {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO);
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO, userDAO);
+                
+             } else if (action.equals("getGame")) {
+                actionPouvoir(request, response, gameDAO, userDAO);
+                   
             } else {
                 invalidParameters(request, response);
             }
@@ -92,6 +97,22 @@ public class GameControleur extends HttpServlet {
             invalidParameters(request, response);
         }
     }
+    
+    /**
+     *
+     * Active le pouvoir du joueur (si possible)
+     */
+//    private void actionPouvoir(HttpServletRequest request,
+//            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
+//        
+//        /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
+//        
+//        if()
+//        
+//        
+//        
+//    }
+    
     
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,

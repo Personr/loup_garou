@@ -121,7 +121,11 @@ public class HomeControleur extends HttpServlet {
                 request.setAttribute("inGame", true); 
                 Game game = gameDAO.getGame(gameID);
                 SessionManager.setGameSession(game, request);
+//                
+//                modele.Game
+                
                 actionAfficher(request,response,gameDAO);
+                
                 
             }else{
                 request.setAttribute("message", "trop de joueurs");

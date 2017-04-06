@@ -189,4 +189,75 @@ public class GameDAO extends AbstractDataBaseDAO {
         }
         return true;
     }
+    public boolean incrementerNbJoueurs(int gameID){
+        Game gameCourante = getGame(gameID) ;
+        int nbJoueurs = gameCourante.getNbPlayers();
+        int nbJoueursMax = gameCourante.getMaxPlayers();
+         
+        if (nbJoueurs >= nbJoueursMax){
+            return false;
+        }else{
+            try (
+	     Connection conn = getConn();
+	     PreparedStatement st = conn.prepareStatement("UPDATE game SET nbPlayer = ? where gameID=?");) {
+            
+            
+//            UPDATE table
+//SET nom_colonne_1 = 'nouvelle valeur'
+//WHERE condition
+            
+            st.setInt(1, nbJoueurs+1);
+            st.setInt(2, gameID);
+            st.executeUpdate();
+            
+            } catch (SQLException e) {
+                throw new DAOException("Erreur BD " + e.getMessage(), e);
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean nouveauJoueur(String username, int gameID){
+        
+        
+        if (username.isEmpty() || gameID <0 ){
+            return false;
+        }
+        
+        try (
+	     Connection conn = getConn();
+	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
+                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme) "
+                     + "VALUES (?,?,0,0,0,0,0,0)");) {
+            
+            
+            
+            st.setString(1, username);
+            st.setInt(2, gameID);
+            st.executeUpdate();
+            
+            
+                
+            
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	}
+        
+        
+        return true;
+    }
+
+    public void deleteGames() {
+        try (
+	    Connection conn = getConn();
+	    PreparedStatement st = conn.prepareStatement("DELETE FROM game");) {
+   
+            st.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	}
+    }
 }

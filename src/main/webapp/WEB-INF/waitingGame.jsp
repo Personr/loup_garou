@@ -42,6 +42,8 @@
                 <td>${game.lgProp}</td>
             </tr>
         </table> 
-
+            
+            
+                
     </body>
 </html>

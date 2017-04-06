@@ -28,7 +28,9 @@ public class Game {
     private final float pSpiritisme;
     private final float lgProp;
     private final java.sql.Time startTime;  
-
+    //liste des objets player de la partie uniquement
+//    public Map<String, Player> mapJoueurs = new HashMap<String, Player>();
+    
     public Game(int gameId, int minPlayers, int maxPlayers, int nbPlayers, int started, 
             Time startTime, int finished,
             String creator, Time dayTime, Time nightTime, float pContamination, 
@@ -48,8 +50,13 @@ public class Game {
         this.pSpiritisme = pSpiritisme;
         this.lgProp = lgProp;
         this.startTime = startTime;
+        
     }
     
+    
+//    public void ajouterJoueur(String username, Player joueur) {
+//        mapJoueurs.put(username, joueur);
+//    }
     
     public int getFinished() {
         return finished;
