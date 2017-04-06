@@ -10,8 +10,8 @@
 
   Nombre de joueurs MIN (2 - 20) : <input type="text" name="nombre_participants_min" /><br/>
   Nombre de joueurs MAX (3 - 20) : <input type="text" name="nombre_participants_max"/><br/>
-  Heure du jour (0 - 23): <input type="text" name="durée_jour" /><br/>
-  Heure de la nuit (0 - 23): <input type="text" name="durée_nuit" /><br/>
+  Heure du jour (0 - 23): <input type="text" name="duree_jour" /><br/>
+  Heure de la nuit (0 - 23): <input type="text" name="duree_nuit" /><br/>
   Horaire de début de la partie (0 - 23): <input type="text" name="horaire_debut" /><br/>
   
   Probabilité qu'un pouvoir soit donné (0 -1): <ol>
@@ -26,5 +26,6 @@
   <input type="hidden" name="action" value="createpartie" />
   <input type="submit" value="Creer"/>
 </form>
+    ${message}
 </body>
 </html>
