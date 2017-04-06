@@ -16,6 +16,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.Ouvrage;
 import modele.Game;
+import tools.SessionManager;
 /**
  *
  * @author cazardn
@@ -42,6 +43,8 @@ public class HomeControleur extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        
+        SessionManager.checkUserSession(request, response);
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -69,7 +72,7 @@ public class HomeControleur extends HttpServlet {
             GameDAO gameDAO) throws ServletException, IOException {
 
         //On met a jour la bdd des parties ? Avec les paramètres
-        request.getRequestDispatcher("/WEB-INF/login.html").forward(request, response);//A retourner sur ListePartie
+        request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);//A retourner sur ListePartie
         //controleurParties.doGet(afficherlistepartie);
     }
 
@@ -77,6 +80,8 @@ public class HomeControleur extends HttpServlet {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        
+        SessionManager.checkUserSession(request, response);
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");

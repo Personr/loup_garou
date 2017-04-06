@@ -25,5 +25,6 @@
       <input type="hidden" name="message" value="" />
       <!--<input type="submit" name="Account" />-->
   </form>
+</body>
   ${message}
 </html>
