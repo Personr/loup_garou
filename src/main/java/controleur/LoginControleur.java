@@ -15,6 +15,8 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.User;
 import tools.SessionManager;
+import dao.GameDAO;
+import modele.Game;
 
 /**
  * Le contrôleur de l'application.
@@ -104,10 +106,11 @@ public class LoginControleur extends HttpServlet {
             return;
         }
         UserDAO userDAO = new UserDAO(ds);
+        GameDAO gameDAO = new GameDAO(ds);
 
         try {
             if (action.equals("enterlist")) {
-                actionLogin(request, response, userDAO);
+                actionLogin(request, response, userDAO, gameDAO);
             } else if (action.equals("createaccount")) {
                 actionCompte(request, response, userDAO);
             } else {
@@ -124,7 +127,7 @@ public class LoginControleur extends HttpServlet {
 
     private void actionLogin(HttpServletRequest request,
             HttpServletResponse response,
-            UserDAO userDAO) throws ServletException, IOException {
+            UserDAO userDAO, GameDAO gameDAO) throws ServletException, IOException {
         //tester si le login et mdp sont dans la BDD, si oui acceder à l'accueil !!
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -132,11 +135,25 @@ public class LoginControleur extends HttpServlet {
         if (userDAO.verifyUser(username, password)) {
             //create a session for the user
             SessionManager.setUserSession(username, request);
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("homecontroleur");
-           // if (!response.isCommitted()) {
+
+            int userGameId = userDAO.getUserGameId(username);
+            RequestDispatcher dispatcher;
+
+            if (userGameId != -1) {
+                Game game = gameDAO.getGame(userGameId);
+                SessionManager.setGameSession(game, request);
+            }
+            if (gameDAO.isStarted(userGameId)) {
+                dispatcher = request.getRequestDispatcher("gamecontroleur");
+            } else {
+                if (userGameId != -1) {
+                    request.setAttribute("inGame", true);
+                }
+                dispatcher = request.getRequestDispatcher("homecontroleur");
+            }
+            // if (!response.isCommitted()) {
             dispatcher.forward(request, response);
-           // }
+            // }
             //request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
             //controleurParties.doGet(afficherlistepartie);
         } else {

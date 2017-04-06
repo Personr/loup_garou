@@ -52,7 +52,7 @@ public class HomeControleur extends HttpServlet {
 
         try {
             if (action.equals("partie")) {
-                actionPartieAfficher(request, response, gameDAO);
+                actionCreatePartieAfficher(request, response, gameDAO);
             } else if (action.equals("creategame")) {
                 actionCreatePartieAfficher(request, response, gameDAO);
              } else if (action.equals("seerules")) {
@@ -64,22 +64,14 @@ public class HomeControleur extends HttpServlet {
             erreurBD(request, response, e);
         }
     }
-
-    private void actionPartieAfficher(HttpServletRequest request,
+    
+    private void actionCreatePartieAfficher(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/creerpartie.html").forward(request, response);
+        
+        request.getRequestDispatcher("/WEB-INF/creerpartie.jsp").forward(request, response);
+        
     }
-
-    private void actionPartie(HttpServletRequest request,
-            HttpServletResponse response,
-            GameDAO gameDAO) throws ServletException, IOException {
-
-        //On met a jour la bdd des parties ? Avec les paramètres
-        request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);//A retourner sur ListePartie
-        //controleurParties.doGet(afficherlistepartie);
-    }
-
     
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
@@ -98,7 +90,6 @@ public class HomeControleur extends HttpServlet {
         try {
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO);
-            
             } else if (action.equals("createpartie")) {
                 actionCreatePartie(request, response, gameDAO);
            
@@ -113,31 +104,21 @@ public class HomeControleur extends HttpServlet {
 
     private void actionAfficher(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO)
             throws IOException, ServletException {
-        /* On interroge la base de données pour obtenir la liste des games en cours */
-        List<Game> games = gameDAO.getListeGames();
-        /* On ajoute cette liste à la requête en tant qu’attribut afin de la transférer à la vue
-         * Rem. : ne pas confondre attribut (= objet ajouté à la requête par le programme
-         * avant un forward, comme ici)
-         * et paramètre (= chaîne représentant des données de formulaire envoyées par le client) */
-        request.setAttribute("game", games);
-        /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
-        request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
-    }
-    
-    private void actionCreatePartieAfficher(HttpServletRequest request,
-            HttpServletResponse response,
-            GameDAO gameDAO) throws ServletException, IOException {
-        
-        request.getRequestDispatcher("/WEB-INF/creerpartie.jsp").forward(request, response);
-        
+        if (request.getAttribute("inGame") == null || !(boolean)request.getAttribute("inGame")) {
+            /* On interroge la base de données pour obtenir la liste des games en cours */
+            List<Game> games = gameDAO.getListeGames();
+            request.setAttribute("games", games);
+            request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+        }
     }
     
     private void actionSeeRules(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
         
-        request.getRequestDispatcher("/WEB-INF/rules.html").forward(request, response);
-        
+        request.getRequestDispatcher("/WEB-INF/rules.html").forward(request, response);     
     }
     
     
@@ -169,7 +150,7 @@ public class HomeControleur extends HttpServlet {
             float pInsomnie = Float.parseFloat(request.getParameter("pInsomnie"));
 
             float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
-            String creator = SessionManager.getSessionParameter("username", request);
+            String creator = SessionManager.getUserSession(request);
             
             if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous)){
                 List<Game> games = gameDAO.getListeGames();

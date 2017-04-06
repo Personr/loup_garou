@@ -69,4 +69,24 @@ public class UserDAO extends AbstractDataBaseDAO {
         }
     }
     
+    public int getUserGameId(String username) {
+        int gameId;
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT p.gameID FROM lgUser u, player p, game g WHERE u.username = ? AND p.username = ? AND p.gameID = g.gameID AND g.finished = 0");) {
+            st.setString(1, username);
+            st.setString(2, username);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                gameId = rs.getInt("gameID");
+            } else {
+                gameId = -1;
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        return gameId;
+    }
+
 }
