@@ -21,6 +21,18 @@ public class SessionManager {
         session.setAttribute("username", username);
     }
     
+    /**
+     *
+     * @param username
+     * @param request
+     * @return username
+     */
+    public static String getUserSession(String username, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return (String) session.getAttribute(username);
+        
+    }
+    
     public static void checkUserSession(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession();
