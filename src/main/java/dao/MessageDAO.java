@@ -12,30 +12,32 @@ import javax.sql.DataSource;
 import modele.Message;
 
 public class MessageDAO extends AbstractDataBaseDAO {
-    
+
     public MessageDAO(DataSource ds) {
         super(ds);
     }
-    
-    public List<Message> getListeMessages(int isLG, int gameID) {
+
+    public List<Message> getListeMessages(int isLG, int gameId) {
         List<Message> result = new ArrayList<Message>();
         try (
-	     Connection conn = getConn();
-	     Statement st = conn.createStatement();
-	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM message WHERE isLG = ? AND gameID = ?");
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM message WHERE isLG = ? AND gameID = ?");) {
+            st.setInt(1, isLG);
+            st.setInt(2, gameId);
+            ResultSet rs = st.executeQuery();
+
             while (rs.next()) {
-                Message message =
-                    new Message(rs.getInt("id"), rs.getInt("gameID"), rs.getDate("createdAt"), 
-                            rs.getString("username"), rs.getString("text"), rs.getInt("isLG"));
+                Message message
+                        = new Message(rs.getInt("id"), rs.getInt("gameID"), rs.getDate("createdAt"),
+                                rs.getString("username"), rs.getString("text"), rs.getInt("isLG"));
                 result.add(message);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
-	}
-	return result;
+        }
+        return result;
     }
-    
+
     public void ajouterMessage(Message message) {
         try (
                 Connection conn = getConn();

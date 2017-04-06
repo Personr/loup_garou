@@ -19,6 +19,8 @@ import dao.GameDAO;
 import modele.Game;
 import tools.SessionManager;
 import modele.Message;
+import java.sql.Date;
+import java.util.Calendar;
 
 
 /**
@@ -88,22 +90,19 @@ public class GameControleur extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
         } else {
             invalidParameters(request, response);
-            return;
         }
     }
     
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,
             MessageDAO messageDAO) throws ServletException, IOException {
-        /* On interroge la base de données pour obtenir la liste des ouvrages */
-        //List<Message> messages = messageDAO.getListeMessages(0, 6);
-        /* On ajoute cette liste à la requête en tant qu’attribut afin de la transférer à la vue
-         * Rem. : ne pas confondre attribut (= objet ajouté à la requête par le programme
-         * avant un forward, comme ici)
-         * et paramètre (= chaîne représentant des données de formulaire envoyées par le client) */
-        //request.setAttribute("messages", messages);
-        /* Enfin on transfère la requête avec cet attribut supplémentaire vers la vue qui convient */
-        request.setAttribute("gameId", request.getParameter("gameId"));
+        
+        /* On interroge la base de données pour obtenir la liste des messages */
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        List<Message> messages = messageDAO.getListeMessages(0, gameId);
+        
+        request.setAttribute("gameId", gameId);
+        request.setAttribute("messages", messages);
         request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
     }
 
@@ -118,11 +117,7 @@ public class GameControleur extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        // le paramètre "action" est obligatoire en POST
-        if (action == null) {
-            invalidParameters(request, response);
-            return;
-        }
+       
         MessageDAO messageDAO = new MessageDAO(ds);
         GameDAO gameDAO = new GameDAO(ds);
         UserDAO userDAO = new UserDAO(ds);
@@ -132,6 +127,8 @@ public class GameControleur extends HttpServlet {
             
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO, userDAO);
+            } else if (action.equals("newMessage")) {
+                actionNewMessage(request, response, messageDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -144,5 +141,19 @@ public class GameControleur extends HttpServlet {
         }
 
     }  
+    
+    private void actionNewMessage(HttpServletRequest request,
+            HttpServletResponse response,
+            MessageDAO messageDAO) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String text = request.getParameter("text");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+        
+        Message message = new Message(0, gameId, currentDate, username, text, 0);
+        messageDAO.ajouterMessage(message);
+        
+        actionAfficherChat(request, response, messageDAO);
+    }
 
 }
