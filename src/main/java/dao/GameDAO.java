@@ -62,15 +62,15 @@ public class GameDAO extends AbstractDataBaseDAO {
 //                0, 'val', TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 
 //                TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp)"
-                        + " VALUES (2,10, ?, 0, NOW(), 0, 'val', ?, ?, ?, ?, ?, ?, ?)");) {
+                        + " VALUES (2,10, ?, 0, TO_DATE('01-01-2099 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0, 'val', TO_DATE('01-01-2099 13:38:11','DD-MM-YYYY HH24:MI:SS'), TO_DATE('01-01-2099 13:38:11','DD-MM-YYYY HH24:MI:SS'), ?, ?, ?, ?, ?)");) {
             st.setInt(1, nbJoueurs);
-            st.setInt(2, dureeJour);
-            st.setInt(3, dureeNuit);
+            //st.setInt(2, dureeJour);
+            //st.setInt(3, dureeNuit);
+            st.setFloat(2, probaPouvoir);
+            st.setFloat(3, probaPouvoir);
             st.setFloat(4, probaPouvoir);
             st.setFloat(5, probaPouvoir);
-            st.setFloat(6, probaPouvoir);
-            st.setFloat(7, probaPouvoir);
-            st.setFloat(8, proportionLoupsGarous);
+            st.setFloat(6, proportionLoupsGarous);
             st.executeUpdate();
             
         } catch (SQLException e) {

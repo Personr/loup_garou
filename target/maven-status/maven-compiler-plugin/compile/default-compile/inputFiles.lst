@@ -2,8 +2,8 @@
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/modele/Game.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/dao/UserDAO.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/dao/GameDAO.java
-/user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/controleur/Controleur.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/controleur/HomeControleur.java
+/user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/controleur/LoginControleur.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/dao/OuvrageDAO.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/modele/User.java
 /user/5/.base/beyousa/home/Documents/WEB/projet_loupgarou/src/main/java/dao/AbstractDataBaseDAO.java

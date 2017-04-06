@@ -135,8 +135,9 @@ public class HomeControleur extends HttpServlet {
         float probaPouvoir = Float.parseFloat(request.getParameter("proba_pouvoir"));
         float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
         
-        //gameDao.createPartie(nbJoueurs, dureeJour, dureeNuit, horaireDebutPartie, probaPouvoir, proportionLoupsGarous);
-        
+        gameDAO.creerPartie(nbJoueurs, dureeJour, dureeNuit, horaireDebutPartie, probaPouvoir, proportionLoupsGarous);
+        List<Game> games = gameDAO.getListeGames();
+        request.setAttribute("game", games);
         request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
         
     }

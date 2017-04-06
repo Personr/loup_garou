@@ -1,5 +1,12 @@
-dao/DAOException.class
-controleur/Controleur.class
-modele/Ouvrage.class
 dao/OuvrageDAO.class
 dao/AbstractDataBaseDAO.class
+modele/Game.class
+dao/UserDAO.class
+dao/DAOException.class
+modele/Message.class
+dao/GameDAO.class
+controleur/LoginControleur.class
+modele/User.class
+controleur/HomeControleur.class
+modele/Player.class
+modele/Ouvrage.class
