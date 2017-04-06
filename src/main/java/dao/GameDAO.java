@@ -92,7 +92,15 @@ public class GameDAO extends AbstractDataBaseDAO {
      * @param pInsomnie
      * @param proportionLoupsGarous
      */
-    public void creerPartie(int nbJoueursMin, int nbJoueursMax, int dureeJour, int dureeNuit, int horaireDebutPartie, String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
+    public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, int dureeJour, int dureeNuit, int horaireDebutPartie, String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
+        if (      nbJoueursMin < 2 || nbJoueursMin > 20
+                ||  nbJoueursMax > 20 || nbJoueursMax < nbJoueursMin
+                || dureeJour < 0 || dureeJour > 23 || dureeNuit < 0 || dureeNuit > 23 || horaireDebutPartie <0 || horaireDebutPartie > 23 || dureeJour > dureeNuit
+                || pContamination >1 || pSpiritisme > 1 || pVoyance > 1 || pInsomnie > 1 || proportionLoupsGarous > 1
+                ) {
+            return false;
+        }
+        
         try (
                 Connection conn = getConn();
 
@@ -102,44 +110,83 @@ public class GameDAO extends AbstractDataBaseDAO {
                 //finished = 0  ; started = 0 
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
                         + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp)"
-                        + " VALUES (?,?, 0, 0, TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), 0, ? "
-                        + ",TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), TO_DATE('01-01-2004 13:38:51','DD-MM-YYYY HH24:MI:SS'),"
-                        + "?, ?, ?, ?, ?)");) {
+                        + " VALUES ("
+                        + " ?,"
+                        + " ?, "
+                        + " 0, "
+                        + " 0, "
+                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
+                        + " 0, "
+                        + " ?, "
+                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
+                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'),"
+                        + " ?, "
+                        + " ?, "
+                        + " ?, "
+                        + " ?, "
+                        + " ?)");) {
             
             
             st.setInt(1, nbJoueursMin);
             st.setInt(2, nbJoueursMax);
+            String Date = "01-01-2017 ";
+            String horaireDebut= "";
+            
+            if (horaireDebutPartie < 10){
+               horaireDebut = "0"+String.valueOf(horaireDebutPartie);
+            }else{
+               horaireDebut =String.valueOf(horaireDebutPartie);
+            }
+            horaireDebut= Date+horaireDebut+":00:00";
+           
+            System.out.println(horaireDebut);
             
             
-            String horaireDebut = "01-01-2004 08:00:00";
-            
-//            String horaireDebut = String.valueOf(horaireDebutPartie) + ":00:00";
             st.setString(3, horaireDebut);
             
             
             //TO_DATE('01-01-2099 ?','DD-MM-YYYY HH24:MI:SS')
             //TO_DATE('?','HH24:MI:SS')
             // TO_DATE('?','HH24:MI:SS')
-            String horaireJour = String.valueOf(dureeJour) + ":00:00";
-            String horaireNuit = String.valueOf(dureeNuit) + ":00:00";
+            
+            String dureeJ = "";
+            if(dureeJour < 10) {
+                dureeJ = dureeJ+"0"+String.valueOf(dureeJour);
+            }else{
+                dureeJ = dureeJ+String.valueOf(dureeJour);
+            }
+            
+            String dureeN = "";
+            if(dureeNuit < 10) {
+                dureeN = "0"+String.valueOf(dureeNuit);
+            }else{
+                dureeN = String.valueOf(dureeNuit);
+            }
+            
+            String horaireJour = Date+dureeJ+":00:00";
+            String horaireNuit = Date+dureeN+":00:00";
             
             
             
             st.setString(4, creator);
             
-            //st.setString(5, horaireJour);
-            //st.setString(6, horaireNuit);
+            System.out.println(horaireJour);
+            System.out.println(horaireNuit);
             
-            st.setFloat(5, pContamination);
-            st.setFloat(6, pVoyance);
-            st.setFloat(7, pInsomnie);
-            st.setFloat(8, pSpiritisme);
-            st.setFloat(9, proportionLoupsGarous);
+            st.setString(5, horaireJour);
+            st.setString(6, horaireNuit);
+            
+            st.setFloat(7, pContamination);
+            st.setFloat(8, pVoyance);
+            st.setFloat(9, pInsomnie);
+            st.setFloat(10, pSpiritisme);
+            st.setFloat(11, proportionLoupsGarous);
             
             st.executeUpdate();
             
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
+        return true;
     }
 }
