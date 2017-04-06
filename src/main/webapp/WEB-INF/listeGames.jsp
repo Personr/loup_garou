@@ -22,6 +22,7 @@
                 <th>Créateur</th>
                 <th>Nb joueurs</th>
                 <th>Date lancement</th>
+                <th><!-- Participer --></th>
             </tr>
             <c:forEach items="${game}" var="game">
                 <tr>
@@ -29,6 +30,7 @@
                     <td>${game.creator}</td>
                     <td>${game.nbPlayers}</td>
                     <td>${game.startTime}</td>
+                    <td><a href="gamecontroleur?action=getGame&view=aller&id=${game.gameId}">Rejoindre !</a></td>
                 </tr>
             </c:forEach>
         </table> 
