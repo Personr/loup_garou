@@ -69,6 +69,8 @@ public class GameControleur extends HttpServlet {
                 actionAfficherChat(request, response, messageDAO, playerDAO);
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
+            } else if (action.equals("proposer")) {
+                actionProposer(request, response, gameDAO, playerDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
             } else if (action.equals("activatePower")) {
@@ -115,6 +117,23 @@ public class GameControleur extends HttpServlet {
         }
 
     }
+    
+    /**
+     *
+     * Propose un joueur au vote
+     */
+    private void actionProposer(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO)
+            throws ServletException, IOException {
+
+        int userId = Integer.parseInt(request.getParameter("toProposeId"));
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        
+        playerDAO.proposer(userId, gameId);
+        actionAfficher(request, response, gameDAO, playerDAO);
+
+    }
+    
 
     private void actionPouvoirContamination(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
@@ -235,7 +254,8 @@ public class GameControleur extends HttpServlet {
             HttpServletResponse response,
             PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
 
-        Game game = (Game) request.getSession().getAttribute("game");
+        int gameID = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameID);
         game.startGame(playerDAO, gameDAO);
         SessionManager.setGameSession(game.getGameId(), request);
 
