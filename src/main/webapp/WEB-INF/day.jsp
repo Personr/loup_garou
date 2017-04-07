@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="styles.css" />	
         <title>T'ES DANS LE GAME !</title>
     </head>
-    
+
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
         <c:choose>
@@ -35,19 +35,37 @@
             </c:otherwise>
         </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
-        
+
+        <h2>Vous pouvez proposer un joueur, en voici la liste:</h2>
+
         <table>
             <tr>
                 <th>Nom</th>
                 <th><!-- Modifier --></th>
             </tr>
-            <c:forEach items="${playerList}" var="player">
+            <c:forEach items="${proposable}" var="player">
                 <tr>
                     <td>${player.username}</td>
                     <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
                 </tr>
             </c:forEach>
         </table>
+
+
+        <h2>Ou voter pour un jour, en voici la liste:</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th><!-- Modifier --></th>
+            </tr>
+            <c:forEach items="${votable}" var="player">
+                <tr>
+                    <td>${player.username}</td>
+                    <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Voter pour lui</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+
 
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getChat" />
