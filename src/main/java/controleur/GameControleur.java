@@ -101,8 +101,11 @@ public class GameControleur extends HttpServlet {
         Player userPlayer = playerDAO.getPlayer(username, gameID);
         
         
-        List<Player> players = playerDAO.getListPlayersProposable(gameID);
-        request.setAttribute("playerList", players);
+        List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
+        request.setAttribute("proposable", proposable);
+        
+        List<Player> votable = playerDAO.getListPlayersVotable(gameID);
+        request.setAttribute("votable", votable);
 
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
