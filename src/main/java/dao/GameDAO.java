@@ -78,6 +78,17 @@ public class GameDAO extends AbstractDataBaseDAO {
 	}
     }
     
+    public void startGame(int gameId) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO game (started) VALUES (?)");) {
+            st.setInt(1, 1);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
     /**
      *
      * @param nbJoueursMin

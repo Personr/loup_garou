@@ -28,6 +28,7 @@
             <input type="hidden" name="action" value="newMessage" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="hidden" name="username" value=${username} />
+            <input type="hidden" name="isLg" value=${isLg} />
             <input type="submit" name="Envoyer"/>
         </form>
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">

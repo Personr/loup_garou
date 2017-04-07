@@ -42,8 +42,11 @@
                 <td>${game.lgProp}</td>
             </tr>
         </table> 
-            
-            
+        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="startGame" />
+            <input type="hidden" name="game" value=${game} />
+            <input type="submit" name="start" value="Lancer la partie"/>
+        </form>               
                 
     </body>
 </html>
