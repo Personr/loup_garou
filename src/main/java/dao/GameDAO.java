@@ -259,6 +259,24 @@ public class GameDAO extends AbstractDataBaseDAO {
         
         return true;
     }
+    
+    public void changeDayNight(int gameID) {
+        Game gameCourante = getGame(gameID);
+        int isDay = gameCourante.getIsDay();
+        int newIsDay = 1 - isDay;
+
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE game SET isDay = ? where gameID = ? ");) {
+
+            st.setInt(1, newIsDay);
+            st.setInt(2, gameID);
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
 
     public void deleteGames() {
         try (

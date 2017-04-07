@@ -7,21 +7,8 @@
         <title>T'ES DANS LE CHAT !</title>
     </head>
     <body>
-        <h1>T'ES DANS LE CHAT DE LA GAME n°${gameId} !</h1>
-        <table>
-            <tr>
-                <th>Auteur</th>
-                <th>Date</th>
-                <th>Texte</th>
-            </tr>
-            <c:forEach items="${messages}" var="message">
-                <tr>
-                    <td>${message.username}</td>
-                    <td>${message.date}</td>
-                    <td>${message.text}</td>
-                </tr>
-            </c:forEach>
-        </table> 
+        <h1>T'ES DANS LE CHAT DE LA GAME n°${gameId}, ${username} !</h1>
+        
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             Nouveau message : <input type="text" name="text"/>
 
@@ -37,5 +24,20 @@
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="chat" value="Retour à la partie"/>
         </form>
+        
+        <table>
+            <tr>
+                <th>Auteur</th>
+                <th>Date</th>
+                <th>Texte</th>
+            </tr>
+            <c:forEach items="${messages}" var="message">
+                <tr>
+                    <td>${message.username}</td>
+                    <td>${message.date}</td>
+                    <td>${message.text}</td>
+                </tr>
+            </c:forEach>
+        </table> 
     </body>
 </html>

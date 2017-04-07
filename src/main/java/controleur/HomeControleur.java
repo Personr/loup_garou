@@ -120,7 +120,7 @@ public class HomeControleur extends HttpServlet {
             if(gameDAO.nouveauJoueur(username,gameID) && gameDAO.incrementerNbJoueurs(gameID)){
                 request.setAttribute("inGame", true); 
                 Game game = gameDAO.getGame(gameID);
-                SessionManager.setGameSession(game, request);
+                SessionManager.setGameSession(game.getGameId(), request);
 //                
 //                modele.Game
                 

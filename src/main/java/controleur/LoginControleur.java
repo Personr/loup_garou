@@ -141,7 +141,7 @@ public class LoginControleur extends HttpServlet {
 
             if (userGameId != -1) {
                 Game game = gameDAO.getGame(userGameId);
-                SessionManager.setGameSession(game, request);
+                SessionManager.setGameSession(game.getGameId(), request);
             }
             if (gameDAO.isStarted(userGameId)) {
                 dispatcher = request.getRequestDispatcher("gamecontroleur");

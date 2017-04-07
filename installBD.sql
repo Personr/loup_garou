@@ -49,7 +49,15 @@ CREATE TABLE player (
        hasInsomnie int CONSTRAINT hasInsomnieValid
        		   CHECK (hasInsomnie IN(0, 1)) NOT NULL,
        hasSpiritisme int CONSTRAINT hasSpiritisme
-       		   CHECK (hasSpiritisme IN(0, 1)) NOT NULL
+       		   CHECK (hasSpiritisme IN(0, 1)) NOT NULL,
+       usedContamination int CONSTRAINT usedContaminationValid
+       		   CHECK (usedContamination IN(0, 1)) NOT NULL,
+       usedVoyance int CONSTRAINT usedVoyanceValid
+       		   CHECK (usedVoyance IN(0, 1)) NOT NULL,
+       usedInsomnie int CONSTRAINT usedInsomnieValid
+       		   CHECK (usedInsomnie IN(0, 1)) NOT NULL,
+       usedSpiritisme int CONSTRAINT usedSpiritisme
+       		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL
 );
 
 CREATE TABLE message (

@@ -65,7 +65,7 @@ public class GameControleur extends HttpServlet {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO);
             } else if (action.equals("getGame")) {
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
                 
@@ -85,14 +85,16 @@ public class GameControleur extends HttpServlet {
      * Affiche la page d’accueil d'une game
      */
     private void actionAfficher(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response, GameDAO gameDAO) throws ServletException, IOException {
         //Game game = gameDAO.getGame(Integer.parseInt(request.getParameter("id")));
         //request.setAttribute("game", game);
         String username = SessionManager.getUserSession(request);
-        Game userGame = (Game) SessionManager.getGameSession(request);
+        int gameID = SessionManager.getGameSession(request);
+        Game userGame = gameDAO.getGame(gameID);
 
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
+        request.setAttribute("isDay", userGame.getIsDay());
         request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
 
     }
@@ -134,9 +136,9 @@ public class GameControleur extends HttpServlet {
         
         Game game = (Game) request.getSession().getAttribute("game");
         game.startGame(playerDAO, gameDAO);
-        SessionManager.setGameSession(game, request);
+        SessionManager.setGameSession(game.getGameId(), request);
         
-        actionAfficher(request, response);
+        actionAfficher(request, response, gameDAO);
     }
 
     /**
@@ -159,9 +161,11 @@ public class GameControleur extends HttpServlet {
         try {
             
             if (action.equals("enterlist")) {
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             } else if (action.equals("newMessage")) {
                 actionNewMessage(request, response, messageDAO);
+            } else if (action.equals("changeDayNight")) {
+                actionChangeDayNight(request, response, gameDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -188,6 +192,15 @@ public class GameControleur extends HttpServlet {
         messageDAO.ajouterMessage(message);
         
         actionAfficherChat(request, response, messageDAO);
+    }
+    
+    private void actionChangeDayNight(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        gameDAO.changeDayNight(gameId);
+        actionAfficher(request, response, gameDAO);
     }
 
 }
