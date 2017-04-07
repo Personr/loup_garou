@@ -38,30 +38,27 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    public void ajouterPlayer(Player player) {
+
+
+    public boolean ajouterPlayer(String username, int gameID){
+        
+        if (username.isEmpty() || gameID <0 ){
+            return false;
+        }
         try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO player "
-                        + "(username, gameID, isLG, alive, hasContamination, hasVoyance, "
-                        + "hasInsomnie, hasSpiritisme, usedContamination , usedVoyance, "
-                        + "usedInsomnie, usedSpiritisme) VALUES (?, ?, ?, ? ,? ,? ,? ,?, ?, ?, ?, ?)");) {
-            
-            st.setString(1, player.getUsername());
-            st.setInt(2, player.getGameId());
-            st.setInt(3, player.getIsLg());
-            st.setInt(4, player.getAlive());
-            st.setInt(5, player.getHasContamination());
-            st.setInt(6, player.getHasVoyance());
-            st.setInt(7, player.getHasInsomnie());
-            st.setInt(8, player.getHasSpiritisme());
-            st.setInt(9, player.getUsedContamination());
-            st.setInt(10, player.getUsedVoyance());
-            st.setInt(11, player.getUsedInsomnie());
-            st.setInt(12, player.getUsedSpiritisme());
-            st.executeUpdate();
+	     Connection conn = getConn();
+	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
+                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedSpiritisme, usedVoyance, usedInsomnie) "
+                     + "VALUES (?,?,0,1,0,0,0,0,0,0,0,0)");) {   
+            st.setString(1, username);
+            st.setInt(2, gameID);
+            st.executeUpdate(); 
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
+	}
+        
+        
+        return true;
     }
 
     public Player getPlayer(String username) {
@@ -98,6 +95,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             st.setInt(8, usedInsomnie);
             st.setInt(9, usedSpiritisme);
             st.setInt(10, id);
+
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

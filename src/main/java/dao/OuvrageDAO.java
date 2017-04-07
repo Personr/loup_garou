@@ -23,8 +23,8 @@ public class OuvrageDAO extends AbstractDataBaseDAO {
 	     ) {
             ResultSet rs = st.executeQuery("SELECT * FROM bibliographie");
             while (rs.next()) {
-                Ouvrage ouvrage =
-                    new Ouvrage(rs.getInt("id"), rs.getString("auteur"), rs.getString("titre"));
+                Ouvrage ouvrage
+                        = new Ouvrage(rs.getInt("id"), rs.getString("gameId"), rs.getString("username"));
                 result.add(ouvrage);
             }
         } catch (SQLException e) {

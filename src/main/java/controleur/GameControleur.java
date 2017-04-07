@@ -226,7 +226,8 @@ public class GameControleur extends HttpServlet {
             HttpServletResponse response,
             PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
 
-        Game game = (Game) request.getAttribute("game");
+        
+        Game game = (Game) request.getSession().getAttribute("game");
         game.startGame(playerDAO, gameDAO);
         SessionManager.setGameSession(game, request);
 
