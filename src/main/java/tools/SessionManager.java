@@ -31,12 +31,12 @@ public class SessionManager {
     
     public static void setGameSession(int game, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.setAttribute("game", game);
+        session.setAttribute("gameId", game);
     }
     
     public static int getGameSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        int gameID = (int) session.getAttribute("game");
+        int gameID = (int) session.getAttribute("gameId");
         return gameID;
     }
     

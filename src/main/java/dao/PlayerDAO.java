@@ -39,7 +39,28 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-
+    
+    public Map<String, Player> getListePlayersVillageois(int gameId) {
+        Map<String, Player> result = new HashMap<String, Player>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? and isLG = ?");) {
+            st.setInt(1, gameId);
+            st.setInt(2,0);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Player player
+                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), rs.getInt("usedContamination"));
+                result.put(rs.getString("username"), player);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        return result;
+    }
+    
 
     public boolean ajouterPlayer(String username, int gameID){
         
@@ -62,12 +83,13 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return true;
     }
 
-    public Player getPlayer(String username) {
+    public Player getPlayer(String username, int gameId) {
         Player player = null;
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE username = ?");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE username = ? AND gameID = ?");) {
             st.setString(1, username);
+            st.setInt(2, gameId);
             ResultSet rs = st.executeQuery();
             rs.next();
             player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
