@@ -22,6 +22,7 @@ import tools.SessionManager;
 import modele.Message;
 import java.sql.Date;
 import java.util.Calendar;
+import modele.Player;
 
 
 /**
@@ -67,8 +68,8 @@ public class GameControleur extends HttpServlet {
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO, userDAO);
                 
-             } else if (action.equals("getGame")) {
-                actionPouvoir(request, response, gameDAO, userDAO);
+             } else if (action.equals("activatepower")) {
+                actionPouvoir(request, response, gameDAO, userDAO, playerDAO);
                    
             } else {
                 invalidParameters(request, response);
@@ -102,16 +103,39 @@ public class GameControleur extends HttpServlet {
      *
      * Active le pouvoir du joueur (si possible)
      */
-//    private void actionPouvoir(HttpServletRequest request,
-//            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
-//        
-//        /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
-//        
-//        if()
-//        
-//        
-//        
-//    }
+    private void actionPouvoir(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+        
+        /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
+        String username = request.getParameter("username");
+        Player joueur = playerDAO.getPlayer(username);
+        //modele.Game.ajouterJoueur(username, joueur);
+        
+        
+        if(joueur.getHasContamination() == 1){
+            
+            request.setAttribute("message", "Vous avez activer votre pouvoir de contamination");
+            actionAfficher(request,response, gameDAO, userDAO);            
+            
+        }else if(joueur.getHasInsomnie() == 1){
+            
+            request.setAttribute("message", "Vous avez activer votre pouvoir d insomnie");
+            actionAfficher(request,response, gameDAO, userDAO);            
+        } else if(joueur.getHasSpiritisme() == 1){
+            
+            request.setAttribute("message", "Vous avez activer votre pouvoir de spiritisme");
+            actionAfficher(request,response, gameDAO, userDAO);            
+        } else if (joueur.getHasVoyance() == 1){
+            
+            request.setAttribute("message", "Vous avez activer votre pouvoir de voyance");
+            actionAfficher(request,response, gameDAO, userDAO);
+        } else {
+            
+            request.setAttribute("message", "hey vous n avez pas de pouvoir!!!");
+            actionAfficher(request,response, gameDAO, userDAO);
+        }
+        
+    }
     
     
     private void actionAfficherChat(HttpServletRequest request,

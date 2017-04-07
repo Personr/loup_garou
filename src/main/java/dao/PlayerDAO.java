@@ -57,12 +57,12 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         }
     }
     
-    public Player getPlayer(int id) {
+    public Player getPlayer(String username) {
         Player player = null;
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE id = ?");) {
-            st.setInt(1, id);
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE username = ?");) {
+            st.setString(1, username);
             ResultSet rs = st.executeQuery();
             rs.next();
             player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),

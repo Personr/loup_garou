@@ -6,6 +6,8 @@
 package modele;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -27,9 +29,10 @@ public class Game {
     private final float pVoyance;
     private final float pSpiritisme;
     private final float lgProp;
-    private final java.sql.Time startTime;  
+    private final java.sql.Time startTime; 
+    
     //liste des objets player de la partie uniquement
-//    public Map<String, Player> mapJoueurs = new HashMap<String, Player>();
+    public Map<String, Player> mapJoueurs;
     
     public Game(int gameId, int minPlayers, int maxPlayers, int nbPlayers, int started, 
             Time startTime, int finished,
@@ -50,13 +53,13 @@ public class Game {
         this.pSpiritisme = pSpiritisme;
         this.lgProp = lgProp;
         this.startTime = startTime;
-        
+        mapJoueurs = new HashMap<>();
     }
     
     
-//    public void ajouterJoueur(String username, Player joueur) {
-//        mapJoueurs.put(username, joueur);
-//    }
+    public void ajouterJoueur(String username, Player joueur) {
+        mapJoueurs.put(username, joueur);
+    }
     
     public int getFinished() {
         return finished;

@@ -33,8 +33,6 @@ public class Player {
         this.hasSpiritisme = hasSpiritisme;
     }
     
-    
-    
     public int getId() {
         return id;
     }
