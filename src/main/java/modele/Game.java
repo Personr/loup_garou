@@ -108,7 +108,7 @@ public class Game {
             int indice = (int)randBetween(0, lg.size()-1);
             Player player = lg.get(indice);
             player.setHasContamination(1);
-            playerDAO.modifierPlayer(player.getId(), 1, 1, 1, 0, 0, 0);
+            playerDAO.modifierPlayer(player.getId(), 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);
         }
     }
     
@@ -118,7 +118,7 @@ public class Game {
             int indice = (int)randBetween(0, villageois.size()-1);
             Player player = villageois.get(indice);
             player.setHasInsomnie(1);
-            playerDAO.modifierPlayer(player.getId(), 0, 1, 0, 0, 1, 0);
+            playerDAO.modifierPlayer(player.getId(), 0, 1, 0, 0, 1, 0, 0, 0, 0, 0);
         }
     }
     
@@ -138,7 +138,7 @@ public class Game {
                 return;
             }
             player.setHasInsomnie(1);
-            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), 1, 0, 1, 0, 0);
+            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), 1, 0, 1, 0, 0, 0, 0, 0, 0);
         }
     }
     
@@ -159,7 +159,7 @@ public class Game {
                 return;
             }
             player.setHasInsomnie(1);
-            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), 1, 0, 0, 0, 1);
+            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), 1, 0, 0, 0, 1, 0, 0, 0, 0);
         }
     }
     
@@ -179,7 +179,7 @@ public class Game {
             if (indices.contains(i)) {
                 player.setIsLg(1);
                 lg.add(player);
-                playerDAO.modifierPlayer(player.getId(), 1, 1, 0, 0, 0, 0);
+                playerDAO.modifierPlayer(player.getId(), 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
             } else {
                 villageois.add(player);
             }

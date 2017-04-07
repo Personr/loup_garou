@@ -10,7 +10,7 @@ package modele;
  * @author personr
  */
 public class Player {
-    
+
     private final int id;
     private final int gameId;
     private final String username;
@@ -20,8 +20,12 @@ public class Player {
     private int hasInsomnie;
     private int hasVoyance;
     private int hasSpiritisme;
-
-    public Player(int id, int gameId, String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme) {
+    private int usedSpiritisme;
+    private int usedVoyance;
+    private int usedContamination;
+    private int usedInsomnie;
+    
+    public Player(int id, int gameId, String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -31,8 +35,12 @@ public class Player {
         this.hasInsomnie = hasInsomnie;
         this.hasVoyance = hasVoyance;
         this.hasSpiritisme = hasSpiritisme;
-    }
+        this.usedContamination = usedContamination;
+        this.usedVoyance = usedVoyance;
+        this.usedSpiritisme = usedSpiritisme;
+        this.usedInsomnie = usedInsomnie;
 
+    }
 
     public void setIsLg(int isLg) {
         this.isLg = isLg;
@@ -53,11 +61,27 @@ public class Player {
     public void setHasSpiritisme(int hasSpiritisme) {
         this.hasSpiritisme = hasSpiritisme;
     }
-    
+
+    public void setUsedContamination(int usedContamination) {
+        this.usedContamination = usedContamination;
+    }
+
+    public void setUsedVoyance(int usedVoyance) {
+        this.usedVoyance = usedVoyance;
+    }
+
+    public void setUsedSpiritisme(int usedSpiritisme) {
+        this.usedSpiritisme = usedSpiritisme;
+    }
+
+    public void setUsedInsomnie(int usedInsomnie) {
+        this.usedInsomnie = usedInsomnie;
+    }
+
     public int getId() {
         return id;
     }
-    
+
     public int getGameId() {
         return gameId;
     }
@@ -90,9 +114,25 @@ public class Player {
         return hasSpiritisme;
     }
 
+    public int getUsedContamination() {
+        return usedContamination;
+    }
+
+    public int getUsedVoyance() {
+        return usedVoyance;
+    }
+
+    public int getUsedSpiritisme() {
+        return usedSpiritisme;
+    }
+
+    public int getUsedInsomnie() {
+        return usedInsomnie;
+    }
+
     @Override
     public String toString() {
         return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
     }
-    
+
 }
