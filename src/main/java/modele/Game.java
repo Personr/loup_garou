@@ -192,6 +192,26 @@ public class Game {
     public void incrNbPlayers() {
         nbPlayers++;
     }
+
+    public int getStarted() {
+        return started;
+    }
+
+    public Map<String, Player> getMapJoueurs() {
+        return mapJoueurs;
+    }
+
+    public List<Player> getVillageois() {
+        return villageois;
+    }
+
+    public List<Player> getLg() {
+        return lg;
+    }
+
+    public List<Player> getSansPouvoir() {
+        return sansPouvoir;
+    }
     
     public int getFinished() {
         return finished;

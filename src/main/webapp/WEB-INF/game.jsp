@@ -51,6 +51,6 @@
             <input type="hidden" name="username" value=${username} />
             <input type="submit" name="power" value="Activez votre pouvoir"/>
         </form>
-
+            ${message}
     </body>
 </html>
