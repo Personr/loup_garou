@@ -35,7 +35,7 @@
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />
-            <input type="submit" name="night" value="Passer à la nuit"/>
+            <input type="submit" name="night" value="Passer Ã  la nuit"/>
         </form>
         ${message}
     </body>

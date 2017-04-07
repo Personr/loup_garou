@@ -28,26 +28,26 @@
 
 
 
-        <form method="post" action="gamecontroleur" accept-charset="UTF-8">
-            <c:choose>
-                <c:when test="${insomnie=='1'}">
-                    <input type="hidden" name="action" value="newRaffraichir" />
-                    <input type="hidden" name="gameId" value=${gameId} />
-                    <input type="hidden" name="username" value=${username} />
-                    <input type="hidden" name="isLg" value=1 />
-                    <input type="submit" name="Rafraichir"/>
 
-                </c:when>    
-                <c:otherwise>
+        <c:choose>
+            <c:when test="${isLg == 0 || player.isLg=='1'}"> 
+                <form method="post" action="gamecontroleur" accept-charset="UTF-8">
                     Nouveau message : <input type="text" name="text"/>
                     <input type="hidden" name="action" value="newMessage" />
                     <input type="hidden" name="gameId" value=${gameId} />
                     <input type="hidden" name="username" value=${username} />
                     <input type="hidden" name="isLg" value=${isLg} />
-                    <input type="submit" name="Envoyer"/>
+                    <input type="submit" name="Envoyer" value="Envoyer"/>
+                </form> 
 
-                </c:otherwise>
-            </c:choose>
+            </c:when>  
+        </c:choose>
+        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="getChat" />
+            <input type="hidden" name="gameId" value=${gameId} />
+            <input type="hidden" name="username" value=${username} />
+            <input type="hidden" name="isLg" value=${isLg} />
+            <input type="submit" name="Rafraichir" Value="Rafraichir"/>
         </form> 
 
 

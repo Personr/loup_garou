@@ -230,8 +230,6 @@ public class HomeControleur extends HttpServlet {
             String creator = SessionManager.getUserSession(request);
             
             if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous)){
-                List<Game> games = gameDAO.getListeGames();
-                request.setAttribute("games", games);
                 request.setAttribute("message", "Partie bien crée!");
                 actionAfficher(request, response,gameDAO);
             }else{
