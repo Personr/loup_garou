@@ -98,12 +98,16 @@ public class GameControleur extends HttpServlet {
 
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        request.setAttribute("isDay", userGame.getIsDay());
-        request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
+
+        if (userGame.getIsDay() == 1) {
+            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+        }
 
     }
-    
- 
+
+
     
     private void actionPouvoirContamination(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
