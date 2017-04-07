@@ -148,11 +148,12 @@ public class GameControleur extends HttpServlet {
 //                }
                 int gameId = Integer.parseInt(request.getParameter("gameId")); 
                 List<Player> mapHumains = gameDAO.getGame(gameId).getVillageois();
-                
+                System.out.println(mapHumains);
                 
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("joueurs", mapHumains);
                 request.setAttribute("username", username);
+                
                 request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
                 
                 joueur.setUsedContamination(1);
