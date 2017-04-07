@@ -30,7 +30,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                             rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                             rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                             rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"));
+                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"));
                 result.add(game);
             }
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                             rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                             rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                             rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"));
+                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"));
             } else {
                 return null;
             }
@@ -120,7 +120,7 @@ public class GameDAO extends AbstractDataBaseDAO {
 //                TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
                 //finished = 0  ; started = 0 
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
-                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp)"
+                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay)"
                         + " VALUES ("
                         + " ?,"
                         + " ?, "
@@ -135,7 +135,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " ?, "
                         + " ?, "
-                        + " ?)");) {
+                        + " ?, 1)");) {
             
             
             st.setInt(1, nbJoueursMin);

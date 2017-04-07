@@ -29,6 +29,8 @@ CREATE TABLE game (
        pSpiritisme float CONSTRAINT pSpiritismeValid 
        		   CHECK (pSpiritisme >= 0.0 AND pSpiritisme <= 1.0) NOT NULL,
        lgProp float NOT NULL,
+       isDay int CONSTRAINT isDayValid 
+       		   CHECK (isDay IN(0, 1)) NOT NULL,
        CONSTRAINT maxSuperieurToMin CHECK (maxPlayer >= minPlayer) 
 );
 
