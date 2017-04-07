@@ -79,7 +79,7 @@ public class Game {
     }
     
     public void startGame(PlayerDAO playerDAO, GameDAO gameDAO) {
-        mapJoueurs = playerDAO.getListePlayers(gameId);
+        mapJoueurs = playerDAO.getMapPlayers(gameId);
         
         setRoles(playerDAO);
         setContamination(playerDAO);

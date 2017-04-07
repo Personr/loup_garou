@@ -97,7 +97,7 @@ public class GameControleur extends HttpServlet {
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
         
-        Map<String, Player> players = playerDAO.getListePlayers(gameID);
+        Map<String, Player> players = playerDAO.getMapPlayers(gameID);
         request.setAttribute("players", players);
 
         request.setAttribute("gameId", userGame.getGameId());
@@ -140,7 +140,7 @@ public class GameControleur extends HttpServlet {
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
                 //afficher une liste des joueurs, et peut contaminer  action a faire
-                //Map<String, Player> mapJoueurs = playerDAO.getListePlayers();
+                //Map<String, Player> mapJoueurs = playerDAO.getMapPlayers();
 
 //                Map<String, Player> mapHumains = ;
 //                
