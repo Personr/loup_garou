@@ -56,8 +56,11 @@ CREATE TABLE player (
        		   CHECK (usedVoyance IN(0, 1)) NOT NULL,
        usedInsomnie int CONSTRAINT usedInsomnieValid
        		   CHECK (usedInsomnie IN(0, 1)) NOT NULL,
-       usedSpiritisme int CONSTRAINT usedSpiritisme
-       		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL
+       usedSpiritisme int CONSTRAINT usedSpiritismeValid
+       		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL,
+       proposed int CONSTRAINT proposedValid
+       		   CHECK (proposed IN(0, 1)) NOT NULL,
+       voted int NOT NULL
 );
 
 CREATE TABLE message (
