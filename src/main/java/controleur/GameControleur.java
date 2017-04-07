@@ -103,13 +103,11 @@ public class GameControleur extends HttpServlet {
         
         
         List<Player> players = playerDAO.getListPlayers(gameID);
-        System.out.println(players);
         request.setAttribute("playerList", players);
 
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-
         if (userGame.getIsDay() == 1) {
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         } else {

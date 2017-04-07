@@ -96,7 +96,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             rs.next();
             player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                     rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                    rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
+                    rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
                     rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                     rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getInt("voted"));
         } catch (SQLException e) {
