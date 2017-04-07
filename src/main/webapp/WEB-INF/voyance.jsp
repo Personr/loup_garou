@@ -14,7 +14,7 @@
         
             <table>
                 
-            <c:forEach items="${joueur}" var="mapHumains">
+            <c:forEach items="${joueur}" var="mapJoueurs">
                 
                 <tr>
                     <td>${joueur.username}</td>
@@ -23,10 +23,10 @@
 <!-- ATTENTION AFFICHER QUE LES HUMAINS                   
                         
                         <input type="hidden" name="view" value="aller" />-->
-                        <input type="hidden" name="action" value="getContamination" />
+                        <input type="hidden" name="action" value="getVoyance" />
                         <input type="hidden" name="username" value=${joueur.username} />
                         <input type="hidden" name="gameId" value=${gameId} />
-                        <input type="submit" name="contamine" value="Contaminer!"/>
+                        <input type="submit" name="voyance" value="Voir ses pouvoirs!"/>
 
                         </form>
                     </td>

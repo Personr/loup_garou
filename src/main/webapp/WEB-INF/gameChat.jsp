@@ -63,4 +63,5 @@
             <input type="submit" name="chat" value="Retour à la partie"/>
         </form>
     </body>
+        ${pouvoir}
 </html>

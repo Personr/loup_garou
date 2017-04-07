@@ -75,7 +75,9 @@ public class GameControleur extends HttpServlet {
                 actionPouvoir(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getContamination")) {
                 actionPouvoirContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
-    
+            } else if (action.equals("getVoyance")) {
+                actionPouvoirVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+
             } else {
                 invalidParameters(request, response);
             }
@@ -115,11 +117,22 @@ public class GameControleur extends HttpServlet {
         
         actionAfficher(request, response, gameDAO);
         //maintenant il faut contaminer => le username passe de humain a LG
-        
-        
-        
+
     }
 
+    private void actionPouvoirVoyance(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+        
+        String username = request.getParameter("username");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username);
+        joueur.setIsLg(1);
+        
+        actionAfficher(request, response, gameDAO);
+        //maintenant il faut rediriger vers
+
+    }
+    
     /**
      *
      * Active le pouvoir du joueur (si possible)
@@ -172,6 +185,7 @@ public class GameControleur extends HttpServlet {
             if (joueur.getUsedInsomnie() == 0) {
                 //Rejoint chatLG2    une copie de chatLG sans barre de chat
                 //request.setAttribute("insomnie", "1");
+                request.setAttribute("pouvoir", "Vous etes invisibles, en mode insomnie");
                 actionAfficherChat(request, response, messageDAO, playerDAO);
 
             } else {
@@ -182,8 +196,20 @@ public class GameControleur extends HttpServlet {
             }
         } else if (joueur.getHasVoyance() == 1) {
             if (joueur.getUsedVoyance() == 0) {
-
-                //afficher une liste des joueurs MORT, et peut envoyer un message
+                
+                int gameId = Integer.parseInt(request.getParameter("gameId")); 
+                Map<String, Player> mapJoueurs = gameDAO.getGame(gameId).getMapJoueurs();
+                System.out.println(mapJoueurs);
+                
+                request.setAttribute("gameId", gameId);
+                request.setAttribute("joueurs", mapJoueurs);
+                request.setAttribute("username", username);
+                
+                request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
+                
+                joueur.setUsedVoyance(1);
+              
+                    
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
                 actionAfficher(request, response, gameDAO);
