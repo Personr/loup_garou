@@ -38,24 +38,25 @@ public class PlayerDAO extends AbstractDataBaseDAO {
 	return result;
     }
     
-    public void ajouterPlayer(Player player) {
+    public boolean ajouterPlayer(String username, int gameID){
+        
+        if (username.isEmpty() || gameID <0 ){
+            return false;
+        }
         try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO player "
-                        + "(username, gameID, isLG, alive, hasContamination, hasVoyance, "
-                        + "hasInsomnie, hasSpiritisme) VALUES (?, ?, ?, ? ,? ,? ,? ,?)");) {
-            st.setString(1, player.getUsername());
-            st.setInt(2, player.getGameId());
-            st.setInt(3, player.getIsLg());
-            st.setInt(4, player.getAlive());
-            st.setInt(5, player.getHasContamination());
-            st.setInt(6, player.getHasVoyance());
-            st.setInt(7, player.getHasInsomnie());
-            st.setInt(8, player.getHasSpiritisme());
-            st.executeUpdate();
+	     Connection conn = getConn();
+	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
+                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme) "
+                     + "VALUES (?,?,0,1,0,0,0,0)");) {   
+            st.setString(1, username);
+            st.setInt(2, gameID);
+            st.executeUpdate();    
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
+	}
+        
+        
+        return true;
     }
     
     public Player getPlayer(int id) {
@@ -79,14 +80,14 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             int hasVoyance, int hasInsomnie, int hasSpiritisme) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = ?, "
-                        + "hasContamination = ?, hasVoyance = ?, hasInsomnie = ?, hasSpiritisme = ? WHERE id = ?");) {
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = ?, alive = ?, hasContamination = ?, hasVoyance = ?, hasInsomnie = ?, hasSpiritisme = ? WHERE id = ?");) {
             st.setInt(1, isLG);
             st.setInt(2, alive);
             st.setInt(3, hasContamination);
             st.setInt(4, hasVoyance);
             st.setInt(5, hasInsomnie);
             st.setInt(6, hasSpiritisme);
+            st.setInt(7, id);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

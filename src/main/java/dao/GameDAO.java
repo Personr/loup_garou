@@ -23,7 +23,7 @@ public class GameDAO extends AbstractDataBaseDAO {
 	     Connection conn = getConn();
 	     Statement st = conn.createStatement();
 	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM game");
+            ResultSet rs = st.executeQuery("SELECT * FROM game ORDER BY gameID");
             while (rs.next()) {
                 Game game =
                     new Game(rs.getInt("gameID"), rs.getInt("minPlayer"), rs.getInt("maxPlayer"), rs.getInt("nbPlayer"), 
@@ -200,8 +200,8 @@ public class GameDAO extends AbstractDataBaseDAO {
         }
         return true;
     }
-    public boolean incrementerNbJoueurs(int gameID){
-        Game gameCourante = getGame(gameID) ;
+    
+    public boolean incrementerNbJoueurs(Game gameCourante){
         int nbJoueurs = gameCourante.getNbPlayers();
         int nbJoueursMax = gameCourante.getMaxPlayers();
          
@@ -218,44 +218,13 @@ public class GameDAO extends AbstractDataBaseDAO {
 //WHERE condition
             
             st.setInt(1, nbJoueurs+1);
-            st.setInt(2, gameID);
+            st.setInt(2, gameCourante.getGameId());
             st.executeUpdate();
             
             } catch (SQLException e) {
                 throw new DAOException("Erreur BD " + e.getMessage(), e);
             }
         }
-        
-        return true;
-    }
-    
-    public boolean nouveauJoueur(String username, int gameID){
-        
-        
-        if (username.isEmpty() || gameID <0 ){
-            return false;
-        }
-        
-        try (
-	     Connection conn = getConn();
-	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
-                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme) "
-                     + "VALUES (?,?,0,0,0,0,0,0)");) {
-            
-            
-            
-            st.setString(1, username);
-            st.setInt(2, gameID);
-            st.executeUpdate();
-            
-            
-                
-            
-            
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-	}
-        
         
         return true;
     }
