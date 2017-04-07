@@ -104,16 +104,15 @@ public class GameControleur extends HttpServlet {
         String username = SessionManager.getUserSession(request);
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
-        
+        Player userPlayer = playerDAO.getPlayer(username, gameID);
         
         
         List<Player> players = playerDAO.getListPlayersProposable(gameID);
-        System.out.println(players);
         request.setAttribute("playerList", players);
 
+        request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-
         if (userGame.getIsDay() == 1) {
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         } else {
@@ -270,12 +269,10 @@ public class GameControleur extends HttpServlet {
         /* On interroge la base de données pour obtenir la liste des messages */
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
-        int insomnie = 0;
         String username = request.getParameter("username");
-        Player joueur = playerDAO.getPlayer(username, gameId);
-
-        insomnie = joueur.getHasInsomnie();
-        request.setAttribute("insomnie", insomnie);
+        Player player = playerDAO.getPlayer(username, gameId);
+        
+        request.setAttribute("player", player);
 
         List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
 
@@ -324,8 +321,6 @@ public class GameControleur extends HttpServlet {
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO, playerDAO);
                 actionNewMessage(request, response, messageDAO, playerDAO);
-            } else if (action.equals("newRafraichir")) {
-                actionNewRafraichir(request, response, messageDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -353,22 +348,6 @@ public class GameControleur extends HttpServlet {
         messageDAO.ajouterMessage(message);
 
         actionAfficherChat(request, response, messageDAO, playerDAO);
-    }
-
-    private void actionNewRafraichir(HttpServletRequest request,
-            HttpServletResponse response,
-            MessageDAO messageDAO) throws ServletException, IOException {
-
-        /* On interroge la base de données pour obtenir la liste des messages */
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
-        int isLg = 1;
-
-        List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
-
-        request.setAttribute("gameId", gameId);
-        request.setAttribute("messages", messages);
-        request.setAttribute("isLg", isLg);
-        request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
     }
 
     private void actionChangeDayNight(HttpServletRequest request,
