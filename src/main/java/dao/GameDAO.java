@@ -81,8 +81,8 @@ public class GameDAO extends AbstractDataBaseDAO {
     public void startGame(int gameId) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO game (started) VALUES (?)");) {
-            st.setInt(1, 1);
+                PreparedStatement st = conn.prepareStatement("UPDATE game SET started = 1 WHERE gameID = ?");) {
+            st.setInt(1, gameId);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

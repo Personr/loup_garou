@@ -28,7 +28,7 @@ public class Game {
     private final int minPlayers;
     private final int maxPlayers;
     private final int nbPlayers;
-    private final int started;
+    private int started;
     private final int finished;
     private final String creator;
     private final java.sql.Time dayTime;
@@ -82,6 +82,7 @@ public class Game {
         setVoyance(playerDAO);
         setSpiritisme(playerDAO);
         
+        started = 1;
         gameDAO.startGame(gameId);
     }
     
