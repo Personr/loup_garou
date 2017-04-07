@@ -158,7 +158,7 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
         joueur.setIsLg(1);
-        joueur.setUsedContamination(0);
+        playerDAO.pouvoirContaminationUtilise(joueur.getId(),0);
         request.setAttribute("message", "vous n avez contamine personne");
         actionAfficher(request, response, gameDAO, playerDAO);
         
@@ -179,7 +179,8 @@ public class GameControleur extends HttpServlet {
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
-        joueur.setUsedVoyance(0);
+        //joueur.setUsedVoyance(0);
+        playerDAO.pouvoirVoyanceUtilise(joueur.getId(),0);
         request.setAttribute("message", "vous n avez espionne personne");
         actionAfficher(request, response, gameDAO, playerDAO);
     }
@@ -199,17 +200,13 @@ public class GameControleur extends HttpServlet {
 
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
- 
                 List<Player> mapHumains = playerDAO.getListPlayersVillageois(gameId);
-                
                 System.out.println(mapHumains);
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("mapHumains", mapHumains);
                 request.setAttribute("username", username);
-                joueur.setUsedContamination(1);
+                playerDAO.pouvoirContaminationUtilise(joueur.getId(),1);
                 request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
-
-                
 
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de contamination");
@@ -241,7 +238,7 @@ public class GameControleur extends HttpServlet {
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("mapJoueurs", mapJoueurs);
                 request.setAttribute("username", username);
-                joueur.setUsedVoyance(1);
+                playerDAO.pouvoirVoyanceUtilise(joueur.getId(),1);
                 request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
                 
             } else {
@@ -250,8 +247,10 @@ public class GameControleur extends HttpServlet {
             }
         } else if (joueur.getHasSpiritisme() == 1) {
             if (joueur.getUsedSpiritisme() == 0) {
-
-                //afficher une liste des joueurs, et peut voir role et pouvoir
+                
+                playerDAO.pouvoirSpiritismeUtilise(joueur.getId(),1);
+                
+                
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
                 actionAfficher(request, response, gameDAO, playerDAO);

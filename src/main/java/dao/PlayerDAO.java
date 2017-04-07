@@ -191,5 +191,65 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
+    
+    //0 : pas utilise -> valable pour la nuit
+    //1 : utilise la nuit et tte la journee
+    public void pouvoirContaminationUtilise(int userId, int utilise) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedContamination = ? WHERE id = ?");) {
+
+            st.setInt(1, utilise);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
+        //0 : pas utilise -> valable pour la nuit
+    //1 : utilise la nuit et tte la journee
+    public void pouvoirVoyanceUtilise(int userId, int utilise) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedVoyance = ? WHERE id = ?");) {
+
+            st.setInt(1, utilise);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
+            //0 : pas utilise -> valable pour la nuit
+    //1 : utilise la nuit et tte la journee
+    public void pouvoirSpiritismeUtilise(int userId, int utilise) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedSpiritisme = ? WHERE id = ?");) {
+
+            st.setInt(1, utilise);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
+                //0 : pas utilise -> valable pour la nuit
+    //1 : utilise la nuit et tte la journee
+    public void pouvoirInsomnieUtilise(int userId, int utilise) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedInsomnie = ? WHERE id = ?");) {
+
+            st.setInt(1, utilise);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
 
 }
