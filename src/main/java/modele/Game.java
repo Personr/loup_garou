@@ -79,7 +79,7 @@ public class Game {
     }
     
     public void startGame(PlayerDAO playerDAO, GameDAO gameDAO) {
-        mapJoueurs = playerDAO.getListePlayers();
+        mapJoueurs = playerDAO.getListePlayers(gameId);
         
         setRoles(playerDAO);
         setContamination(playerDAO);
@@ -108,6 +108,8 @@ public class Game {
         int res = (int) ceil(lgProp * nbPlayers);
         if (res == 0) {
             res = 1;
+        } else if (res == nbPlayers) {
+            res--;
         }
         return res;
     }

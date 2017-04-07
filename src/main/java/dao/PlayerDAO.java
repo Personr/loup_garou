@@ -18,12 +18,13 @@ public class PlayerDAO extends AbstractDataBaseDAO {
     public PlayerDAO(DataSource ds) {
         super(ds);
     }
-
-    public Map<String, Player> getListePlayers() {
+    
+    public Map<String, Player> getListePlayers(int gameId) {
         Map<String, Player> result = new HashMap<String, Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ?");) {
+            st.setInt(1, gameId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Player player
