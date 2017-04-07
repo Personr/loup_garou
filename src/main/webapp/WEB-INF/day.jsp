@@ -8,7 +8,7 @@
     </head>
     
     <body>
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+        <h1>T'ES DANS LA GAME n ${gameId}, ${username} !</h1>
         <h2>C'est le jour, il va falloir voter</h2>
         
         <table>
@@ -35,7 +35,7 @@
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />
-            <input type="submit" name="night" value="Passer à la nuit"/>
+            <input type="submit" name="night" value="Passer Ã  la nuit"/>
         </form>
         ${message}
     </body>

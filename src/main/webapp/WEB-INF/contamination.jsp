@@ -1,7 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!DOCTYPE html>
 <html lang="fr">
 
     <head>
@@ -12,30 +10,29 @@
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} - CONTAMINATION!</h1>
         
-            <table>
-                
-            <c:forEach items="${mapHumains}" var="joueur">
-                
-                <tr>
-                    <td>${joueur.username}</td>
-                    
-                    <td>
-                        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
-<!-- ATTENTION AFFICHER QUE LES HUMAINS                   
-                        
-                        <input type="hidden" name="view" value="aller" />-->
-                        <input type="hidden" name="action" value="getContamination" />
+
+<!--                        <input type="hidden" name="action" value="getContamination" />
                         <input type="hidden" name="username" value=${joueur.username} />
                         <input type="hidden" name="gameId" value=${gameId} />
-                        <input type="submit" name="contamine" value="Contaminer!"/>
+                        <input type="submit" name="contamine" value="Contaminer!"/>-->
 
-                        </form>
-                    </td>
+                        
+
+        
+        
+        
+            <table>
+                <tr>
+                    <th>Liste des Villageois</th>
                 </tr>
-                
-            </c:forEach>
-                
+                <c:forEach items="${mapHumains}" var="joueur">
+                    <tr>
+                        <td>${joueur.username}</td>
+                        <td><a href="gamecontroleur?action=getContamination&username=${joueur.username}&gameId=${gameId}">Contamine Le! (il se transformera en Loup-Garou)</a></td>
+                    </tr>
+                </c:forEach>
             </table>
+            <a href="gamecontroleur?action=getNoContamination&username=${joueur.username}&gameId=${gameId}">Ne contaminer personne!</a>
             
     </body>
 </html>

@@ -10,31 +10,24 @@
         <title>CONTAMINE UN HUMAIN ! </title>
     </head>
     <body>
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} - CONTAMINATION!</h1>
+        <h1>T'ES DANS LA GAME n°${gameId}, ${username} - VOYANCE!</h1>
         
             <table>
-                
-            <c:forEach items="${mapJoueurs}" var="joueur">
-                
                 <tr>
-                    <td>${joueur.username}</td>
-                    <td>
-                        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
-<!-- ATTENTION AFFICHER QUE LES HUMAINS                   
-                        
-                        <input type="hidden" name="view" value="aller" />-->
-                        <input type="hidden" name="action" value="getVoyance" />
-                        <input type="hidden" name="username" value=${joueur.username} />
-                        <input type="hidden" name="gameId" value=${gameId} />
-                        <input type="submit" name="voyance" value="Voir ses pouvoirs!"/>
-
-                        </form>
-                    </td>
+                    <th>Liste des Joueurs</th>
                 </tr>
-                
-            </c:forEach>
-                
+                <c:forEach items="${mapJoueurs}" var="joueur">
+                    <tr>
+                        <td>${joueur.username}</td>
+                        <td><a href="gamecontroleur?action=getVoyance&username=${joueur.username}&gameId=${gameId}">Voir ses pouvoirs</a></td>
+                    </tr>
+                </c:forEach>
             </table>
+            <a href="gamecontroleur?action=getNoVoyance&username=${joueur.username}&gameId=${gameId}">Ne voir personne!</a>            
+            
+
+
+
             
     </body>
 </html>

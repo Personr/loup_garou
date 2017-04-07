@@ -75,8 +75,12 @@ public class GameControleur extends HttpServlet {
                 actionPouvoir(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getContamination")) {
                 actionPouvoirContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+            } else if (action.equals("getNoContamination")) {
+                actionPouvoirNoContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getVoyance")) {
                 actionPouvoirVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+            } else if (action.equals("getNoVoyance")) {
+                actionPouvoirNoVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
 
             } else {
                 invalidParameters(request, response);
@@ -123,23 +127,42 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
         joueur.setIsLg(1);
-
+        request.setAttribute("message", "vous avez contamine" + username);
         actionAfficher(request, response, gameDAO, playerDAO);
-        //maintenant il faut contaminer => le username passe de humain a LG
-
+        
     }
 
+    private void actionPouvoirNoContamination(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+
+        String username = request.getParameter("username");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username, gameId);
+        joueur.setIsLg(1);
+        joueur.setUsedContamination(0);
+        request.setAttribute("message", "vous n avez contamine personne");
+        actionAfficher(request, response, gameDAO, playerDAO);
+        
+    }    
+    
     private void actionPouvoirVoyance(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
-        joueur.setIsLg(1);
-        
-        actionAfficher(request, response, gameDAO, playerDAO);
-        //maintenant il faut rediriger vers
+        request.setAttribute("spieduser", joueur);
+        request.getRequestDispatcher("/WEB-INF/voyancePlayer.jsp").forward(request, response);
+    }
+    private void actionPouvoirNoVoyance(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
 
+        String username = request.getParameter("username");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username, gameId);
+        joueur.setUsedVoyance(0);
+        request.setAttribute("message", "vous n avez espionne personne");
+        actionAfficher(request, response, gameDAO, playerDAO);
     }
     
     /**
@@ -157,32 +180,17 @@ public class GameControleur extends HttpServlet {
 
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
-                //afficher une liste des joueurs, et peut contaminer  action a faire
-                //Map<String, Player> mapJoueurs = playerDAO.getMapPlayers();
-
-//                Map<String, Player> mapHumains = ;
-//                
-//                Set cles = mapJoueurs.keySet();
-//                Iterator it = cles.iterator();
-//                while (it.hasNext()){
-//                   String cle = (String) it.next(); // tu peux typer plus finement ici
-//                   Player player = mapJoueurs.get(cle); // tu peux typer plus finement ici
-//                   if(player.getIsLg() == 0){
-//                       mapHumains.put(cle, player);
-//                   }
-//                }
-                //List<Player> mapHumains = gameDAO.getGame(gameId).getVillageois();
-                
+ 
                 List<Player> mapHumains = playerDAO.getListPlayersVillageois(gameId);
                 
                 System.out.println(mapHumains);
                 request.setAttribute("gameId", gameId);
-                request.setAttribute("joueurs", mapHumains);
+                request.setAttribute("mapHumains", mapHumains);
                 request.setAttribute("username", username);
-                
+                joueur.setUsedContamination(1);
                 request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
 
-                joueur.setUsedContamination(1);
+                
 
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de contamination");
@@ -210,16 +218,12 @@ public class GameControleur extends HttpServlet {
                 gameId = Integer.parseInt(request.getParameter("gameId")); 
                 Map<String, Player> mapJoueurs = gameDAO.getGame(gameId).getMapJoueurs();
                 System.out.println(mapJoueurs);
-                
                 request.setAttribute("gameId", gameId);
-                request.setAttribute("joueurs", mapJoueurs);
+                request.setAttribute("mapJoueurs", mapJoueurs);
                 request.setAttribute("username", username);
-                
+                joueur.setUsedVoyance(1);
                 request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
                 
-                joueur.setUsedVoyance(1);
-              
-                    
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
                 actionAfficher(request, response, gameDAO, playerDAO);
