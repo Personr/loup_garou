@@ -5,6 +5,8 @@
  */
 package modele;
 
+import dao.PlayerDAO;
+
 /**
  *
  * @author personr
@@ -25,12 +27,12 @@ public class Player {
     private int usedContamination;
     private int usedInsomnie;
     private int proposed;
-    private int voted;
+    private String voted;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
             int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
-            int proposed, int voted) {
+            int proposed, String voted) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -47,7 +49,7 @@ public class Player {
         this.proposed = proposed;
         this.voted = voted;
     }
-
+    
     public void setIsLg(int isLg) {
         this.isLg = isLg;
     }
@@ -140,7 +142,7 @@ public class Player {
         return proposed;
     }
 
-    public int getVoted() {
+    public String getVoted() {
         return voted;
     }
     

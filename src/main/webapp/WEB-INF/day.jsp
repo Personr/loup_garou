@@ -35,8 +35,23 @@
             </c:otherwise>
         </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
+        
+        <h2>Voivi la liste des joueurs :</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>A vote pour</th>
+            </tr>
+            <c:forEach items="${players}" var="player">
+                <tr>
+                    <td>${player.username}</td>
+                    <td>${player.voted}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        
 
-        <h2>Vous pouvez proposer un joueur, en voici la liste:</h2>
+        <h2>Vous pouvez proposer un joueur, en voici la liste :</h2>
 
         <table>
             <tr>
@@ -52,7 +67,7 @@
         </table>
 
 
-        <h2>Ou voter pour un jour, en voici la liste:</h2>
+        <h2>Ou voter pour un joueur, en voici la liste :</h2>
         <table>
             <tr>
                 <th>Nom</th>
@@ -61,7 +76,7 @@
             <c:forEach items="${votable}" var="player">
                 <tr>
                     <td>${player.username}</td>
-                    <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Voter pour lui</a></td>
+                    <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
                 </tr>
             </c:forEach>
         </table>

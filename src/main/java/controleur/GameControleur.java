@@ -71,6 +71,8 @@ public class GameControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("proposer")) {
                 actionProposer(request, response, gameDAO, playerDAO);
+            } else if (action.equals("voter")) {
+                actionVoter(request, response, gameDAO, playerDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
             } else if (action.equals("activatePower")) {
@@ -106,6 +108,8 @@ public class GameControleur extends HttpServlet {
         Game userGame = gameDAO.getGame(gameID);
         Player userPlayer = playerDAO.getPlayer(username, gameID);
         
+        List<Player> players= playerDAO.getListPlayers(gameID);
+        request.setAttribute("players", players);
         
         List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
         request.setAttribute("proposable", proposable);
@@ -133,9 +137,28 @@ public class GameControleur extends HttpServlet {
             throws ServletException, IOException {
 
         int userId = Integer.parseInt(request.getParameter("toProposeId"));
-        int gameId = SessionManager.getGameSession(request);
         
         playerDAO.proposer(userId);
+        actionAfficher(request, response, gameDAO, playerDAO);
+
+    }
+    
+    /**
+     *
+     * Vote pour un joueur
+     */
+    private void actionVoter(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO)
+            throws ServletException, IOException {
+
+        int cibleId = Integer.parseInt(request.getParameter("toVoteId"));
+        String username = SessionManager.getUserSession(request);
+        int gameId = SessionManager.getGameSession(request);
+        Player player = playerDAO.getPlayer(username, gameId);
+        int userId = player.getId();
+        
+        
+        playerDAO.voter(userId, cibleId);
         actionAfficher(request, response, gameDAO, playerDAO);
 
     }
