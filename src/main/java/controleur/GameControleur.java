@@ -147,7 +147,7 @@ public class GameControleur extends HttpServlet {
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
-        joueur.setIsLg(1);
+        playerDAO.transformerLoupGarou(joueur.getId());
         request.setAttribute("message", "vous avez contamine : " + username);
         actionAfficher(request, response, gameDAO, playerDAO);
         
@@ -159,10 +159,7 @@ public class GameControleur extends HttpServlet {
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Player joueur = playerDAO.getPlayer(username, gameId);
-        joueur.setIsLg(1);
-        
         playerDAO.pouvoirContaminationUtilise(joueur.getId(),0);
-        
         request.setAttribute("message", "vous n avez contamine personne");
         actionAfficher(request, response, gameDAO, playerDAO);
         

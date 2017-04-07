@@ -273,5 +273,19 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
+    //
+
+    public void transformerLoupGarou(int userId) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = ? WHERE id = ?");) {
+
+            st.setInt(1, 1);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
 
 }
