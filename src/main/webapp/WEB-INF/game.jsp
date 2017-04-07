@@ -67,6 +67,6 @@
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="night" value="Passer à la nuit"/>
         </form>
-
+            ${message}
     </body>
 </html>

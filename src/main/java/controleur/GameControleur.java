@@ -71,7 +71,7 @@ public class GameControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
-            } else if (action.equals("activatepower")) {
+            } else if (action.equals("activatePower")) {
                 actionPouvoir(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getContamination")) {
                 actionPouvoirContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
@@ -135,21 +135,23 @@ public class GameControleur extends HttpServlet {
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
                 //afficher une liste des joueurs, et peut contaminer  action a faire
-                Map<String, Player> mapJoueurs = playerDAO.getListePlayers();
-                Map<String, Player> mapHumains = null;
+                //Map<String, Player> mapJoueurs = playerDAO.getListePlayers();
                 
-                Set cles = mapJoueurs.keySet();
-                Iterator it = cles.iterator();
-                while (it.hasNext()){
-                   String cle = (String) it.next(); // tu peux typer plus finement ici
-                   Player player = mapJoueurs.get(cle); // tu peux typer plus finement ici
-                   if(player.getIsLg() == 0){
-                       mapHumains.put(cle, player);
-                   }
-                }
-                
-                
+//                Map<String, Player> mapHumains = ;
+//                
+//                Set cles = mapJoueurs.keySet();
+//                Iterator it = cles.iterator();
+//                while (it.hasNext()){
+//                   String cle = (String) it.next(); // tu peux typer plus finement ici
+//                   Player player = mapJoueurs.get(cle); // tu peux typer plus finement ici
+//                   if(player.getIsLg() == 0){
+//                       mapHumains.put(cle, player);
+//                   }
+//                }
                 int gameId = Integer.parseInt(request.getParameter("gameId")); 
+                List<Player> mapHumains = gameDAO.getGame(gameId).getVillageois();
+                
+                
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("joueurs", mapHumains);
                 request.setAttribute("username", username);
