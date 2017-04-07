@@ -23,7 +23,7 @@ public class GameDAO extends AbstractDataBaseDAO {
 	     Connection conn = getConn();
 	     Statement st = conn.createStatement();
 	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM game");
+            ResultSet rs = st.executeQuery("SELECT * FROM game ORDER BY gameID");
             while (rs.next()) {
                 Game game =
                     new Game(rs.getInt("gameID"), rs.getInt("minPlayer"), rs.getInt("maxPlayer"), rs.getInt("nbPlayer"), 
@@ -200,8 +200,8 @@ public class GameDAO extends AbstractDataBaseDAO {
         }
         return true;
     }
-    public boolean incrementerNbJoueurs(int gameID){
-        Game gameCourante = getGame(gameID) ;
+    
+    public boolean incrementerNbJoueurs(Game gameCourante){
         int nbJoueurs = gameCourante.getNbPlayers();
         int nbJoueursMax = gameCourante.getMaxPlayers();
          
@@ -218,7 +218,7 @@ public class GameDAO extends AbstractDataBaseDAO {
 //WHERE condition
             
             st.setInt(1, nbJoueurs+1);
-            st.setInt(2, gameID);
+            st.setInt(2, gameCourante.getGameId());
             st.executeUpdate();
             
             } catch (SQLException e) {

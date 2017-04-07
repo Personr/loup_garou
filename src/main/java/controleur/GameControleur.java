@@ -22,7 +22,10 @@ import tools.SessionManager;
 import modele.Message;
 import java.sql.Date;
 import java.util.Calendar;
-
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import modele.Player;
 
 /**
  * Le contrôleur de l'application.
@@ -63,15 +66,16 @@ public class GameControleur extends HttpServlet {
 
         try {
             if (action.equals("getChat")) {
-                actionAfficherChat(request, response, messageDAO);
+                actionAfficherChat(request, response, messageDAO, playerDAO);
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
-                
-//             } else if (action.equals("getGame")) {
-//                actionPouvoir(request, response, gameDAO, userDAO);
-                   
+            } else if (action.equals("activatepower")) {
+                actionPouvoir(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+            } else if (action.equals("getContamination")) {
+                actionPouvoirContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+    
             } else {
                 invalidParameters(request, response);
             }
@@ -99,40 +103,131 @@ public class GameControleur extends HttpServlet {
 
     }
     
+ 
+    
+    private void actionPouvoirContamination(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+        
+        String username = request.getParameter("username");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username);
+        joueur.setIsLg(1);
+        
+        actionAfficher(request, response, gameDAO);
+        //maintenant il faut contaminer => le username passe de humain a LG
+        
+        
+        
+    }
+
     /**
      *
      * Active le pouvoir du joueur (si possible)
      */
-//    private void actionPouvoir(HttpServletRequest request,
-//            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
-//        
-//        /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
-//        
-//        if()
-//        
-//        
-//        
-//    }
-    
-    
+    private void actionPouvoir(HttpServletRequest request,
+            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+
+        /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
+        String username = request.getParameter("username");
+        Player joueur = playerDAO.getPlayer(username);
+        //modele.Game.ajouterJoueur(username, joueur);
+
+        if (joueur.getHasContamination() == 1) {
+            if (joueur.getUsedContamination() == 0) {
+                //afficher une liste des joueurs, et peut contaminer  action a faire
+                Map<String, Player> mapJoueurs = playerDAO.getListePlayers();
+                Map<String, Player> mapHumains = null;
+                
+                Set cles = mapJoueurs.keySet();
+                Iterator it = cles.iterator();
+                while (it.hasNext()){
+                   String cle = (String) it.next(); // tu peux typer plus finement ici
+                   Player player = mapJoueurs.get(cle); // tu peux typer plus finement ici
+                   if(player.getIsLg() == 0){
+                       mapHumains.put(cle, player);
+                   }
+                }
+                
+                
+                int gameId = Integer.parseInt(request.getParameter("gameId")); 
+                request.setAttribute("gameId", gameId);
+                request.setAttribute("joueurs", mapHumains);
+                request.setAttribute("username", username);
+                request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
+                
+                joueur.setUsedContamination(1);
+                
+            } else {
+                request.setAttribute("message", "Vous avez deja active votre pouvoir de contamination");
+                actionAfficher(request, response, gameDAO);
+            }
+
+            //request.setAttribute("message", "Vous avez activer votre pouvoir de contamination");
+            //actionAfficher(request,response);            
+        } else if (joueur.getHasInsomnie() == 1) {
+
+            if (joueur.getUsedInsomnie() == 0) {
+                //Rejoint chatLG2    une copie de chatLG sans barre de chat
+                //request.setAttribute("insomnie", "1");
+                actionAfficherChat(request, response, messageDAO, playerDAO);
+
+            } else {
+                
+                
+                request.setAttribute("message", "Il fait jour, impossible d utiliser votre pouvoir");
+                actionAfficher(request, response, gameDAO);
+            }
+        } else if (joueur.getHasVoyance() == 1) {
+            if (joueur.getUsedVoyance() == 0) {
+
+                //afficher une liste des joueurs MORT, et peut envoyer un message
+            } else {
+                request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
+                actionAfficher(request, response, gameDAO);
+            }
+        } else if (joueur.getHasSpiritisme() == 1) {
+            if (joueur.getUsedSpiritisme() == 0) {
+
+                //afficher une liste des joueurs, et peut voir role et pouvoir
+            } else {
+                request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
+                actionAfficher(request, response, gameDAO);
+            }
+        } else {
+
+            request.setAttribute("message", "hey vous n avez pas de pouvoir!!!");
+            actionAfficher(request, response, gameDAO);
+        }
+
+    }
+
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO) throws ServletException, IOException {
-        
+            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+
         /* On interroge la base de données pour obtenir la liste des messages */
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
+        int insomnie = 0;
+        String username = request.getParameter("username");
+        Player joueur = playerDAO.getPlayer(username);
+
+        insomnie = joueur.getHasInsomnie();
+        request.setAttribute("insomnie", insomnie);
+
         List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
-        
+
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
+
         request.setAttribute("isLg", isLg);
         request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
     }
-    
+
     private void actionStartGame(HttpServletRequest request,
             HttpServletResponse response,
             PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
+
         
         Game game = (Game) request.getSession().getAttribute("game");
         game.startGame(playerDAO, gameDAO);
@@ -152,20 +247,23 @@ public class GameControleur extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-       
+
         MessageDAO messageDAO = new MessageDAO(ds);
         GameDAO gameDAO = new GameDAO(ds);
         UserDAO userDAO = new UserDAO(ds);
-        
+        PlayerDAO playerDAO = new PlayerDAO(ds);
 
         try {
-            
+
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO);
             } else if (action.equals("newMessage")) {
-                actionNewMessage(request, response, messageDAO);
+                actionNewMessage(request, response, messageDAO, playerDAO);
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO);
+                actionNewMessage(request, response, messageDAO, playerDAO);
+            } else if (action.equals("newRafraichir")) {
+                actionNewRafraichir(request, response, messageDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -177,21 +275,38 @@ public class GameControleur extends HttpServlet {
             erreurBD(request, response, e);
         }
 
-    }  
-    
+    }
+
     private void actionNewMessage(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO) throws ServletException, IOException {
+            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
         String username = request.getParameter("username");
         String text = request.getParameter("text");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
+       // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
-        
-        Message message = new Message(0, gameId, currentDate, username, text, isLg);
+
+        Message message = new Message(0, gameId, currentDate, username, text, isLg );//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
         messageDAO.ajouterMessage(message);
-        
-        actionAfficherChat(request, response, messageDAO);
+
+        actionAfficherChat(request, response, messageDAO, playerDAO);
+    }
+
+    private void actionNewRafraichir(HttpServletRequest request,
+            HttpServletResponse response,
+            MessageDAO messageDAO) throws ServletException, IOException {
+
+        /* On interroge la base de données pour obtenir la liste des messages */
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        int isLg = 1;
+
+        List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
+
+        request.setAttribute("gameId", gameId);
+        request.setAttribute("messages", messages);
+        request.setAttribute("isLg", isLg);
+        request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
     }
     
     private void actionChangeDayNight(HttpServletRequest request,

@@ -3,6 +3,7 @@ package controleur;
 import dao.DAOException;
 import dao.OuvrageDAO;
 import dao.GameDAO;
+import dao.PlayerDAO;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -49,6 +50,7 @@ public class HomeControleur extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         GameDAO gameDAO = new GameDAO(ds);
+        PlayerDAO playerDAO = new PlayerDAO(ds);
 
         try {
             if (action.equals("partie")) {
@@ -58,7 +60,7 @@ public class HomeControleur extends HttpServlet {
              } else if (action.equals("seerules")) {
                 actionSeeRules(request, response, gameDAO);
             } else if (action.equals("nouveaujoueur")) {
-                actionNouveauJoueur(request, response, gameDAO);
+                actionNouveauJoueur(request, response, gameDAO, playerDAO);
             } else if (action.equals("admin")) {
                 actionAdminAfficher(request, response, gameDAO);
             } else if (action.equals("supprimerparties")) {
@@ -104,7 +106,7 @@ public class HomeControleur extends HttpServlet {
     
     private void actionNouveauJoueur(HttpServletRequest request,
             HttpServletResponse response,
-            GameDAO gameDAO) throws ServletException, IOException {
+            GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
         
         //on veut mettre a jour la BDD lorsqu'un joueur rentre dans une partie puis le rediriger sur une page d'attente
         //gameID username
@@ -116,15 +118,16 @@ public class HomeControleur extends HttpServlet {
         if(request.getParameter("gameId") != null){
             String username = SessionManager.getUserSession(request);
             int gameID = Integer.parseInt(request.getParameter("gameId"));
-            
-            if(gameDAO.nouveauJoueur(username,gameID) && gameDAO.incrementerNbJoueurs(gameID)){
-                request.setAttribute("inGame", true); 
-                Game game = gameDAO.getGame(gameID);
+            Game game = gameDAO.getGame(gameID);
+          
+            if (playerDAO.ajouterPlayer(username, gameID) && gameDAO.incrementerNbJoueurs(game)) {
+                request.setAttribute("inGame", true);
                 SessionManager.setGameSession(game.getGameId(), request);
+                game.incrNbPlayers();
 //                
 //                modele.Game
-                
-                actionAfficher(request,response,gameDAO);
+
+                actionAfficher(request, response, gameDAO);
                 
                 
             }else{
