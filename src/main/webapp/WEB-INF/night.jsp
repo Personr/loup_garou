@@ -7,7 +7,7 @@
         <title>T'ES DANS LE GAME !</title>
     </head>
     <body>
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+        <h1>T'ES DANS LA GAME n ${gameId}, ${username} !</h1>
         <h2>Et la c'est la nuit</h2>
 
     <c:choose>
@@ -30,6 +30,17 @@
                 <input type="hidden" name="gameId" value=${gameId} />
                 <input type="hidden" name="username" value=${username} />
                 <input type="submit" name="power" value="Activez votre pouvoir"/>
+            </form>
+        </c:when>  
+    </c:choose>
+        
+    <c:choose>
+        <c:when test="${userPlayer.alive=='0'}"> 
+            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="testSpiritisme" />
+                <input type="hidden" name="gameId" value=${gameId} />
+                <input type="hidden" name="username" value=${username} />
+                <input type="submit" name="power" value="Un spiritisme pourrait vous parler!!"/>
             </form>
         </c:when>  
     </c:choose>

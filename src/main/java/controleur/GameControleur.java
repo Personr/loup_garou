@@ -83,7 +83,12 @@ public class GameControleur extends HttpServlet {
                 actionPouvoirVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getNoVoyance")) {
                 actionPouvoirNoVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
-
+            } else if (action.equals("getSpiritisme")) {
+                actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+            } else if (action.equals("getNoSpiritisme")) {
+                actionPouvoirNoSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+            } else if (action.equals("testSpiritisme")) {
+                actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -92,6 +97,34 @@ public class GameControleur extends HttpServlet {
         }
     }
 
+    
+    private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+//        String username = request.getParameter("username");
+//        int gameId = Integer.parseInt(request.getParameter("gameId"));
+//        Player joueur = playerDAO.getPlayer(username, gameId);
+
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        String username = request.getParameter("username");
+        Player player = playerDAO.getPlayer(username, gameId);
+        
+        request.setAttribute("player", player);
+
+        List<Message> messages = messageDAO.getListeMessages(2, gameId);
+
+        request.setAttribute("gameId", gameId);
+        request.setAttribute("messages", messages);
+        request.getRequestDispatcher("/WEB-INF/spiritisme.jsp").forward(request, response);
+    }
+
+    private void actionPouvoirNoSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username, gameId);
+        playerDAO.pouvoirSpiritismeUtilise(joueur.getId(),0);
+        request.setAttribute("message", "vous n avez pas utilise le spiritisme");
+        actionAfficher(request, response, gameDAO, playerDAO);
+    }
+    
     /**
      *
      * Affiche la page d’accueil d'une game
@@ -185,6 +218,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("message", "vous n avez espionne personne");
         actionAfficher(request, response, gameDAO, playerDAO);
     }
+
     
     /**
      *
@@ -241,19 +275,21 @@ public class GameControleur extends HttpServlet {
                 request.setAttribute("username", username);
                 playerDAO.pouvoirVoyanceUtilise(joueur.getId(),1);
                 request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
-                
             } else {
-                request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
+                request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
                 actionAfficher(request, response, gameDAO, playerDAO);
             }
         } else if (joueur.getHasSpiritisme() == 1) {
             if (joueur.getUsedSpiritisme() == 0) {
-                
+                gameId = Integer.parseInt(request.getParameter("gameId")); 
+                List<Player> joueursMorts = playerDAO.getListPlayersMorts(gameId);
                 playerDAO.pouvoirSpiritismeUtilise(joueur.getId(),1);
-                
-                
+                request.setAttribute("gameId", gameId);
+                request.setAttribute("joueursMorts", joueursMorts);
+                request.setAttribute("username", username);
+                request.getRequestDispatcher("/WEB-INF/choisirSpiritisme.jsp").forward(request, response);
             } else {
-                request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
+                request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
                 actionAfficher(request, response, gameDAO, playerDAO);
             }
         } else {
@@ -320,6 +356,8 @@ public class GameControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("newMessage")) {
                 actionNewMessage(request, response, messageDAO, playerDAO);
+            } else if (action.equals("newMessageSpiritisme")) {
+                actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO, playerDAO);
                 actionNewMessage(request, response, messageDAO, playerDAO);
@@ -351,6 +389,23 @@ public class GameControleur extends HttpServlet {
 
         actionAfficherChat(request, response, messageDAO, playerDAO);
     }
+    
+    private void actionNewMessageSpiritisme(HttpServletRequest request,
+            HttpServletResponse response,
+            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String text = request.getParameter("text");
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        //int isLg = Integer.parseInt(request.getParameter("isLg"));
+        // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
+        java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+
+        Message message = new Message(0, gameId, currentDate, username, text, 2);//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
+        messageDAO.ajouterMessage(message);
+
+        actionPouvoirSpiritisme(request, response, 
+            gameDAO, userDAO, playerDAO, messageDAO);
+    }
 
     private void actionChangeDayNight(HttpServletRequest request,
             HttpServletResponse response,
@@ -360,5 +415,7 @@ public class GameControleur extends HttpServlet {
         gameDAO.changeDayNight(gameId);
         actionAfficher(request, response, gameDAO, playerDAO);
     }
+
+
 
 }
