@@ -19,7 +19,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         super(ds);
     }
     
-    public Map<String, Player> getListePlayers(int gameId) {
+    public Map<String, Player> getMapPlayers(int gameId) {
         Map<String, Player> result = new HashMap<String, Player>();
         try (
                 Connection conn = getConn();
@@ -39,21 +39,45 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    
-    public Map<String, Player> getListePlayersVillageois(int gameId) {
-        Map<String, Player> result = new HashMap<String, Player>();
+
+    public List<Player> getListPlayers(int gameId) {
+        List<Player> result = new ArrayList<Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? and isLG = ?");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ?");) {
             st.setInt(1, gameId);
-            st.setInt(2,0);
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Player player
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), rs.getInt("usedContamination"));
-                result.put(rs.getString("username"), player);
+
+
+                result.add(player);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        return result;
+    }
+
+    public List<Player> getListPlayersVillageois(int gameId) {
+        List<Player> result = new ArrayList<Player>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ?");) {
+            st.setInt(1, gameId);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Player player
+                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), rs.getInt("usedContamination"));
+
+                result.add(player);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

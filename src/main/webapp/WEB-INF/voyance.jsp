@@ -14,7 +14,7 @@
         
             <table>
                 
-            <c:forEach items="${joueur}" var="mapJoueurs">
+            <c:forEach items="${mapJoueurs}" var="joueur">
                 
                 <tr>
                     <td>${joueur.username}</td>

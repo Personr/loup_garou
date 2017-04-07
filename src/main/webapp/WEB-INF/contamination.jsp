@@ -14,10 +14,11 @@
         
             <table>
                 
-            <c:forEach items="${joueur}" var="mapHumains">
+            <c:forEach items="${mapHumains}" var="joueur">
                 
                 <tr>
                     <td>${joueur.username}</td>
+                    
                     <td>
                         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
 <!-- ATTENTION AFFICHER QUE LES HUMAINS                   
