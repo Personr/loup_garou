@@ -19,7 +19,7 @@
             <c:forEach items="${playerList}" var="player">
                 <tr>
                     <td>${player.username}</td>
-                    <td><a href="controleur?action=getOuvrage&view=modifier&id=${ouvrage.id}">Voter pour lui</a></td>
+                    <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
                 </tr>
             </c:forEach>
         </table>

@@ -24,8 +24,13 @@ public class Player {
     private int usedVoyance;
     private int usedContamination;
     private int usedInsomnie;
+    private int proposed;
+    private int voted;
     
-    public Player(int id, int gameId, String username, int isLg, int alive, int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination) {
+    public Player(int id, int gameId, String username, int isLg, int alive, 
+            int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
+            int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
+            int proposed, int voted) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -39,7 +44,8 @@ public class Player {
         this.usedVoyance = usedVoyance;
         this.usedSpiritisme = usedSpiritisme;
         this.usedInsomnie = usedInsomnie;
-
+        this.proposed = proposed;
+        this.voted = voted;
     }
 
     public void setIsLg(int isLg) {
@@ -129,6 +135,16 @@ public class Player {
     public int getUsedInsomnie() {
         return usedInsomnie;
     }
+
+    public int getProposed() {
+        return proposed;
+    }
+
+    public int getVoted() {
+        return voted;
+    }
+    
+    
 
     @Override
     public String toString() {
