@@ -9,6 +9,31 @@
     
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+        <c:choose>
+            <c:when test="${userPlayer.isLg == '1'}"> 
+                Tu es Loup-Garou !
+            </c:when>  
+            <c:otherwise>
+                Tu es Villageois !
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${userPlayer.hasInsomnie == '1'}"> 
+                Tu as comme pouvoir : Insomnie !
+            </c:when>  
+            <c:when test="${userPlayer.hasContamination == '1'}"> 
+                Tu as comme pouvoir : Contamination !
+            </c:when>  
+            <c:when test="${userPlayer.hasVoyance == '1'}"> 
+                Tu as comme pouvoir : Voyance !
+            </c:when>  
+            <c:when test="${userPlayer.hasSpiritisme == '1'}"> 
+                Tu as comme pouvoir : Spiritisme !
+            </c:when>  
+            <c:otherwise>
+                Tu n'as pas de pouvoir...
+            </c:otherwise>
+        </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
         
         <table>
