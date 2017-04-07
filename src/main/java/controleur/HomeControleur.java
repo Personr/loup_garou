@@ -122,7 +122,6 @@ public class HomeControleur extends HttpServlet {
           
             if (playerDAO.ajouterPlayer(username, gameID) && gameDAO.incrementerNbJoueurs(game)) {
                 request.setAttribute("inGame", true);
-                SessionManager.setGameSession(game.getGameId(), request);
                 game.incrNbPlayers();
 //                
 //                modele.Game
@@ -182,8 +181,12 @@ public class HomeControleur extends HttpServlet {
             /* On interroge la base de données pour obtenir la liste des games en cours */
             List<Game> games = gameDAO.getListeGames();
             request.setAttribute("games", games);
+            
             request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
         } else {
+            int gameId = SessionManager.getGameSession(request);
+            Game game = gameDAO.getGame(gameId);
+            request.setAttribute("game", game);
             request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
         }
     }

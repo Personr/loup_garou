@@ -114,7 +114,7 @@ public class GameControleur extends HttpServlet {
         
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
-        Player joueur = playerDAO.getPlayer(username);
+        Player joueur = playerDAO.getPlayer(username, gameId);
         joueur.setIsLg(1);
         
         actionAfficher(request, response, gameDAO);
@@ -133,7 +133,8 @@ public class GameControleur extends HttpServlet {
 
         /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
         String username = request.getParameter("username");
-        Player joueur = playerDAO.getPlayer(username);
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player joueur = playerDAO.getPlayer(username, gameId);
         //modele.Game.ajouterJoueur(username, joueur);
 
         if (joueur.getHasContamination() == 1) {
@@ -152,7 +153,6 @@ public class GameControleur extends HttpServlet {
 //                       mapHumains.put(cle, player);
 //                   }
 //                }
-                int gameId = Integer.parseInt(request.getParameter("gameId")); 
                 List<Player> mapHumains = gameDAO.getGame(gameId).getVillageois();
                 
                 
@@ -216,7 +216,7 @@ public class GameControleur extends HttpServlet {
         int isLg = Integer.parseInt(request.getParameter("isLg"));
         int insomnie = 0;
         String username = request.getParameter("username");
-        Player joueur = playerDAO.getPlayer(username);
+        Player joueur = playerDAO.getPlayer(username, gameId);
 
         insomnie = joueur.getHasInsomnie();
         request.setAttribute("insomnie", insomnie);
@@ -234,10 +234,9 @@ public class GameControleur extends HttpServlet {
             HttpServletResponse response,
             PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
 
-        
-        Game game = (Game) request.getSession().getAttribute("game");
+        int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
         game.startGame(playerDAO, gameDAO);
-        SessionManager.setGameSession(game.getGameId(), request);
         
         actionAfficher(request, response, gameDAO);
     }
