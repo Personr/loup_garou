@@ -276,6 +276,21 @@ public class GameDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
+        
+        // Le jour reprend, on enlève les pouvoirs + les voted, proposed
+        if (newIsDay == 1) {
+            try (
+                    Connection conn = getConn();
+                    PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = 0,"
+                            + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0 where gameID = ? ");) {
+
+                st.setInt(1, gameID);
+                st.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new DAOException("Erreur BD " + e.getMessage(), e);
+            }
+        }
     }
 
     public void deleteGames() {
