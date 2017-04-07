@@ -101,8 +101,7 @@ public class GameControleur extends HttpServlet {
         Player userPlayer = playerDAO.getPlayer(username, gameID);
         
         
-        
-        List<Player> players = playerDAO.getListPlayers(gameID);
+        List<Player> players = playerDAO.getListPlayersProposable(gameID);
         request.setAttribute("playerList", players);
 
         request.setAttribute("userPlayer", userPlayer);
@@ -125,9 +124,9 @@ public class GameControleur extends HttpServlet {
             throws ServletException, IOException {
 
         int userId = Integer.parseInt(request.getParameter("toProposeId"));
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        int gameId = SessionManager.getGameSession(request);
         
-        playerDAO.proposer(userId, gameId);
+        playerDAO.proposer(userId);
         actionAfficher(request, response, gameDAO, playerDAO);
 
     }
