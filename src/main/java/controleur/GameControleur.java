@@ -97,8 +97,11 @@ public class GameControleur extends HttpServlet {
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
         
-        Map<String, Player> players = playerDAO.getMapPlayers(gameID);
-        request.setAttribute("players", players);
+        
+        
+        List<Player> players = playerDAO.getListPlayers(gameID);
+        System.out.println(players);
+        request.setAttribute("playerList", players);
 
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);

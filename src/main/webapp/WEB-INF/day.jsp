@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html; charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
@@ -7,21 +8,21 @@
     </head>
     
     <body>
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+        <h1>T'ES DANS LA GAME nÂ°${gameId}, ${username} !</h1>
         <h2>C'est le jour, il va falloir voter</h2>
         
         <table>
             <tr>
-                <th>Joueur</th>
-                <th><!-- Voter pour lui wallah --></th>
+                <th>Nom</th>
+                <th><!-- Modifier --></th>
             </tr>
-            <c:forEach items="${players}" var="players">
+            <c:forEach items="${playerList}" var="player">
                 <tr>
-                    <td>${players.string}</td><td>${players.string}</td>
-                    <td><a href="controleur?action=getOuvrage&view=modifier&id=${ouvrage.id}">voter pour lui</a></td>
+                    <td>${player.username}</td>
+                    <td><a href="controleur?action=getOuvrage&view=modifier&id=${ouvrage.id}">Voter pour lui</a></td>
                 </tr>
             </c:forEach>
-        </table> 
+        </table>
 
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getChat" />
@@ -34,7 +35,7 @@
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />
-            <input type="submit" name="night" value="Passer à la nuit"/>
+            <input type="submit" name="night" value="Passer Ã  la nuit"/>
         </form>
         ${message}
     </body>
