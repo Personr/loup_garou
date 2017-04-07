@@ -3,7 +3,7 @@ CREATE SEQUENCE messageIdSeq;
 CREATE SEQUENCE gameIdSeq;
 
 CREATE TABLE lgUser (
-       username varchar(100) PRIMARY KEY NOT NULL,
+       usCREATE SEQUENCE playerIdSeq;ername varchar(100) PRIMARY KEY NOT NULL,
        password varchar(100) NOT NULL
 );
 
@@ -60,7 +60,7 @@ CREATE TABLE player (
        		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL,
        proposed int CONSTRAINT proposedValid
        		   CHECK (proposed IN(0, 1)) NOT NULL,
-       voted int NOT NULL
+       voted varchar(100) NOT NULL
 );
 
 CREATE TABLE message (
@@ -70,7 +70,7 @@ CREATE TABLE message (
        username varchar(100) REFERENCES lgUser (username),
        text varchar(300),
        isLG int CONSTRAINT messageIsLGValid
-       		   CHECK (isLG IN(0, 1)) NOT NULL
+       		   CHECK (isLG IN(0, 1, 2)) NOT NULL
 );
 
 

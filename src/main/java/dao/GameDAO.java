@@ -281,7 +281,7 @@ public class GameDAO extends AbstractDataBaseDAO {
         if (newIsDay == 1) {
             try (
                     Connection conn = getConn();
-                    PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = 0,"
+                    PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
                             + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0 where gameID = ? ");) {
 
                 st.setInt(1, gameID);

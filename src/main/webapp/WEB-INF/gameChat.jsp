@@ -30,7 +30,7 @@
 
 
         <c:choose>
-            <c:when test="${isLg == 0 || player.isLg=='1'}"> 
+            <c:when test="${isLg == '0' || player.isLg=='1'}"> 
                 <form method="post" action="gamecontroleur" accept-charset="UTF-8">
                     Nouveau message : <input type="text" name="text"/>
                     <input type="hidden" name="action" value="newMessage" />
