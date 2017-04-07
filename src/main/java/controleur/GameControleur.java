@@ -68,7 +68,7 @@ public class GameControleur extends HttpServlet {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO, playerDAO);
             } else if (action.equals("getGame")) {
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
             } else if (action.equals("activatePower")) {
@@ -89,14 +89,16 @@ public class GameControleur extends HttpServlet {
      * Affiche la page d’accueil d'une game
      */
     private void actionAfficher(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response, GameDAO gameDAO) throws ServletException, IOException {
         //Game game = gameDAO.getGame(Integer.parseInt(request.getParameter("id")));
         //request.setAttribute("game", game);
         String username = SessionManager.getUserSession(request);
-        Game userGame = (Game) SessionManager.getGameSession(request);
+        int gameID = SessionManager.getGameSession(request);
+        Game userGame = gameDAO.getGame(gameID);
 
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
+        request.setAttribute("isDay", userGame.getIsDay());
         request.getRequestDispatcher("/WEB-INF/game.jsp").forward(request, response);
 
     }
@@ -111,7 +113,7 @@ public class GameControleur extends HttpServlet {
         Player joueur = playerDAO.getPlayer(username);
         joueur.setIsLg(1);
         
-        actionAfficher(request, response);
+        actionAfficher(request, response, gameDAO);
         //maintenant il faut contaminer => le username passe de humain a LG
         
         
@@ -160,7 +162,7 @@ public class GameControleur extends HttpServlet {
                 
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de contamination");
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             }
 
             //request.setAttribute("message", "Vous avez activer votre pouvoir de contamination");
@@ -176,7 +178,7 @@ public class GameControleur extends HttpServlet {
                 
                 
                 request.setAttribute("message", "Il fait jour, impossible d utiliser votre pouvoir");
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             }
         } else if (joueur.getHasVoyance() == 1) {
             if (joueur.getUsedVoyance() == 0) {
@@ -184,7 +186,7 @@ public class GameControleur extends HttpServlet {
                 //afficher une liste des joueurs MORT, et peut envoyer un message
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             }
         } else if (joueur.getHasSpiritisme() == 1) {
             if (joueur.getUsedSpiritisme() == 0) {
@@ -192,12 +194,12 @@ public class GameControleur extends HttpServlet {
                 //afficher une liste des joueurs, et peut voir role et pouvoir
             } else {
                 request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             }
         } else {
 
             request.setAttribute("message", "hey vous n avez pas de pouvoir!!!");
-            actionAfficher(request, response);
+            actionAfficher(request, response, gameDAO);
         }
 
     }
@@ -232,9 +234,9 @@ public class GameControleur extends HttpServlet {
         
         Game game = (Game) request.getSession().getAttribute("game");
         game.startGame(playerDAO, gameDAO);
-        SessionManager.setGameSession(game, request);
-
-        actionAfficher(request, response);
+        SessionManager.setGameSession(game.getGameId(), request);
+        
+        actionAfficher(request, response, gameDAO);
     }
 
     /**
@@ -257,10 +259,12 @@ public class GameControleur extends HttpServlet {
         try {
 
             if (action.equals("enterlist")) {
-                actionAfficher(request, response);
+                actionAfficher(request, response, gameDAO);
             } else if (action.equals("newMessage")) {
                 actionNewMessage(request, response, messageDAO, playerDAO);
-
+            } else if (action.equals("changeDayNight")) {
+                actionChangeDayNight(request, response, gameDAO);
+                actionNewMessage(request, response, messageDAO, playerDAO);
             } else if (action.equals("newRafraichir")) {
                 actionNewRafraichir(request, response, messageDAO);
             } else {
@@ -306,6 +310,15 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("messages", messages);
         request.setAttribute("isLg", isLg);
         request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
+    }
+    
+    private void actionChangeDayNight(HttpServletRequest request,
+            HttpServletResponse response,
+            GameDAO gameDAO) throws ServletException, IOException {
+        
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        gameDAO.changeDayNight(gameId);
+        actionAfficher(request, response, gameDAO);
     }
 
 }

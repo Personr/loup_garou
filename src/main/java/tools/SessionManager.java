@@ -5,6 +5,7 @@
  */
 package tools;
 
+import dao.GameDAO;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,14 +29,15 @@ public class SessionManager {
         
     }
     
-    public static void setGameSession(Game game, HttpServletRequest request) {
+    public static void setGameSession(int game, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("game", game);
     }
     
-    public static Game getGameSession(HttpServletRequest request) {
+    public static int getGameSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        return (Game) session.getAttribute("game");
+        int gameID = (int) session.getAttribute("game");
+        return gameID;
     }
     
     public static void checkUserSession(HttpServletRequest request, HttpServletResponse response)

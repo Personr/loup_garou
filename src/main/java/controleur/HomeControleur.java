@@ -119,15 +119,15 @@ public class HomeControleur extends HttpServlet {
             String username = SessionManager.getUserSession(request);
             int gameID = Integer.parseInt(request.getParameter("gameId"));
             Game game = gameDAO.getGame(gameID);
-            
-            if(playerDAO.ajouterPlayer(username,gameID) && gameDAO.incrementerNbJoueurs(game)){
-                request.setAttribute("inGame", true); 
+          
+            if (playerDAO.ajouterPlayer(username, gameID) && gameDAO.incrementerNbJoueurs(game)) {
+                request.setAttribute("inGame", true);
+                SessionManager.setGameSession(game.getGameId(), request);
                 game.incrNbPlayers();
-                SessionManager.setGameSession(game, request);
 //                
 //                modele.Game
-                
-                actionAfficher(request,response,gameDAO);
+
+                actionAfficher(request, response, gameDAO);
                 
                 
             }else{
