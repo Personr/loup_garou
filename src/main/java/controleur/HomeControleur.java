@@ -29,18 +29,40 @@ public class HomeControleur extends HttpServlet {
     @Resource(name = "jdbc/bibliography")
     private DataSource ds;
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void invalidParameters(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/controleurErreur.jsp").forward(request, response);
     }
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @param e
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void erreurBD(HttpServletRequest request,
             HttpServletResponse response, DAOException e)
             throws ServletException, IOException {
         request.setAttribute("erreurMessage", e.getMessage());
         request.getRequestDispatcher("/WEB-INF/bdErreur.jsp").forward(request, response);
     }
-
+    
+    /**
+     * Actions possibles en GET : afficher (correspond à l’absence du param)
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException 
+     */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
@@ -75,6 +97,14 @@ public class HomeControleur extends HttpServlet {
         }
     }
     
+    /**
+     * Affiche la page de creation de partie.
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionCreatePartieAfficher(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
@@ -82,14 +112,15 @@ public class HomeControleur extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/creerpartie.jsp").forward(request, response);
         
     }
-    
+
     private void actionAdminAfficher(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
         
         request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
-        
     }
+    
+    
     private void actionAdminSupprimer(HttpServletRequest request,
         HttpServletResponse response,
         GameDAO gameDAO) throws ServletException, IOException {
@@ -98,25 +129,20 @@ public class HomeControleur extends HttpServlet {
         actionAfficher(request,response,gameDAO);
     }
     
-//    private void actionAttendrePartie(HttpServletRequest request,
-//            HttpServletResponse response,
-//            GameDAO gameDAO) throws ServletException, IOException {
-//        
-//        request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
-//        
-//    }
+
     
+    /**
+     * rajoute le joueur dans la game (si possible!)
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param playerDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionNouveauJoueur(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
-        
-        //on veut mettre a jour la BDD lorsqu'un joueur rentre dans une partie puis le rediriger sur une page d'attente
-        //gameID username
-        //partie -> les proba de pouvoirs 
-        //alive = 1
-        //is LG ?
-        //id -> 
-        
         if(request.getParameter("gameId") != null){
             String username = SessionManager.getUserSession(request);
             int gameID = Integer.parseInt(request.getParameter("gameId"));
@@ -125,8 +151,6 @@ public class HomeControleur extends HttpServlet {
             if (playerDAO.ajouterPlayer(username, gameID) && gameDAO.incrementerNbJoueurs(game)) {
                 request.setAttribute("inGame", true);
                 game.incrNbPlayers();
-//               
-//                modele.Game
                 SessionManager.setGameSession(game.getGameId(), request);
                 actionAfficher(request, response, gameDAO);
                 
@@ -140,14 +164,13 @@ public class HomeControleur extends HttpServlet {
             request.setAttribute("message", "mauvais ID de partie");
             actionAfficher(request,response, gameDAO);
         }
-        
-        
-        
-        
-        
-        
     }
     
+    /**
+     * Actions possibles en POST : ajouter, supprimer, modifier. Une fois
+     * l’action demandée effectuée, on retourne à la page d’accueil avec
+     * actionAfficher(...)
+     */    
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
@@ -177,6 +200,14 @@ public class HomeControleur extends HttpServlet {
         
     }
 
+    /**
+     * affiche la page d'attente ou de jeu (si le joueur est deja dans une game)
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @throws IOException
+     * @throws ServletException 
+     */
     private void actionAfficher(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO)
             throws IOException, ServletException {
         if (request.getAttribute("inGame") == null || !(boolean)request.getAttribute("inGame")) {
@@ -193,6 +224,14 @@ public class HomeControleur extends HttpServlet {
         }
     }
     
+    /**
+     * page avec les règles du jeu
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionSeeRules(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
@@ -200,7 +239,14 @@ public class HomeControleur extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/rules.html").forward(request, response);     
     }
     
-    
+    /**
+     * creer la partie! - verifie que tous les champs sont remplis
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionCreatePartie(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
