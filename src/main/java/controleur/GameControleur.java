@@ -149,23 +149,35 @@ public class GameControleur extends HttpServlet {
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
         Player userPlayer = playerDAO.getPlayer(username, gameID);
-        
-        List<Player> players= playerDAO.getListPlayers(gameID);
-        request.setAttribute("players", players);
-        
-        List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
-        request.setAttribute("proposable", proposable);
-        
-        List<Player> votable = playerDAO.getListPlayersVotable(gameID);
-        request.setAttribute("votable", votable);
-
+              
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
+        System.out.println("bonjour");
+        
+        List<Player> players = playerDAO.getListPlayers(gameID);
+        request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
-            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
-        } else {
+            List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
+            request.setAttribute("proposable", proposable);
+            System.out.println("jour" + proposable);
+
+            List<Player> votable = playerDAO.getListPlayersVotable(gameID);
+            request.setAttribute("votable", votable);
+            System.out.println("jour" + votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+        } else {
+            List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
+            request.setAttribute("lg", lg);
+
+            List<Player> proposable = playerDAO.getListHumansProposable(gameID);
+            request.setAttribute("proposable", proposable);
+            System.out.println("nuit" + proposable);
+
+            List<Player> votable = playerDAO.getListHumansVotable(gameID);
+            request.setAttribute("votable", votable);
+            System.out.println("nuit" + votable);
+            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
 
     }
@@ -311,7 +323,7 @@ public class GameControleur extends HttpServlet {
 
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
-                List<Player> mapHumains = playerDAO.getListPlayersVillageois(gameId);
+                List<Player> mapHumains = playerDAO.getListPlayersRole(gameId, 0);
                 System.out.println(mapHumains);
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("mapHumains", mapHumains);
@@ -458,7 +470,6 @@ public class GameControleur extends HttpServlet {
                 actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO, playerDAO);
-                actionNewMessage(request, response, messageDAO, playerDAO);
             } else {
                 invalidParameters(request, response);
             }
