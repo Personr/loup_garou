@@ -27,7 +27,7 @@ public class MessageDAO extends AbstractDataBaseDAO {
         List<Message> result = new ArrayList<Message>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM message WHERE isLG = ? AND gameID = ? AND dayNb = ? ORDER BY createdAt DESC");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM message WHERE isLG = ? AND gameID = ? AND dayNb = ? ORDER BY createdAt");) {
             st.setInt(1, isLG);
             st.setInt(2, gameId);
             st.setInt(3, dayNb);

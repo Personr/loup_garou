@@ -10,18 +10,21 @@
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} - SPIRITISME!</h1>
 
-            <table>
+        <table>
+            <tr>
+                <th>Liste des Joueurs Morts</th>
+            </tr>
+            <c:forEach items="${joueursMorts}" var="joueur">
                 <tr>
-                    <th>Liste des Joueurs Morts</th>
+                    <td>${joueur.username}</td>
+                    <td><a href="gamecontroleur?action=getSpiritisme&username=${joueur.username}&gameId=${gameId}">Discutez</a></td>
                 </tr>
-                <c:forEach items="${joueursMorts}" var="joueur">
-                    <tr>
-                        <td>${joueur.username}</td>
-                        <td><a href="gamecontroleur?action=getSpiritisme&username=${joueur.username}&gameId=${gameId}">Discutez</a></td>
-                    </tr>
-                </c:forEach>
-            </table>
-            <a href="gamecontroleur?action=getNoSpiritisme&username=${joueur.username}&gameId=${gameId}">Ne pas utiliser mon pouvoir</a>
-            
+            </c:forEach>
+        </table>
+        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="getGame" />
+            <input type="submit" name="annuler" value="Retour"/>
+        </form>  
+
     </body>
 </html>
