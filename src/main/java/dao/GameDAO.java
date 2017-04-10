@@ -304,4 +304,16 @@ public class GameDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 	}
     }
+    
+    public void deleteGame(int gameId) {
+        try (
+	    Connection conn = getConn();
+	    PreparedStatement st = conn.prepareStatement("DELETE FROM game WHERE gameID = ?");) {
+            st.setInt(1, gameId);
+            st.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	}
+    }
 }

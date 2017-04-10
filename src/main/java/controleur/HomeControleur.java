@@ -64,7 +64,9 @@ public class HomeControleur extends HttpServlet {
             } else if (action.equals("admin")) {
                 actionAdminAfficher(request, response, gameDAO);
             } else if (action.equals("supprimerparties")) {
-            actionAdminSupprimer(request, response, gameDAO);
+                actionAdminSupprimer(request, response, gameDAO);
+            } else if (action.equals("startgame")) {
+                actionAfficher(request, response, gameDAO);
             } else {
                 invalidParameters(request, response);
             }
