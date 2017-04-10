@@ -67,7 +67,7 @@ CREATE TABLE player (
        justContaminated int CONSTRAINT justContaminatedValid
        		   CHECK (justContaminated IN(0, 1)) NOT NULL,
        justBitten int CONSTRAINT justBittenValid
-       		   CHECK (justBitten IN(0, 1)) NOT NULL		   
+       		   CHECK (justBitten IN(0, 1)) NOT NULL,		   
 );
 
 CREATE TABLE message (

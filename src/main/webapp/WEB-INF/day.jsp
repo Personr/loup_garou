@@ -8,6 +8,7 @@
     </head>
 
     <body>
+<!--        <embed src="/src/millionday.mp3" autostart="true">-->
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
         <c:choose>
             <c:when test="${userPlayer.isLg == '1'}"> 
@@ -36,7 +37,7 @@
         </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
         
-        <h2>Voivi la liste des joueurs :</h2>
+        <h2>Voici la liste des joueurs :</h2>
         <table>
             <tr>
                 <th>Nom</th>
