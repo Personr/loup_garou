@@ -36,16 +36,18 @@
         </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
         
-        <h2>Voivi la liste des joueurs :</h2>
+        <h2>Voici la liste des joueurs :</h2>
         <table>
             <tr>
                 <th>Nom</th>
                 <th>A vote pour</th>
+                <th>Nb de vote contre lui</th>
             </tr>
             <c:forEach items="${players}" var="player">
                 <tr>
                     <td>${player.username}</td>
                     <td>${player.voted}</td>
+                    <td>${player.nbVotes}</td>
                 </tr>
             </c:forEach>
         </table>

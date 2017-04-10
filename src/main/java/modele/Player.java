@@ -163,6 +163,24 @@ public class Player {
         return contacted;
     }
 
+    public int getNbVotes() {
+        return nbVotes;
+    }
+
+    public int getJustDied() {
+        return justDied;
+    }
+
+    public int getJustContaminated() {
+        return justContaminated;
+    }
+
+    public int getJustBitten() {
+        return justBitten;
+    }
+    
+    
+
     @Override
     public String toString() {
         return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';

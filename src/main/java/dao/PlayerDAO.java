@@ -279,6 +279,29 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET nbVotes = nbVotes + 1 WHERE id = ?");) {
+            
+            st.setInt(1, cibleId);
+
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
+    public void changeVote(int userId, int ancienVoteId) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET nbVotes = nbVotes - 1 WHERE id = ?");) {
+            
+            st.setInt(1, ancienVoteId);
+
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
     }
     
     //0 : pas utilise -> valable pour la nuit
