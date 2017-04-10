@@ -11,23 +11,27 @@
     </head>
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} - VOYANCE!</h1>
-        
-            <table>
+
+        <table>
+            <tr>
+                <th>Liste des Joueurs</th>
+            </tr>
+            <c:forEach items="${mapJoueurs}" var="joueur">
                 <tr>
-                    <th>Liste des Joueurs</th>
+                    <td>${joueur.username}</td>
+                    <td><a href="gamecontroleur?action=getVoyance&username=${joueur.username}&gameId=${gameId}">Voir ses pouvoirs</a></td>
                 </tr>
-                <c:forEach items="${mapJoueurs}" var="joueur">
-                    <tr>
-                        <td>${joueur.username}</td>
-                        <td><a href="gamecontroleur?action=getVoyance&username=${joueur.username}&gameId=${gameId}">Voir ses pouvoirs</a></td>
-                    </tr>
-                </c:forEach>
-            </table>
-            <a href="gamecontroleur?action=getNoVoyance&username=${joueur.username}&gameId=${gameId}">Ne voir personne!</a>            
-            
+            </c:forEach>
+        </table>
+    </form>
+    <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+        <input type="hidden" name="action" value="getGame" />
+        <input type="submit" name="annuler" value="Retour"/>
+    </form>          
 
 
 
-            
-    </body>
+
+
+</body>
 </html>
