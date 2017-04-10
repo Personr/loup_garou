@@ -47,6 +47,13 @@
             <input type="hidden" name="game" value=${game} />
             <input type="submit" name="start" value="Lancer la partie"/>
         </form>               
+            
+        <form method="get" action="homecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="getWaitingGame" />
+            <input type="hidden" name="view" value="aller" />
+            <input type="hidden" name="gameId" value=${gameId} />
+            <input type="submit" name="chat" value="Rafraichir"/>
+        </form>
                 
     </body>
 </html>

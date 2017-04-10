@@ -9,7 +9,38 @@
 
     <body>
 <!--        <embed src="/src/millionday.mp3" autostart="true">-->
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+    <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+    
+    <h2>Resultats de la nuit derniere:</h2>  
+    
+    
+    <c:choose>
+        <c:when test="${userPlayer.justBitten=='1'}"> 
+            <b>${message2}</b><br />
+
+        </c:when>  
+        <c:when test="${userPlayer.justBitten=='0' && bitten == '1'}"> 
+            
+             <b>${message1}</b><br />
+
+        </c:when> 
+        <c:when test="${userPlayer.justContaminated=='1'}"> 
+            
+             <b>${message3}</b><br />
+
+        </c:when>  
+        <c:when test="${userPlayer.justContaminated=='0' && contaminated == '1'}"> 
+            
+             <b>${message4}</b><br />
+             
+        </c:when>  
+        <c:when test="${bitten=='0' && contaminated == '0'}"> 
+            
+             <b>${message5}</b><br />
+
+        </c:when>  
+    </c:choose>  
+        
         <c:choose>
             <c:when test="${userPlayer.isLg == '1'}"> 
                 Tu es Loup-Garou !

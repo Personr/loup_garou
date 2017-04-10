@@ -9,6 +9,27 @@
     <body>
 
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+        
+        <h2>Resultats de la journee derniere:</h2>
+        
+    <c:choose>
+        <c:when test="${userPlayer.justDied=='1'}"> 
+            
+            <b>${message2}</b><br />
+        </c:when>  
+        <c:when test="${userPlayer.justDied=='0' && elim == '1'}"> 
+            
+            <b>${message1}</b><br />
+            
+        </c:when> 
+        <c:when test="${userPlayer.justDied=='0' && elim == '0'}"> 
+            
+            <b>${message3}</b><br />
+            
+        </c:when>  
+    </c:choose>
+        
+        
         <c:choose>
             <c:when test="${userPlayer.isLg == '1'}"> 
                 Tu es Loup-Garou !

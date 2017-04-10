@@ -89,6 +89,9 @@ public class HomeControleur extends HttpServlet {
                 actionAdminSupprimer(request, response, gameDAO);
             } else if (action.equals("startGame")) {
                 actionAfficher(request, response, gameDAO);
+                request.setAttribute("inGame", true);
+            } else if (action.equals("getWaitingGame")) {
+                actionAfficher(request, response, gameDAO);  
             } else {
                 invalidParameters(request, response);
             }
@@ -190,7 +193,7 @@ public class HomeControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO);
             } else if (action.equals("createpartie")) {
                 actionCreatePartie(request, response, gameDAO);
-           
+              
             } else {
                 invalidParameters(request, response);
             }           

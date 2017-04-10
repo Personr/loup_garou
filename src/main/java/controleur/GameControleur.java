@@ -134,7 +134,7 @@ public class GameControleur extends HttpServlet {
     private void actionToDay(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         //actionAfficher(request,response, gameDAO, playerDAO);
         int gameId = Integer.parseInt(request.getParameter("gameId"));
-        gameDAO.startDay(gameId);
+//        gameDAO.startDay(gameId);
         actionAfficher(request,response, gameDAO, playerDAO);
         //request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
     }
@@ -170,6 +170,9 @@ public class GameControleur extends HttpServlet {
         
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
+        
+
+        
         if (userGame.getIsDay() == 1) {
             List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
             request.setAttribute("proposable", proposable);
@@ -190,6 +193,9 @@ public class GameControleur extends HttpServlet {
 
             List<Player> votable = playerDAO.getListHumansVotable(gameID);
             request.setAttribute("votable", votable);
+            System.out.println(request.getAttribute("message1"));
+            System.out.println(request.getAttribute("message3"));
+            System.out.println(request.getAttribute("message4"));
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
 
@@ -581,91 +587,71 @@ public class GameControleur extends HttpServlet {
         
         // On crée le résultat du vote (que ce soit vote de jour où de nuit)
         List<Integer> resultat = gameDAO.depouiller(gameId);
+        //List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
+        //
+        //Player playerdead = null;
         
         if (isDay == 1) {
+            int elim = 0;
             // On commence une nuit
             if (resultat.size() == 1) {
                 // 1 chosen, there is a dead
                 playerDAO.kill(resultat.get(0));
+                request.setAttribute("message1", "Vous avez elimine : " + playerDAO.getPlayerFromId(resultat.get(0)).getUsername()  );
+                request.setAttribute("message2",  playerDAO.getPlayerFromId(resultat.get(0))+", vous venez de vous faire eliminer...");
+                //playerdead = playerDAO.getPlayerFromId(resultat.get(0));
+                elim = 1;
             } else {
                 // nobody chosen or equality -> no dead 
-            }
-            List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
-            int elim = 0;
-            Player playerdead = null;
-            for (Player play : listeMorts) {
-                if (play.getJustDied() == 1) {
-                    request.setAttribute("message1", "Vous avez elimine : " + play.getUsername());
-                    request.setAttribute("message2", play.getUsername() + " vous venez de vous faire eliminer...");
-                    elim = 1;
-                    playerdead = play;
-                    System.out.println("le joueur "+play.getUsername()+" est mort!");
-                }
+                request.setAttribute("message3", "Personne n a ete elimine");
             }
             String userplaying = SessionManager.getUserSession(request);
             Player playerplaying = playerDAO.getPlayer(userplaying, gameId);
-            request.setAttribute("message3", "Personne n a ete elimine");
             request.setAttribute("elim", elim);
             request.setAttribute("userPlayer", playerplaying);
-            request.setAttribute("userDead", playerdead);
-            request.getRequestDispatcher("/WEB-INF/resultatNight.jsp").forward(request, response);
-            
             gameDAO.startNight(gameId);
+            actionAfficher(request, response, gameDAO, playerDAO);
             
+
         } else {
             // We start a day
                         // On commence une journée
+            int bitten = 0; int contaminated = 0;
             if (resultat.size() == 1) {
                 // 1 chosen, there is a person who is now loup-garou
                 playerDAO.mordre(resultat.get(0));
+                request.setAttribute("message1",  playerDAO.getPlayerFromId(resultat.get(0)).getUsername() + " a ete mordu");
+                request.setAttribute("message2", "vous venez de vous faire mordre... Dommage tes mort");
+                bitten = 1;
             } else {
                 // nobody chosen or equality -> no dead 
+
             }
             
-            
-            
             List<Player> listeJoueurs = playerDAO.getListPlayers(gameId);
-            System.out.println(listeJoueurs);
-            int bitten = 0; int contaminated = 0;
-            Player playerBitten = null;
-            Player playerContaminated = null;
-            //Player player
             for (Player play : listeJoueurs) {
-                System.out.println("oui");
-                if (play.getJustBitten() == 1) {
-                    System.out.println("bite");
-                    request.setAttribute("message1", play.getUsername() + " a ete mordu");
-                    request.setAttribute("message2", "vous venez de vous faire mordre... Dommage tes mort");
-                    bitten = 1;
-                    playerBitten = play;
-                    System.out.println("le joueur "+play.getUsername()+" est mordu!");
-                }
-                
                 if (play.getJustContaminated() == 1) {
                     request.setAttribute("message4", play.getUsername() + " a ete contamine");
                     request.setAttribute("message3", " vous venez de vous faire contaminer...");
                     contaminated = 1;
-                    playerContaminated = play;
-                    System.out.println("le joueur "+play.getUsername()+" est contamine!");
                 }
             }
-            
+            if(contaminated == 0 && bitten == 0){
+                request.setAttribute("message5", "Personne de mordu ou de contamine, bien calme tout ça!");
+            }
 
             
             //set les attributs sur les morts , ecrire les messages possibles
             String userplaying2 = SessionManager.getUserSession(request);
             Player playerplaying2 = playerDAO.getPlayer(userplaying2, gameId);
-            request.setAttribute("message5", "Personne de mordu ou de contamine, bien calme tout ça!");
+            
             
             request.setAttribute("bitten", bitten);
             request.setAttribute("contaminated", contaminated);
             request.setAttribute("userPlayer", playerplaying2);
-            request.getRequestDispatcher("/WEB-INF/resultatDay.jsp").forward(request, response);
-            
             gameDAO.startDay(gameId);
-            
+            actionAfficher(request, response, gameDAO, playerDAO);
         }
-        //actionAfficher(request, response, gameDAO, playerDAO);
     }
 
 
