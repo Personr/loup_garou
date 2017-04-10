@@ -507,7 +507,7 @@ public class GameControleur extends HttpServlet {
                 // 1 chosen, there is a dead
                 playerDAO.kill(resultat.get(0));
                 request.setAttribute("message1", "Vous avez elimine : " + playerDAO.getPlayerFromId(resultat.get(0)).getUsername()  );
-                request.setAttribute("message2",  playerDAO.getPlayerFromId(resultat.get(0))+", vous venez de vous faire eliminer...");
+                request.setAttribute("message2",  playerDAO.getPlayerFromId(resultat.get(0)).getUsername() +", vous venez de vous faire eliminer...");
                 //playerdead = playerDAO.getPlayerFromId(resultat.get(0));
                 elim = 1;
             } else {

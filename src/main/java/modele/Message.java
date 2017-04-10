@@ -54,7 +54,8 @@ public class Message {
     
     // retourne l'heure pour afficher dans le chat
     public String getPrettyDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         return format.format(date);
     }
 

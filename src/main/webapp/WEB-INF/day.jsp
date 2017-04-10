@@ -9,7 +9,7 @@
 
     <body>
 <!--        <embed src="/src/millionday.mp3" autostart="true">-->
-    <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
+    <h1>T'ES DANS LA GAME n°${gameId}, ${username} <c:choose><c:when test="${userPlayer.alive == '0'}"> ... mais tu es mort</c:when></c:choose>!</h1>
     
     <h2>Resultats de la nuit derniere:</h2>  
     
@@ -41,31 +41,31 @@
         </c:when>  
     </c:choose>  
         
-        <c:choose>
-            <c:when test="${userPlayer.isLg == '1'}"> 
-                Tu es Loup-Garou !
-            </c:when>  
-            <c:otherwise>
-                Tu es Villageois !
-            </c:otherwise>
-        </c:choose>
-        <c:choose>
-            <c:when test="${userPlayer.hasInsomnie == '1'}"> 
-                Tu as comme pouvoir : Insomnie !
-            </c:when>  
-            <c:when test="${userPlayer.hasContamination == '1'}"> 
-                Tu as comme pouvoir : Contamination !
-            </c:when>  
-            <c:when test="${userPlayer.hasVoyance == '1'}"> 
-                Tu as comme pouvoir : Voyance !
-            </c:when>  
-            <c:when test="${userPlayer.hasSpiritisme == '1'}"> 
-                Tu as comme pouvoir : Spiritisme !
-            </c:when>  
-            <c:otherwise>
-                Tu n'as pas de pouvoir...
-            </c:otherwise>
-        </c:choose>
+    <c:choose>
+        <c:when test="${userPlayer.isLg == '1'}"> 
+            Tu es Loup-Garou !
+        </c:when>  
+        <c:otherwise>
+            Tu es Villageois !
+        </c:otherwise>
+    </c:choose>
+    <c:choose>
+        <c:when test="${userPlayer.hasInsomnie == '1'}"> 
+            Tu as comme pouvoir : Insomnie !
+        </c:when>  
+        <c:when test="${userPlayer.hasContamination == '1'}"> 
+            Tu as comme pouvoir : Contamination !
+        </c:when>  
+        <c:when test="${userPlayer.hasVoyance == '1'}"> 
+            Tu as comme pouvoir : Voyance !
+        </c:when>  
+        <c:when test="${userPlayer.hasSpiritisme == '1'}"> 
+            Tu as comme pouvoir : Spiritisme !
+        </c:when>  
+        <c:otherwise>
+            Tu n'as pas de pouvoir...
+        </c:otherwise>
+    </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
         
         <h2>Voici la liste des joueurs :</h2>
@@ -84,36 +84,45 @@
             </c:forEach>
         </table>
         
+        
+        <c:choose>
+            <c:when test="${userPlayer.alive == '1'}">
+                <h2>Vous pouvez proposer un joueur, en voici la liste :</h2>
 
-        <h2>Vous pouvez proposer un joueur, en voici la liste :</h2>
-
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th><!-- Modifier --></th>
-            </tr>
-            <c:forEach items="${proposable}" var="player">
-                <tr>
-                    <td>${player.username}</td>
-                    <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
-                </tr>
-            </c:forEach>
-        </table>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th><!-- Modifier --></th>
+                    </tr>
+                    <c:forEach items="${proposable}" var="player">
+                        <tr>
+                            <td>${player.username}</td>
+                            <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
 
 
-        <h2>Ou voter pour un joueur, en voici la liste :</h2>
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th><!-- Modifier --></th>
-            </tr>
-            <c:forEach items="${votable}" var="player">
-                <tr>
-                    <td>${player.username}</td>
-                    <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
-                </tr>
-            </c:forEach>
-        </table>
+                <h2>Ou voter pour un joueur, en voici la liste :</h2>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th><!-- Modifier --></th>
+                    </tr>
+                    <c:forEach items="${votable}" var="player">
+                        <tr>
+                            <td>${player.username}</td>
+                            <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
+            <c:when test="${userPlayer.alive == '1'}">
+                Vous ne pouvez pas participer aux votes, vous êtes mort...
+            </c:when>
+        </c:choose>
+        
+
 
         
         
@@ -125,17 +134,22 @@
             <input type="submit" name="chat" value="voir le Chat du village"/>
         </form>
 
+            
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="night" value="Passer à  la nuit"/>
         </form>
-            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+            
+            
+        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getGame" />
             <input type="hidden" name="view" value="aller" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="chat" value="Rafraichir"/>
         </form>
+            
+            
         ${message}
         
         
