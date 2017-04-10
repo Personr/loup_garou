@@ -153,18 +153,15 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        System.out.println("bonjour");
         
         List<Player> players = playerDAO.getListPlayers(gameID);
         request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
             List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
             request.setAttribute("proposable", proposable);
-            System.out.println("jour" + proposable);
 
             List<Player> votable = playerDAO.getListPlayersVotable(gameID);
             request.setAttribute("votable", votable);
-            System.out.println("jour" + votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
         } else {
             List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
@@ -172,11 +169,9 @@ public class GameControleur extends HttpServlet {
 
             List<Player> proposable = playerDAO.getListHumansProposable(gameID);
             request.setAttribute("proposable", proposable);
-            System.out.println("nuit" + proposable);
 
             List<Player> votable = playerDAO.getListHumansVotable(gameID);
             request.setAttribute("votable", votable);
-            System.out.println("nuit" + votable);
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
 
@@ -568,8 +563,8 @@ public class GameControleur extends HttpServlet {
             List<Integer> resultat = gameDAO.depouiller(gameId);
             if (resultat.size() == 1) {
                 // 1 chosen, there is a dead
-                //playerDAO.kill(resultat.get(0));
-                System.out.println(resultat.get(0));
+                playerDAO.kill(resultat.get(0));
+                System.out.println("Tué: " + resultat.get(0));
             } else {
                 // nobody chosen or equality -> no dead 
             }
