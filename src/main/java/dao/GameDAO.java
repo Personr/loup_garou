@@ -40,6 +40,31 @@ public class GameDAO extends AbstractDataBaseDAO {
 	return result;
     }
     
+    /**
+     * Renvoie la liste des parties de la table game.
+     */
+    public List<Game> getListGamesNotStarted() {
+        List<Game> result = new ArrayList<Game>();
+        try (
+	     Connection conn = getConn();
+	     Statement st = conn.createStatement();
+	     ) {
+            ResultSet rs = st.executeQuery("SELECT * FROM game WHERE started = 0 ORDER BY gameID");
+            while (rs.next()) {
+                Game game =
+                    new Game(rs.getInt("gameID"), rs.getInt("minPlayer"), rs.getInt("maxPlayer"), rs.getInt("nbPlayer"), 
+                            rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
+                            rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
+                            rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
+                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
+                result.add(game);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	}
+	return result;
+    }
+    
     public Game getGame(int gameId) {
         Game game;
         try (
