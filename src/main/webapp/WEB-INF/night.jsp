@@ -35,6 +35,66 @@
             </c:otherwise>
         </c:choose>
         <h2>Et la c'est la nuit</h2>
+        
+        <h2>Voivi la liste des joueurs :</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+            </tr>
+            <c:forEach items="${players}" var="player">
+                <tr>
+                    <td>${player.username}</td>
+                </tr>
+            </c:forEach>
+        </table>
+
+        <c:choose>
+            <c:when test="${userPlayer.isLg == '1'}"> 
+                <h2>Comme vous êtes un loup-garou, voici la liste de vos compères :</h2>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th>A vote pour</th>
+                    </tr>
+                    <c:forEach items="${lg}" var="player">
+                        <tr>
+                            <td>${player.username}</td>
+                            <td>${player.voted}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+
+                <h2>Vous pouvez proposer un villageois à tuer, en voici la liste :</h2>
+
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th><!-- Modifier --></th>
+                    </tr>
+                    <c:forEach items="${proposable}" var="player">
+                        <tr>
+                            <td>${player.username}</td>
+                            <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+
+
+                <h2>Ou voter pour tuer un villageois, en voici la liste :</h2>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th><!-- Modifier --></th>
+                    </tr>
+                    <c:forEach items="${votable}" var="player">
+                        <tr>
+                            <td>${player.username}</td>
+                            <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>  
+        </c:choose>
 
         <c:choose>
             <c:when test="${userPlayer.isLg=='1' || userPlayer.hasInsomnie=='1'}"> 
