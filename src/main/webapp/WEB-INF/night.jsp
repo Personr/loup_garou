@@ -83,6 +83,41 @@
         </c:when>  
     </c:choose>
         
+    
+    <c:choose>
+        <c:when test="${userPlayer.justDied=='1'}"> 
+            
+            ${message2}
+<!--            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="testSpiritisme" />
+                <input type="hidden" name="gameId" value=${gameId} />
+                <input type="hidden" name="username" value=${username} />
+                <input type="submit" name="power" value="Un spiritisme vous parle!"/>
+            </form>-->
+        </c:when>  
+        <c:when test="${userPlayer.justDied=='0' && elim == '1'}"> 
+            
+            ${message1}
+<!--            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="testSpiritisme" />
+                <input type="hidden" name="gameId" value=${gameId} />
+                <input type="hidden" name="username" value=${username} />
+                <input type="submit" name="power" value="Un spiritisme vous parle!"/>
+            </form>-->
+        </c:when> 
+        <c:when test="${userPlayer.justDied=='0' && elim == '0'}"> 
+            
+            ${message3}
+<!--            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="testSpiritisme" />
+                <input type="hidden" name="gameId" value=${gameId} />
+                <input type="hidden" name="username" value=${username} />
+                <input type="submit" name="power" value="Un spiritisme vous parle!"/>
+            </form>-->
+        </c:when>  
+    </c:choose>
+    
+    
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />

@@ -540,6 +540,22 @@ public class GameControleur extends HttpServlet {
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
 
         int gameId = Integer.parseInt(request.getParameter("gameId"));
+        List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
+        int elim = 0;
+        for (Player play : listeMorts) {
+            if (play.getJustDied() == 1) {
+                request.setAttribute("message1", "Vous avez elimine : " + play.getUsername());
+                request.setAttribute("message2", play.getUsername()+" vous venez de vous faire eliminer...");
+                elim = 1;
+            }
+        }
+        request.setAttribute("message3", "Personne n a ete elimine");
+        request.setAttribute("elim",elim);
+        
+//        for (String temp : lList) {
+//		System.out.println(temp);
+//	}
+        //request.setAttribute("listeMorts", listeMorts);
         gameDAO.changeDayNight(gameId);
         actionAfficher(request, response, gameDAO, playerDAO);
     }

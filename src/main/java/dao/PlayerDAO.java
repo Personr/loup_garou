@@ -196,15 +196,17 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             st.setString(1, username);
             st.setInt(2, gameId);
             ResultSet rs = st.executeQuery();
-            rs.next();
-            player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                    rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                    rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
-                    rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                    rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
+            if(rs.next()){
+                player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+                        rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+                        rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
+                        rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
+                        rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                    rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));                
+            }
+
         } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
+            throw new DAOException("Erreur BD ahah " + e.getMessage(), e);
         }
         return player;
     }
@@ -290,6 +292,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
 
             st.setInt(1, utilise);
             st.setInt(2, userId);
+            
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
