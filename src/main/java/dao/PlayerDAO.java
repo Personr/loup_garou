@@ -514,7 +514,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
     public void mordre(int userId){
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = 1, justBitten = 1 WHERE id = ?");) {
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET alive = 0, justBitten = 1 WHERE id = ?");) {
 
             st.setInt(1, userId);
             
