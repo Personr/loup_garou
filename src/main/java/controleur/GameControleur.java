@@ -3,17 +3,12 @@ package controleur;
 import dao.DAOException;
 import dao.UserDAO;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
-import modele.User;
 import dao.MessageDAO;
 import dao.GameDAO;
 import dao.PlayerDAO;
@@ -22,9 +17,6 @@ import tools.SessionManager;
 import modele.Message;
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import modele.Player;
 
 /**
@@ -65,7 +57,7 @@ public class GameControleur extends HttpServlet {
 
         try {
             if (action.equals("getChat")) {
-                actionAfficherChat(request, response, messageDAO, playerDAO);
+                actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("proposer")) {
@@ -108,7 +100,8 @@ public class GameControleur extends HttpServlet {
         lancement d'un chat parallele entre le 'player' et le joueur au pouvoir de spiritisme.
         le 'player' est notifié sur la page 'night.jsp' du message.
     */
-    private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+    private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, 
+            GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         
         //String username = request.getParameter("username");
         //int gameId = Integer.parseInt(request.getParameter("gameId"));
@@ -117,13 +110,14 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         String username = request.getParameter("username");
         Player player = playerDAO.getPlayer(username, gameId);
+        Game game = gameDAO.getGame(gameId);
         
         request.setAttribute("player", player);
         
         //on informe le mort qu'il est contacté.
         playerDAO.playerContacted(player.getId());
         
-        List<Message> messages = messageDAO.getListeMessages(2, gameId);
+        List<Message> messages = messageDAO.getListeMessages(2, gameId, game.getDayNb());
 
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
@@ -138,6 +132,9 @@ public class GameControleur extends HttpServlet {
     }
     
     private void actionToDay(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+        //actionAfficher(request,response, gameDAO, playerDAO);
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        gameDAO.startDay(gameId);
         actionAfficher(request,response, gameDAO, playerDAO);
         //request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
     }
@@ -171,7 +168,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
         
-        List<Player> players = playerDAO.getListPlayers(gameID);
+        List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
             List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
@@ -179,7 +176,11 @@ public class GameControleur extends HttpServlet {
 
             List<Player> votable = playerDAO.getListPlayersVotable(gameID);
             request.setAttribute("votable", votable);
+            List<Player> morts = playerDAO.getListPlayersMorts(gameID);
+            request.setAttribute("morts", morts);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+            
+
         } else {
             List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
             request.setAttribute("lg", lg);
@@ -365,7 +366,7 @@ public class GameControleur extends HttpServlet {
                 //Rejoint chatLG2    une copie de chatLG sans barre de chat
                 //request.setAttribute("insomnie", "1");
                 request.setAttribute("pouvoir", "Vous etes invisibles, en mode insomnie");
-                actionAfficherChat(request, response, messageDAO, playerDAO);
+                actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
 
             } else {
 
@@ -420,17 +421,18 @@ public class GameControleur extends HttpServlet {
      */
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
 
         /* On interroge la base de données pour obtenir la liste des messages */
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
         String username = request.getParameter("username");
         Player player = playerDAO.getPlayer(username, gameId);
+        Game game = gameDAO.getGame(gameId);
         
         request.setAttribute("player", player);
 
-        List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
+        List<Message> messages = messageDAO.getListeMessages(isLg, gameId, game.getDayNb());
 
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
@@ -486,7 +488,7 @@ public class GameControleur extends HttpServlet {
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("newMessage")) {
-                actionNewMessage(request, response, messageDAO, playerDAO);
+                actionNewMessage(request, response, messageDAO, playerDAO, gameDAO);
             } else if (action.equals("newMessageSpiritisme")) {
                 actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
@@ -515,18 +517,19 @@ public class GameControleur extends HttpServlet {
      */
     private void actionNewMessage(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
         String username = request.getParameter("username");
         String text = request.getParameter("text");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
-        // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
+        
+        Game game = gameDAO.getGame(gameId);
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
 
-        Message message = new Message(0, gameId, currentDate, username, text, isLg);//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
+        Message message = new Message(0, gameId, currentDate, username, text, isLg, game.getDayNb());   //On considère un insomniaque comme un LG qui ne peut pas écrire
         messageDAO.ajouterMessage(message);
 
-        actionAfficherChat(request, response, messageDAO, playerDAO);
+        actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
     }
     
     
@@ -550,8 +553,9 @@ public class GameControleur extends HttpServlet {
         //int isLg = Integer.parseInt(request.getParameter("isLg"));
         // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+        Game game = gameDAO.getGame(gameId);
 
-        Message message = new Message(0, gameId, currentDate, username, text, 2);//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
+        Message message = new Message(0, gameId, currentDate, username, text, 2, game.getDayNb());//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
         messageDAO.ajouterMessage(message);
 
         actionPouvoirSpiritisme(request, response, 
@@ -574,14 +578,15 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Game gameCourante = gameDAO.getGame(gameId);
         int isDay = gameCourante.getIsDay();
+        
+        // On crée le résultat du vote (que ce soit vote de jour où de nuit)
+        List<Integer> resultat = gameDAO.depouiller(gameId);
+        
         if (isDay == 1) {
-            // We start a night
-            // First, create vote result
-            List<Integer> resultat = gameDAO.depouiller(gameId);
+            // On commence une nuit
             if (resultat.size() == 1) {
                 // 1 chosen, there is a dead
                 playerDAO.kill(resultat.get(0));
-                //System.out.println("Tué: " + resultat.get(0));
             } else {
                 // nobody chosen or equality -> no dead 
             }
@@ -606,12 +611,22 @@ public class GameControleur extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/resultatNight.jsp").forward(request, response);
             
             gameDAO.startNight(gameId);
+            
         } else {
             // We start a day
             
+
+            // On commence une journée
+            if (resultat.size() == 1) {
+                // 1 chosen, there is a person who is know loup-garou
+                playerDAO.mordre(resultat.get(0));
+            } else {
+                // nobody chosen or equality -> no dead 
+            }
+            
             //set les attributs sur les morts , ecrire les messages possibles
             request.getRequestDispatcher("/WEB-INF/resultatDay.jsp").forward(request, response);
-            gameDAO.startDay(gameId);
+            
         }
         //actionAfficher(request, response, gameDAO, playerDAO);
     }

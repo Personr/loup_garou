@@ -11,7 +11,6 @@
     
     <c:choose>
         <c:when test="${userPlayer.justDied=='1'}"> 
-            le joueur s appele : userPlayer.username
             ${message2}
 <!--            <form method="get" action="gamecontroleur" accept-charset="UTF-8">
                 <input type="hidden" name="action" value="testSpiritisme" />
@@ -43,7 +42,7 @@
     </c:choose>
     
     <form method="get" action="gamecontroleur" accept-charset="UTF-8">
-        <input type="hidden" name="action" value="toDay" />
+        <input type="hidden" name="action" value="toNight" />
         <input type="hidden" name="gameId" value=${gameId} />
         <input type="submit" name="night" value="Continuer"/>
     </form>
