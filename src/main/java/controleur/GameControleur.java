@@ -566,7 +566,7 @@ public class GameControleur extends HttpServlet {
         }
     }
     
-    private void actionCheckerFinPartie(HttpServletRequest request,
+    private boolean actionCheckerFinPartie(HttpServletRequest request,
         HttpServletResponse response,
         GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
