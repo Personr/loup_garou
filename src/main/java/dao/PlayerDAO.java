@@ -123,7 +123,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         List<Player> result = new ArrayList<Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 0");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 0 AND alive = 1");) {
             st.setInt(1, gameId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
