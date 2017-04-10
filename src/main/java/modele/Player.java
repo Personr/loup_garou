@@ -57,6 +57,7 @@ public class Player {
         this.justDied = justDied;
         this.justContaminated = justContaminated;
         this.justBitten = justBitten;
+        this.contacted = contacted;
     }
     
     public void setIsLg(int isLg) {
@@ -70,6 +71,34 @@ public class Player {
     public void setHasInsomnie(int hasInsomnie) {
         this.hasInsomnie = hasInsomnie;
     }
+
+
+
+    public void setProposed(int proposed) {
+        this.proposed = proposed;
+    }
+
+    public void setVoted(String voted) {
+        this.voted = voted;
+    }
+
+    public void setNbVotes(int nbVotes) {
+        this.nbVotes = nbVotes;
+    }
+
+    public void setJustDied(int justDied) {
+        this.justDied = justDied;
+    }
+
+    public void setJustContaminated(int justContaminated) {
+        this.justContaminated = justContaminated;
+    }
+
+    public void setJustBitten(int justBitten) {
+        this.justBitten = justBitten;
+    }
+
+
 
     public void setHasVoyance(int hasVoyance) {
         this.hasVoyance = hasVoyance;
@@ -166,7 +195,6 @@ public class Player {
     public int getNbVotes() {
         return nbVotes;
     }
-
     public int getJustDied() {
         return justDied;
     }
@@ -179,8 +207,6 @@ public class Player {
         return justBitten;
     }
     
-    
-
     @Override
     public String toString() {
         return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
