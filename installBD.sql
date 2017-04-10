@@ -60,7 +60,8 @@ CREATE TABLE player (
        		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL,
        proposed int CONSTRAINT proposedValid
        		   CHECK (proposed IN(0, 1)) NOT NULL,
-       voted varchar(100) NOT NULL
+       voted varchar(100) NOT NULL,
+       nbVotes int NOT NULL;
 );
 
 CREATE TABLE message (
