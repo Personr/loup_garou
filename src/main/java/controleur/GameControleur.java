@@ -125,7 +125,7 @@ public class GameControleur extends HttpServlet {
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
         
-        if (actionCheckerFinPartie(request, response, gameDAO, playerDAO)) {
+        if (!actionCheckerFinPartie(request, response, gameDAO, playerDAO)) {
 
             if (userGame.getIsDay() == 1) {
                 List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
@@ -568,6 +568,7 @@ public class GameControleur extends HttpServlet {
         
         int gameId = SessionManager.getGameSession(request);
         boolean check = false;
+        
         if(playerDAO.getListHumans(gameId).isEmpty()){
             request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
             gameDAO.endGame(gameId);
