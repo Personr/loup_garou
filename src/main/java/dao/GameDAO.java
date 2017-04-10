@@ -30,7 +30,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                             rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                             rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                             rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"));
+                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
                 result.add(game);
             }
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                             rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                             rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                             rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"));
+                            rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
             } else {
                 return null;
             }
@@ -120,7 +120,7 @@ public class GameDAO extends AbstractDataBaseDAO {
 //                TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
                 //finished = 0  ; started = 0 
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
-                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay)"
+                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay, dayNb)"
                         + " VALUES ("
                         + " ?,"
                         + " ?, "
@@ -135,7 +135,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " ?, "
                         + " ?, "
-                        + " ?, 1)");) {
+                        + " ?, 1, 1)");) {
             
             
             st.setInt(1, nbJoueursMin);
@@ -277,14 +277,16 @@ public class GameDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
         
-        // Le jour reprend, on enlève les pouvoirs + les voted, proposed
+        // Le jour reprend, on enlève les pouvoirs + les voted, proposed, et on incrémente le numéro de jour
         if (newIsDay == 1) {
+            int dayNb = gameCourante.getDayNb();
             try (
                     Connection conn = getConn();
                     PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
-                            + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0 where gameID = ? ");) {
+                            + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0, dayNb = ? WHERE gameID = ? ");) {
 
                 st.setInt(1, gameID);
+                st.setInt(2, dayNb+1);
                 st.executeUpdate();
 
             } catch (SQLException e) {

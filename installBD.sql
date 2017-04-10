@@ -31,6 +31,7 @@ CREATE TABLE game (
        lgProp float NOT NULL,
        isDay int CONSTRAINT isDayValid 
        		   CHECK (isDay IN(0, 1)) NOT NULL,
+       dayNb int NOT NULL,
        CONSTRAINT maxSuperieurToMin CHECK (maxPlayer >= minPlayer) 
 );
 
@@ -77,7 +78,8 @@ CREATE TABLE message (
        username varchar(100) REFERENCES lgUser (username),
        text varchar(300),
        isLG int CONSTRAINT messageIsLGValid
-       		   CHECK (isLG IN(0, 1, 2)) NOT NULL
+       		   CHECK (isLG IN(0, 1, 2)) NOT NULL,
+       dayNb int NOT NULL
 );
 
 

@@ -41,6 +41,7 @@ public class Game {
     private final float lgProp;
     private final java.sql.Time startTime;  
     private int isDay;
+    private int dayNb;
     
     //liste des objets player de la partie uniquement
     private Map<String, Player> mapJoueurs;
@@ -51,7 +52,7 @@ public class Game {
     public Game(int gameId, int minPlayers, int maxPlayers, int nbPlayers, int started, 
             Time startTime, int finished,
             String creator, Time dayTime, Time nightTime, float pContamination, 
-            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp, int isDay) {
+            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp, int isDay, int dayNb) {
         this.gameId = gameId;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -72,6 +73,7 @@ public class Game {
         this.lg = new ArrayList<Player>();
         this.sansPouvoir = new ArrayList<Player>();
         this.isDay = isDay;
+        this.dayNb = dayNb;
     }
     
     /**
@@ -232,6 +234,10 @@ public class Game {
     
     public void incrNbPlayers() {
         nbPlayers++;
+    }
+
+    public int getDayNb() {
+        return dayNb;
     }
 
     public int getStarted() {

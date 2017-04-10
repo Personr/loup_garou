@@ -19,14 +19,20 @@ public class Message {
     private final String text;
     private final int isLg;
     private final String username;
+    private final int dayNb;
 
-    public Message(int id, int gameId, Date date, String username, String text, int isLg) {
+    public Message(int id, int gameId, Date date, String username, String text, int isLg, int dayNb) {
         this.id = id;
         this.gameId = gameId;
         this.date = date;
         this.text = text;
         this.isLg = isLg;
         this.username = username;
+        this.dayNb = dayNb;
+    }
+
+    public int getDayNb() {
+        return dayNb;
     }
 
     public int getId() {
