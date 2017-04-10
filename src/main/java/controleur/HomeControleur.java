@@ -92,6 +92,7 @@ public class HomeControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO);
                 request.setAttribute("inGame", true);
             } else if (action.equals("getWaitingGame")) {
+                request.setAttribute("inGame", true);
                 actionAfficher(request, response, gameDAO);  
             } else {
                 invalidParameters(request, response);

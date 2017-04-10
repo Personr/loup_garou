@@ -55,6 +55,10 @@
                 </tr>
             </c:forEach>
         </table> 
+        <form method="post" action="homecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="enterlist" />
+            <input type="submit" name="chat" value="Rafraichir"/>
+        </form>
         ${message}
     </body>
 </html>
