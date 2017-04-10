@@ -195,7 +195,6 @@ public class Player {
     public int getNbVotes() {
         return nbVotes;
     }
-    
     public int getJustDied() {
         return justDied;
     }
@@ -207,6 +206,7 @@ public class Player {
     public int getJustBitten() {
         return justBitten;
     }
+    
     @Override
     public String toString() {
         return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';

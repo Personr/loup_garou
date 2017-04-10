@@ -42,11 +42,13 @@
             <tr>
                 <th>Nom</th>
                 <th>A vote pour</th>
+                <th>Nb de vote contre lui</th>
             </tr>
             <c:forEach items="${players}" var="player">
                 <tr>
                     <td>${player.username}</td>
                     <td>${player.voted}</td>
+                    <td>${player.nbVotes}</td>
                 </tr>
             </c:forEach>
         </table>
