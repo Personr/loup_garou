@@ -33,7 +33,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.put(rs.getString("username"), player);
             }
         } catch (SQLException e) {
@@ -58,7 +58,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), 
                                 rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
 
 
                 result.add(player);
@@ -85,7 +85,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"),
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"),
                                 rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
 
                 result.add(player);
             }
@@ -110,7 +110,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
         } catch (SQLException e) {
@@ -123,7 +123,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         List<Player> result = new ArrayList<Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 0");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 0 AND alive = 1");) {
             st.setInt(1, gameId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -133,7 +133,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
         } catch (SQLException e) {
@@ -156,7 +156,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
         } catch (SQLException e) {
@@ -175,8 +175,8 @@ public class PlayerDAO extends AbstractDataBaseDAO {
 	     Connection conn = getConn();
 	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
                      + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, "
-                     + "usedSpiritisme, usedVoyance, usedInsomnie, proposed, voted, nbVotes, justDied, justContaminated, justBitten) "
-                     + "VALUES (?,?,0,1,0,0,0,0,0,0,0,0,0,' ', 0, 0, 0, 0)");) {   
+                     + "usedSpiritisme, usedVoyance, usedInsomnie, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) "
+                     + "VALUES (?,?,0,1,0,0,0,0,0,0,0,0,0,' ', 0, 0, 0, 0, 0)");) {   
             st.setString(1, username);
             st.setInt(2, gameID);
             st.executeUpdate(); 
@@ -202,7 +202,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                     rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
                     rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                     rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
@@ -222,7 +222,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                     rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
                     rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                     rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
@@ -366,5 +366,19 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 	}
     }
+    
+    public void playerContacted(int userId){
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET contacted = 1 WHERE id = ?");) {
+
+            st.setInt(1, userId);
+            
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }        
+    }
+    
 
 }
