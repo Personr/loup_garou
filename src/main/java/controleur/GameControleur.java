@@ -354,6 +354,7 @@ public class GameControleur extends HttpServlet {
             SessionManager.setGameSession(game.getGameId(), request);
             actionAfficher(request, response, gameDAO, playerDAO);
         } else {
+            request.setAttribute("message", "Nombre de joueurs insuffisant");
             request.getRequestDispatcher("homecontroleur").forward(request, response);
         }
     }

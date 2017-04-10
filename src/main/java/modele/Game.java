@@ -93,6 +93,7 @@ public class Game {
             gameDAO.startGame(gameId);
             return true;
         } else {
+            playerDAO.removePlayersFromGame(gameId);
             gameDAO.deleteGame(gameId);
             return false;
         }
