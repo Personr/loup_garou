@@ -3,7 +3,7 @@ CREATE SEQUENCE messageIdSeq;
 CREATE SEQUENCE gameIdSeq;
 
 CREATE TABLE lgUser (
-       usCREATE SEQUENCE playerIdSeq;ername varchar(100) PRIMARY KEY NOT NULL,
+       username varchar(100) PRIMARY KEY NOT NULL,
        password varchar(100) NOT NULL
 );
 
