@@ -18,7 +18,13 @@ public class UserDAO extends AbstractDataBaseDAO {
         super(ds);
     }
     
-    //return false if user already exists
+
+    /**
+     * return false if user already exists
+     * @param username
+     * @param password
+     * @return 
+     */
     public boolean ajouterUser(String username, String password) {
         if (getUser(username) != null || username.length() == 0 || password.length() == 0) {
             return false;
@@ -34,8 +40,12 @@ public class UserDAO extends AbstractDataBaseDAO {
         }
         return true;
     }
-    
-    //return null if user doesn't exist
+   
+    /**
+     * return null if user doesn't exist
+     * @param username
+     * @return 
+     */
     public User getUser(String username) {
         User user = null;
         try (
@@ -54,8 +64,12 @@ public class UserDAO extends AbstractDataBaseDAO {
         }
         return user;
     }
-    
-    //return true if good creditentials
+    /**
+     * return true if good creditentials
+     * @param username
+     * @param password
+     * @return 
+     */
     public boolean verifyUser(String username, String password) {
         try (
                 Connection conn = getConn();
@@ -68,7 +82,11 @@ public class UserDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
-    
+    /**
+     * return le gameId d'un user
+     * @param username
+     * @return 
+     */
     public int getUserGameId(String username) {
         int gameId;
         try (

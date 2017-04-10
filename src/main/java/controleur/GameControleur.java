@@ -50,8 +50,7 @@ public class GameControleur extends HttpServlet {
     }
 
     /**
-     * Actions possibles en GET : afficher (correspond à l’absence du param),
-     * getOuvrage.
+     * Actions possibles en GET : afficher (correspond à l’absence du param)
      */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -100,17 +99,26 @@ public class GameControleur extends HttpServlet {
     }
 
     
+    
+    /*
+        lancement d'un chat parallele entre le 'player' et le joueur au pouvoir de spiritisme.
+        le 'player' est notifié sur la page 'night.jsp' du message.
+    */
     private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
-//        String username = request.getParameter("username");
-//        int gameId = Integer.parseInt(request.getParameter("gameId"));
-//        Player joueur = playerDAO.getPlayer(username, gameId);
+        
+        //String username = request.getParameter("username");
+        //int gameId = Integer.parseInt(request.getParameter("gameId"));
+        //Player joueur = playerDAO.getPlayer(username, gameId);
 
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         String username = request.getParameter("username");
         Player player = playerDAO.getPlayer(username, gameId);
         
         request.setAttribute("player", player);
-
+        
+        //on informe le mort qu'il est contacté.
+        playerDAO.playerContacted(player.getId());
+        
         List<Message> messages = messageDAO.getListeMessages(2, gameId);
 
         request.setAttribute("gameId", gameId);
@@ -118,6 +126,9 @@ public class GameControleur extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/spiritisme.jsp").forward(request, response);
     }
 
+    /**
+        retour a la page d'accueil et annulation de l'action de spiritisme.
+    */
     private void actionPouvoirNoSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         String username = request.getParameter("username");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
@@ -134,33 +145,44 @@ public class GameControleur extends HttpServlet {
     private void actionAfficher(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO) 
             throws ServletException, IOException {
-        //Game game = gameDAO.getGame(Integer.parseInt(request.getParameter("id")));
-        //request.setAttribute("game", game);
         String username = SessionManager.getUserSession(request);
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
         Player userPlayer = playerDAO.getPlayer(username, gameID);
-        
-        List<Player> players= playerDAO.getListPlayers(gameID);
-        request.setAttribute("players", players);
-        
-        List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
-        request.setAttribute("proposable", proposable);
-        
-        List<Player> votable = playerDAO.getListPlayersVotable(gameID);
-        request.setAttribute("votable", votable);
-
+              
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
+        System.out.println("bonjour");
+        
+        List<Player> players = playerDAO.getListPlayers(gameID);
+        request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
-            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
-        } else {
+            List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
+            request.setAttribute("proposable", proposable);
+            System.out.println("jour" + proposable);
+
+            List<Player> votable = playerDAO.getListPlayersVotable(gameID);
+            request.setAttribute("votable", votable);
+            System.out.println("jour" + votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+        } else {
+            List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
+            request.setAttribute("lg", lg);
+
+            List<Player> proposable = playerDAO.getListHumansProposable(gameID);
+            request.setAttribute("proposable", proposable);
+            System.out.println("nuit" + proposable);
+
+            List<Player> votable = playerDAO.getListHumansVotable(gameID);
+            request.setAttribute("votable", votable);
+            System.out.println("nuit" + votable);
+            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
 
     }
     
+   
     /**
      *
      * Propose un joueur au vote
@@ -205,7 +227,17 @@ public class GameControleur extends HttpServlet {
 
     }
     
-
+    /**
+     * 
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param userDAO
+     * @param playerDAO
+     * @param messageDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionPouvoirContamination(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
 
@@ -218,6 +250,17 @@ public class GameControleur extends HttpServlet {
         
     }
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param userDAO
+     * @param playerDAO
+     * @param messageDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionPouvoirNoContamination(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
 
@@ -229,7 +272,17 @@ public class GameControleur extends HttpServlet {
         actionAfficher(request, response, gameDAO, playerDAO);
         
     }    
-    
+    /**
+     * 
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param userDAO
+     * @param playerDAO
+     * @param messageDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionPouvoirVoyance(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         
@@ -239,6 +292,17 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("spieduser", joueur);
         request.getRequestDispatcher("/WEB-INF/voyancePlayer.jsp").forward(request, response);
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param userDAO
+     * @param playerDAO
+     * @param messageDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionPouvoirNoVoyance(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
 
@@ -254,7 +318,8 @@ public class GameControleur extends HttpServlet {
     
     /**
      *
-     * Active le pouvoir du joueur (si possible)
+     * Active le pouvoir du joueur (si possible). Chaque cas redirige vers des action de vues ou d'autres méhodes du gameControler.
+     * 
      */
     private void actionPouvoir(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
@@ -267,7 +332,7 @@ public class GameControleur extends HttpServlet {
 
         if (joueur.getHasContamination() == 1) {
             if (joueur.getUsedContamination() == 0) {
-                List<Player> mapHumains = playerDAO.getListPlayersVillageois(gameId);
+                List<Player> mapHumains = playerDAO.getListPlayersRole(gameId, 0);
                 System.out.println(mapHumains);
                 request.setAttribute("gameId", gameId);
                 request.setAttribute("mapHumains", mapHumains);
@@ -331,7 +396,16 @@ public class GameControleur extends HttpServlet {
         }
 
     }
-
+    
+    /**
+     * Affiche le chat (de base ou loups garous).
+     * @param request
+     * @param response
+     * @param messageDAO
+     * @param playerDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,
             MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
@@ -352,6 +426,16 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("isLg", isLg);
         request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
     }
+    
+    /**
+     * Lance la game!
+     * @param request
+     * @param response
+     * @param playerDAO
+     * @param gameDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
 
     private void actionStartGame(HttpServletRequest request,
             HttpServletResponse response,
@@ -395,7 +479,6 @@ public class GameControleur extends HttpServlet {
                 actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO, playerDAO);
-                actionNewMessage(request, response, messageDAO, playerDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -408,7 +491,16 @@ public class GameControleur extends HttpServlet {
         }
 
     }
-
+   
+    /**
+     * Ajoute le message au chat correspondant!
+     * @param request
+     * @param response
+     * @param messageDAO
+     * @param playerDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionNewMessage(HttpServletRequest request,
             HttpServletResponse response,
             MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
@@ -425,6 +517,18 @@ public class GameControleur extends HttpServlet {
         actionAfficherChat(request, response, messageDAO, playerDAO);
     }
     
+    
+    /**
+     * Ajoute un message au chat de spiritisme. (entre le mort et le player au pouvoir de spritisme).
+     * @param request
+     * @param response
+     * @param messageDAO
+     * @param playerDAO
+     * @param gameDAO
+     * @param userDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionNewMessageSpiritisme(HttpServletRequest request,
             HttpServletResponse response,
             MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
@@ -442,6 +546,15 @@ public class GameControleur extends HttpServlet {
             gameDAO, userDAO, playerDAO, messageDAO);
     }
 
+    /**
+     * change du jour a la nuit
+     * @param request
+     * @param response
+     * @param gameDAO
+     * @param playerDAO
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void actionChangeDayNight(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
