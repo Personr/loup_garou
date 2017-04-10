@@ -16,7 +16,13 @@ public class MessageDAO extends AbstractDataBaseDAO {
     public MessageDAO(DataSource ds) {
         super(ds);
     }
-
+    
+    /**
+     * recupere la liste des messages
+     * @param isLG
+     * @param gameId
+     * @return 
+     */
     public List<Message> getListeMessages(int isLG, int gameId) {
         List<Message> result = new ArrayList<Message>();
         try (
@@ -38,6 +44,10 @@ public class MessageDAO extends AbstractDataBaseDAO {
         return result;
     }
 
+    /**
+     * ajoute un message a la conversation
+     * @param message 
+     */
     public void ajouterMessage(Message message) {
         try (
                 Connection conn = getConn();
@@ -54,6 +64,11 @@ public class MessageDAO extends AbstractDataBaseDAO {
         }
     }
     
+    /**
+     * recupere les messages d'un id correspondant
+     * @param id
+     * @return 
+     */
     public Message getMessage(int id) {
         Message message = null;
         try (

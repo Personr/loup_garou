@@ -74,11 +74,21 @@ public class Game {
         this.isDay = isDay;
     }
     
-    
+    /**
+     * ajoute un joueur a la game
+     * @param username
+     * @param joueur 
+     */
     public void ajouterJoueur(String username, Player joueur) {
         mapJoueurs.put(username, joueur);
     }
 
+    /**
+     * demarre la game
+     * @param playerDAO
+     * @param gameDAO
+     * @return 
+     */
     public boolean startGame(PlayerDAO playerDAO, GameDAO gameDAO) {
         if (nbPlayers >= minPlayers) {
             mapJoueurs = playerDAO.getMapPlayers(gameId);
@@ -99,19 +109,31 @@ public class Game {
         }
     }
     
+    /**
+     * 
+     * @param min
+     * @param max
+     * @return 
+     */
     private int randIntBetween(int min, int max) {
 	Random rand = new Random();
 	int randNb = rand.nextInt(max - min + 1) + min;
 	return randNb;
     }
     
-    
+    /**
+     * 
+     * @return 
+     */
     private float randFloat0_1() {
 	Random rand = new Random();
 	float randNb = (float)rand.nextDouble();
 	return randNb;
     }
-    
+    /**
+     * recupere le nombre de loups garous d une partie
+     * @return 
+     */
     private int getLgNb() {
         int res = (int) ceil(lgProp * nbPlayers);
         if (res == 0) {
@@ -122,6 +144,10 @@ public class Game {
         return res;
     }
     
+    /**
+     * pouvoir contamination
+     * @param playerDAO 
+     */
     private void setContamination(PlayerDAO playerDAO) {
         float seuil = randFloat0_1();
         if (seuil <= pContamination) {
@@ -134,7 +160,10 @@ public class Game {
                     1, player.getHasVoyance(), player.getHasInsomnie(), player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
         }
     }
-    
+    /**
+     * 
+     * @param playerDAO 
+     */
     private void setInsomnie(PlayerDAO playerDAO) {
         float seuil = randFloat0_1();
         if (seuil <= pInsomnie) {

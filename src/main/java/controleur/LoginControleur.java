@@ -128,12 +128,10 @@ public class LoginControleur extends HttpServlet {
     private void actionLogin(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO, GameDAO gameDAO) throws ServletException, IOException {
-        //tester si le login et mdp sont dans la BDD, si oui acceder à l'accueil !!
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
         if (userDAO.verifyUser(username, password)) {
-            //create a session for the user
             SessionManager.setUserSession(username, request);
 
             int userGameId = userDAO.getUserGameId(username);
@@ -151,11 +149,7 @@ public class LoginControleur extends HttpServlet {
                 }
                 dispatcher = request.getRequestDispatcher("homecontroleur");
             }
-            // if (!response.isCommitted()) {
             dispatcher.forward(request, response);
-            // }
-            //request.getRequestDispatcher("/WEB-INF/listeParties.jsp").forward(request, response);
-            //controleurParties.doGet(afficherlistepartie);
         } else {
             actionLoginAfficher(request, response);
         }

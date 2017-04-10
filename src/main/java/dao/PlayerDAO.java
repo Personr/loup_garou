@@ -340,8 +340,11 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
-    //
 
+    /**
+     * transforme en loup garou l'user id
+     * @param userId 
+     */
     public void transformerLoupGarou(int userId) {
         try (
                 Connection conn = getConn();
@@ -355,6 +358,10 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         }
     }
     
+    /**
+     * enleve les joueurs de la game
+     * @param gameId 
+     */
     public void removePlayersFromGame(int gameId) {
         try (
 	    Connection conn = getConn();
@@ -367,6 +374,10 @@ public class PlayerDAO extends AbstractDataBaseDAO {
 	}
     }
     
+    /**
+     * informe le joueur qu'il a été contacté
+     * @param userId 
+     */
     public void playerContacted(int userId){
         try (
                 Connection conn = getConn();
