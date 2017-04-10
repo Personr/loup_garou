@@ -614,18 +614,55 @@ public class GameControleur extends HttpServlet {
             
         } else {
             // We start a day
-            
-
-            // On commence une journée
+                        // On commence une journée
             if (resultat.size() == 1) {
-                // 1 chosen, there is a person who is know loup-garou
+                // 1 chosen, there is a person who is now loup-garou
                 playerDAO.mordre(resultat.get(0));
             } else {
                 // nobody chosen or equality -> no dead 
             }
             
+            
+            
+            List<Player> listeJoueurs = playerDAO.getListPlayers(gameId);
+            System.out.println(listeJoueurs);
+            int bitten = 0; int contaminated = 0;
+            Player playerBitten = null;
+            Player playerContaminated = null;
+            //Player player
+            for (Player play : listeJoueurs) {
+                System.out.println("oui");
+                if (play.getJustBitten() == 1) {
+                    System.out.println("bite");
+                    request.setAttribute("message1", play.getUsername() + " a ete mordu");
+                    request.setAttribute("message2", "vous venez de vous faire mordre... Dommage tes mort");
+                    bitten = 1;
+                    playerBitten = play;
+                    System.out.println("le joueur "+play.getUsername()+" est mordu!");
+                }
+                
+                if (play.getJustContaminated() == 1) {
+                    request.setAttribute("message4", play.getUsername() + " a ete contamine");
+                    request.setAttribute("message3", " vous venez de vous faire contaminer...");
+                    contaminated = 1;
+                    playerContaminated = play;
+                    System.out.println("le joueur "+play.getUsername()+" est contamine!");
+                }
+            }
+            
+
+            
             //set les attributs sur les morts , ecrire les messages possibles
+            String userplaying2 = SessionManager.getUserSession(request);
+            Player playerplaying2 = playerDAO.getPlayer(userplaying2, gameId);
+            request.setAttribute("message5", "Personne de mordu ou de contamine, bien calme tout ça!");
+            
+            request.setAttribute("bitten", bitten);
+            request.setAttribute("contaminated", contaminated);
+            request.setAttribute("userPlayer", playerplaying2);
             request.getRequestDispatcher("/WEB-INF/resultatDay.jsp").forward(request, response);
+            
+            gameDAO.startDay(gameId);
             
         }
         //actionAfficher(request, response, gameDAO, playerDAO);
