@@ -32,11 +32,12 @@ public class Player {
     private int justDied;
     private int justContaminated;
     private int justBitten;
+    private int contacted;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
             int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
-            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten) {
+            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten, int contacted) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -94,6 +95,10 @@ public class Player {
         this.usedInsomnie = usedInsomnie;
     }
 
+    public void setContacted(int contacted){
+        this.contacted=contacted;
+    }
+        
     public int getId() {
         return id;
     }
@@ -154,7 +159,9 @@ public class Player {
         return voted;
     }
     
-    
+    public int getContacted() {
+        return contacted;
+    }
 
     @Override
     public String toString() {
