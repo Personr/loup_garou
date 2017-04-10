@@ -569,7 +569,8 @@ public class GameControleur extends HttpServlet {
     private boolean actionCheckerFinPartie(HttpServletRequest request,
         HttpServletResponse response,
         GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        
+        int gameId = SessionManager.getGameSession(request);
         boolean check = false;
         if(playerDAO.getListHumans(gameId).isEmpty()){
             request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
