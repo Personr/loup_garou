@@ -71,7 +71,7 @@ public class GameControleur extends HttpServlet {
             } else if (action.equals("proposer")) {
                 actionProposer(request, response, gameDAO, playerDAO);
             } else if (action.equals("voter")) {
-                actionVoter(request, response, gameDAO, playerDAO);
+                actionVoter(request, response, gameDAO, playerDAO, -1);
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
             } else if (action.equals("activatePower")) {
@@ -155,18 +155,15 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        System.out.println("bonjour");
         
         List<Player> players = playerDAO.getListPlayers(gameID);
         request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
             List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
             request.setAttribute("proposable", proposable);
-            System.out.println("jour" + proposable);
 
             List<Player> votable = playerDAO.getListPlayersVotable(gameID);
             request.setAttribute("votable", votable);
-            System.out.println("jour" + votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
         } else {
             List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
@@ -174,11 +171,9 @@ public class GameControleur extends HttpServlet {
 
             List<Player> proposable = playerDAO.getListHumansProposable(gameID);
             request.setAttribute("proposable", proposable);
-            System.out.println("nuit" + proposable);
 
             List<Player> votable = playerDAO.getListHumansVotable(gameID);
             request.setAttribute("votable", votable);
-            System.out.println("nuit" + votable);
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
 
@@ -194,9 +189,8 @@ public class GameControleur extends HttpServlet {
             throws ServletException, IOException {
 
         int userId = Integer.parseInt(request.getParameter("toProposeId"));
-        
         playerDAO.proposer(userId);
-        actionAfficher(request, response, gameDAO, playerDAO);
+        actionVoter(request, response, gameDAO, playerDAO, userId);
 
     }
     
@@ -205,17 +199,27 @@ public class GameControleur extends HttpServlet {
      * Vote pour un joueur
      */
     private void actionVoter(HttpServletRequest request,
-            HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO)
+            HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO, int cibleId)
             throws ServletException, IOException {
 
-        int cibleId = Integer.parseInt(request.getParameter("toVoteId"));
+        if (cibleId == -1) {
+            cibleId = Integer.parseInt(request.getParameter("toVoteId"));
+        }
         String username = SessionManager.getUserSession(request);
         int gameId = SessionManager.getGameSession(request);
         Player player = playerDAO.getPlayer(username, gameId);
         int userId = player.getId();
         
-        
-        playerDAO.voter(userId, cibleId);
+        // On récupère l'ancien vote
+        String voted = player.getVoted();
+        if (voted.equals(" ")) {
+            // n'avait pas voté
+            playerDAO.voter(userId, cibleId);
+        } else {
+            int ancienVoteId = playerDAO.getPlayer(voted, gameId).getId();
+            playerDAO.changeVote(userId, ancienVoteId);
+            playerDAO.voter(userId, cibleId);
+        }
         actionAfficher(request, response, gameDAO, playerDAO);
 
     }
@@ -556,7 +560,35 @@ public class GameControleur extends HttpServlet {
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
 
         int gameId = Integer.parseInt(request.getParameter("gameId"));
-        gameDAO.changeDayNight(gameId);
+        Game gameCourante = gameDAO.getGame(gameId);
+        int isDay = gameCourante.getIsDay();
+        if (isDay == 1) {
+            // We start a night
+            // First, create vote result
+            List<Integer> resultat = gameDAO.depouiller(gameId);
+            if (resultat.size() == 1) {
+                // 1 chosen, there is a dead
+                playerDAO.kill(resultat.get(0));
+                System.out.println("Tué: " + resultat.get(0));
+            } else {
+                // nobody chosen or equality -> no dead 
+            }
+            List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
+            int elim = 0;
+            for (Player play : listeMorts) {
+                if (play.getJustDied() == 1) {
+                    request.setAttribute("message1", "Vous avez elimine : " + play.getUsername());
+                    request.setAttribute("message2", play.getUsername() + " vous venez de vous faire eliminer...");
+                    elim = 1;
+                }
+            }
+            request.setAttribute("message3", "Personne n a ete elimine");
+            request.setAttribute("elim", elim);
+            gameDAO.startNight(gameId);
+        } else {
+            // We start a day
+            gameDAO.startDay(gameId);
+        }
         actionAfficher(request, response, gameDAO, playerDAO);
     }
 

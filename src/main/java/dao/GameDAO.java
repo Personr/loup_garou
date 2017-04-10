@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 import modele.Ouvrage;
 import modele.Game;
+import modele.Player;
 import tools.SessionManager;
 
 public class GameDAO extends AbstractDataBaseDAO {
@@ -260,38 +261,75 @@ public class GameDAO extends AbstractDataBaseDAO {
         return true;
     }
     
-    public void changeDayNight(int gameID) {
+    public void startDay(int gameID) {
         Game gameCourante = getGame(gameID);
-        int isDay = gameCourante.getIsDay();
-        int newIsDay = 1 - isDay;
-
+        int dayNb = gameCourante.getDayNb();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE game SET isDay = ? where gameID = ? ");) {
+                PreparedStatement st = conn.prepareStatement("UPDATE game SET isDay = 1, dayNb = ? where gameID = ? ");) {
+            st.setInt(1, dayNb+1);
+            st.setInt(2, gameID);           
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        // Le jour reprend, on remet à 0 les bons paramètres 
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
+                        + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0,"
+                        + "contacted = 0, nbVotes = 0, justDied = 0 WHERE gameID = ? ");) {
 
-            st.setInt(1, newIsDay);
-            st.setInt(2, gameID);
+            st.setInt(1, gameID);           
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+
+    }
+    
+    public void startNight(int gameID) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE game SET isDay = 0 where gameID = ? ");) {
+
+            st.setInt(1, gameID);
             st.executeUpdate();
 
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
-        
-        // Le jour reprend, on enlève les pouvoirs + les voted, proposed, et on incrémente le numéro de jour
-        if (newIsDay == 1) {
-            int dayNb = gameCourante.getDayNb();
-            try (
-                    Connection conn = getConn();
-                    PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
-                            + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0, dayNb = ? WHERE gameID = ? ");) {
+        // La nuit reprend, on remet à 0 les bons paramètres 
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
+                        + "nbVotes = 0, justBitten = 0, justContaminated = 0 where gameID = ? ");) {
 
-                st.setInt(1, gameID);
-                st.setInt(2, dayNb+1);
-                st.executeUpdate();
+            st.setInt(1, gameID);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
+    
+    public List<Integer> depouiller(int gameID) {
+        List<Integer> result = new ArrayList<>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT id FROM player "
+                        + "WHERE gameId = ? "
+                        + "AND nbVotes = (SELECT max(nbVotes) from player where gameId = ?)");) {
+            st.setInt(1, gameID);
+            st.setInt(2, gameID);
 
-            } catch (SQLException e) {
-                throw new DAOException("Erreur BD " + e.getMessage(), e);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int playerID = rs.getInt("id");
+                result.add(playerID);
             }
+            return result;
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
         }
     }
 
