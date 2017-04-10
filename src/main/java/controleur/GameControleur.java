@@ -147,6 +147,8 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
+        List<Player> morts = playerDAO.getListPlayersMorts(gameID);
+        request.setAttribute("morts", morts);
         
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
@@ -158,8 +160,6 @@ public class GameControleur extends HttpServlet {
             request.setAttribute("votable", votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
             
-            List<Player> morts = playerDAO.getListPlayersMorts(gameID);
-            request.setAttribute("morts", morts);
         } else {
             List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
             request.setAttribute("lg", lg);

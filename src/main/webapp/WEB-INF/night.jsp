@@ -192,5 +192,18 @@
             <input type="submit" name="chat" value="Rafraichir"/>
         </form>
         ${message}
+        
+        <h2>Voici la liste des joueurs morts, restez en paix :</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+            </tr>
+            <c:forEach items="${morts}" var="mort">
+                <tr>
+                    <td>${mort.username}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        
     </body>
 </html>
