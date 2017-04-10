@@ -29,11 +29,14 @@ public class Player {
     private int proposed;
     private String voted;
     private int nbVotes;
+    private int justDied;
+    private int justContaminated;
+    private int justBitten;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
             int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
-            int proposed, String voted, int nbVotes) {
+            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -50,6 +53,9 @@ public class Player {
         this.proposed = proposed;
         this.voted = voted;
         this.nbVotes = nbVotes;
+        this.justDied = justDied;
+        this.justContaminated = justContaminated;
+        this.justBitten = justBitten;
     }
     
     public void setIsLg(int isLg) {

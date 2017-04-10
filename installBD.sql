@@ -61,7 +61,13 @@ CREATE TABLE player (
        proposed int CONSTRAINT proposedValid
        		   CHECK (proposed IN(0, 1)) NOT NULL,
        voted varchar(100) NOT NULL,
-       nbVotes int NOT NULL;
+       nbVotes int NOT NULL,
+       justDied int CONSTRAINT justDiedValid
+       		   CHECK (justDied IN(0, 1)) NOT NULL,
+       justContaminated int CONSTRAINT justContaminatedValid
+       		   CHECK (justContaminated IN(0, 1)) NOT NULL,
+       justBitten int CONSTRAINT justBittenValid
+       		   CHECK (justBitten IN(0, 1)) NOT NULL		   
 );
 
 CREATE TABLE message (
