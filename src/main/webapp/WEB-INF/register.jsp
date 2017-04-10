@@ -6,7 +6,7 @@
     <title>JEU LOUP GAROU</title>
  </head>
   <body>
-    <h1>Création d'un nouveau compte</h1>
+    <h1>Creation d'un nouveau compte</h1>
     <p>
       <form method="post" action="loginControleur" accept-charset="UTF-8">
 	Pseudo : <input type="text" name="username"><br/>
