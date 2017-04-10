@@ -184,17 +184,12 @@
                 </form>
             </c:when>  
         </c:choose>
-
-
-
-
-        <c:when test="${isCreator == '1'}">
-            <form method="post" action="gamecontroleur" accept-charset="UTF-8">
-                <input type="hidden" name="action" value="changeDayNight" />
-                <input type="hidden" name="gameId" value=${gameId} />
-                <input type="submit" name="night" value="Passer au jour"/>
-            </form>
-        </c:when>
+        
+        <form method="post" action="gamecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="changeDayNight" />
+            <input type="hidden" name="gameId" value=${gameId} />
+            <input type="submit" name="night" value="Passer au jour"/>
+        </form>
 
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getGame" />

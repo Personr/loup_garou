@@ -122,10 +122,6 @@
             </c:when>
         </c:choose>
 
-
-
-
-
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getChat" />
             <input type="hidden" name="gameId" value=${gameId} />
@@ -133,15 +129,13 @@
             <input type="hidden" name="isLg" value=0 />
             <input type="submit" name="chat" value="voir le Chat du village"/>
         </form>
-
-
-        <c:when test="${isCreator == '1'}">
-            <form method="post" action="gamecontroleur" accept-charset="UTF-8">
-                <input type="hidden" name="action" value="changeDayNight" />
-                <input type="hidden" name="gameId" value=${gameId} />
-                <input type="submit" name="night" value="Passer à  la nuit"/>
-            </form>
-        </c:when>
+            
+        
+        <form method="post" action="gamecontroleur" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="changeDayNight" />
+            <input type="hidden" name="gameId" value=${gameId} />
+            <input type="submit" name="night" value="Passer à  la nuit"/>
+        </form>
 
 
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
