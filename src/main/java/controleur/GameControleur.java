@@ -500,12 +500,15 @@ public class GameControleur extends HttpServlet {
         //
         //Player playerdead = null;
         
+        actionCheckerFinPartie(request,response,gameDAO, playerDAO);
+        
         if (isDay == 1) {
             int elim = 0;
             // On commence une nuit
             if (resultat.size() == 1) {
                 // 1 chosen, there is a dead
                 playerDAO.kill(resultat.get(0));
+                
                 request.setAttribute("message1", "Vous avez elimine : " + playerDAO.getPlayerFromId(resultat.get(0)).getUsername()  );
                 request.setAttribute("message2",  playerDAO.getPlayerFromId(resultat.get(0)).getUsername() +", vous venez de vous faire eliminer...");
                 //playerdead = playerDAO.getPlayerFromId(resultat.get(0));
@@ -562,7 +565,19 @@ public class GameControleur extends HttpServlet {
             actionAfficher(request, response, gameDAO, playerDAO);
         }
     }
-
+    
+    private void actionCheckerFinPartie(HttpServletRequest request,
+        HttpServletResponse response,
+        GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        if(playerDAO.getListHumans(gameId).isEmpty()){
+            request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
+        }else if (playerDAO.getListLG(gameId).isEmpty()){
+            request.getRequestDispatcher("/WEB-INF/villageoiswin.jsp").forward(request, response);
+        }
+        gameDAO.endGame(gameId);
+        
+    }
 
 
 }
