@@ -582,7 +582,7 @@ public class GameControleur extends HttpServlet {
         }else{
             check = false;
         }
-        
+        return check;
         
     }
 
