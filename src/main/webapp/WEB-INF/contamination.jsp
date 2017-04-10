@@ -9,18 +9,6 @@
     </head>
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} - CONTAMINATION!</h1>
-        
-
-<!--                        <input type="hidden" name="action" value="getContamination" />
-                        <input type="hidden" name="username" value=${joueur.username} />
-                        <input type="hidden" name="gameId" value=${gameId} />
-                        <input type="submit" name="contamine" value="Contaminer!"/>-->
-
-                        
-
-        
-        
-        
             <table>
                 <tr>
                     <th>Liste des Villageois</th>

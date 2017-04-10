@@ -9,6 +9,7 @@
     </head>
 
     <body>
+<!--        <embed src="/src/millionday.mp3" autostart="true">-->
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} !</h1>
         <c:choose>
             <c:when test="${userPlayer.isLg == '1'}"> 
@@ -97,7 +98,7 @@
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="changeDayNight" />
             <input type="hidden" name="gameId" value=${gameId} />
-            <input type="submit" name="night" value="Passer Ã  la nuit"/>
+            <input type="submit" name="night" value="Passer à  la nuit"/>
         </form>
             <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getGame" />
@@ -113,9 +114,9 @@
             <tr>
                 <th>Nom</th>
             </tr>
-            <c:forEach items="${morts}" var="player">
+            <c:forEach items="${morts}" var="mort">
                 <tr>
-                    <td>${player.username}</td>
+                    <td>${mort.username}</td>
                 </tr>
             </c:forEach>
         </table>
