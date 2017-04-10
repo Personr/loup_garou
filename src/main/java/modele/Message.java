@@ -6,6 +6,7 @@
 package modele;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -49,6 +50,12 @@ public class Message {
 
     public Date getDate() {
         return date;
+    }
+    
+    // retourne l'heure pour afficher dans le chat
+    public String getPrettyDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
     }
 
     public String getText() {

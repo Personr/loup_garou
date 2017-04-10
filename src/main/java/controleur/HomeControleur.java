@@ -17,6 +17,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.Ouvrage;
 import modele.Game;
+import modele.Player;
 import tools.SessionManager;
 /**
  *
@@ -143,10 +144,21 @@ public class HomeControleur extends HttpServlet {
     private void actionNouveauJoueur(HttpServletRequest request,
             HttpServletResponse response,
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
-        if(request.getParameter("gameId") != null){
+        
+        if (request.getParameter("gameId") != null) {
+            
             String username = SessionManager.getUserSession(request);
             int gameID = Integer.parseInt(request.getParameter("gameId"));
             Game game = gameDAO.getGame(gameID);
+            
+            Player player = playerDAO.getPlayer(username, gameID);
+            if (player != null) {
+                // le joueur est déjà dans la partie
+                request.setAttribute("inGame", true);
+                SessionManager.setGameSession(game.getGameId(), request);
+                actionAfficher(request,response, gameDAO);
+                return;
+            }
           
             if (playerDAO.ajouterPlayer(username, gameID) && gameDAO.incrementerNbJoueurs(game)) {
                 request.setAttribute("inGame", true);
@@ -155,12 +167,12 @@ public class HomeControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO);
                 
                 
-            }else{
+            } else {
                 request.setAttribute("message", "trop de joueurs");
                 actionAfficher(request,response, gameDAO);
             }
             
-        }else{
+        } else {
             request.setAttribute("message", "mauvais ID de partie");
             actionAfficher(request,response, gameDAO);
         }
@@ -212,7 +224,7 @@ public class HomeControleur extends HttpServlet {
             throws IOException, ServletException {
         if (request.getAttribute("inGame") == null || !(boolean)request.getAttribute("inGame")) {
             /* On interroge la base de données pour obtenir la liste des games en cours */
-            List<Game> games = gameDAO.getListeGames();
+            List<Game> games = gameDAO.getListGamesNotStarted();
             request.setAttribute("games", games);
             
             request.getRequestDispatcher("/WEB-INF/listeGames.jsp").forward(request, response);
