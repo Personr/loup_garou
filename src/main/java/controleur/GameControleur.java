@@ -3,17 +3,12 @@ package controleur;
 import dao.DAOException;
 import dao.UserDAO;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
-import modele.User;
 import dao.MessageDAO;
 import dao.GameDAO;
 import dao.PlayerDAO;
@@ -22,9 +17,6 @@ import tools.SessionManager;
 import modele.Message;
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import modele.Player;
 
 /**
@@ -154,7 +146,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
         
-        List<Player> players = playerDAO.getListPlayers(gameID);
+        List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
         if (userGame.getIsDay() == 1) {
             List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
@@ -163,6 +155,9 @@ public class GameControleur extends HttpServlet {
             List<Player> votable = playerDAO.getListPlayersVotable(gameID);
             request.setAttribute("votable", votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+            
+            List<Player> morts = playerDAO.getListPlayersMorts(gameID);
+            request.setAttribute("morts", morts);
         } else {
             List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
             request.setAttribute("lg", lg);
@@ -557,14 +552,15 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         Game gameCourante = gameDAO.getGame(gameId);
         int isDay = gameCourante.getIsDay();
+        
+        // On crée le résultat du vote (que ce soit vote de jour où de nuit)
+        List<Integer> resultat = gameDAO.depouiller(gameId);
+        
         if (isDay == 1) {
-            // We start a night
-            // First, create vote result
-            List<Integer> resultat = gameDAO.depouiller(gameId);
+            // On commence une nuit
             if (resultat.size() == 1) {
                 // 1 chosen, there is a dead
                 playerDAO.kill(resultat.get(0));
-                System.out.println("Tué: " + resultat.get(0));
             } else {
                 // nobody chosen or equality -> no dead 
             }
@@ -580,8 +576,15 @@ public class GameControleur extends HttpServlet {
             request.setAttribute("message3", "Personne n a ete elimine");
             request.setAttribute("elim", elim);
             gameDAO.startNight(gameId);
+            
         } else {
-            // We start a day
+            // On commence une journée
+            if (resultat.size() == 1) {
+                // 1 chosen, there is a person who is know loup-garou
+                playerDAO.mordre(resultat.get(0));
+            } else {
+                // nobody chosen or equality -> no dead 
+            }
             gameDAO.startDay(gameId);
         }
         actionAfficher(request, response, gameDAO, playerDAO);

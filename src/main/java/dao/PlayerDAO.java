@@ -69,6 +69,32 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
     
+    public List<Player> getListPlayersAlive(int gameId) {
+        List<Player> result = new ArrayList<Player>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND alive = 1");) {
+            st.setInt(1, gameId);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Player player
+                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+                                rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
+                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), 
+                                rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
+
+
+                result.add(player);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+        return result;
+    }
+    
     
     public List<Player> getListPlayersMorts(int gameId) {
         List<Player> result = new ArrayList<Player>();
@@ -472,6 +498,23 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("UPDATE player SET alive = 0, justDied = 1 WHERE id = ?");) {
+
+            st.setInt(1, userId);
+            
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }        
+    }
+    
+    /**
+     * "mord" un joueur -> le convertit en loup-garou
+     * @param userId 
+     */
+    public void mordre(int userId){
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = 1, justBitten = 1 WHERE id = ?");) {
 
             st.setInt(1, userId);
             
