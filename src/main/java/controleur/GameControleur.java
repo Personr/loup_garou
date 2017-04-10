@@ -438,7 +438,13 @@ public class GameControleur extends HttpServlet {
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
 
         int gameId = Integer.parseInt(request.getParameter("gameId"));
-        gameDAO.changeDayNight(gameId);
+        Game gameCourante = gameDAO.getGame(gameId);
+        int isDay = gameCourante.getIsDay();
+        if (isDay == 1) {
+            gameDAO.changeDayNight(gameId);
+        } else {
+            gameDAO.changeDayNight(gameId);
+        }
         actionAfficher(request, response, gameDAO, playerDAO);
     }
 
