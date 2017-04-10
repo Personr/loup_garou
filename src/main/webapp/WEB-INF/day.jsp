@@ -3,6 +3,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
+        <link href="styles.css" media="all" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="styles.css" />	
         <title>T'ES DANS LE GAME !</title>
     </head>
