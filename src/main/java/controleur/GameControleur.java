@@ -120,34 +120,35 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("username", username);
         List<Player> morts = playerDAO.getListPlayersMorts(gameID);
         request.setAttribute("morts", morts);
+        request.setAttribute("isCreator", '1');
         
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
         
-        if (actionCheckerFinPartie(request, response, gameDAO, playerDAO)) {
+        actionCheckerFinPartie(request, response, gameDAO, playerDAO);
 
-            if (userGame.getIsDay() == 1) {
-                List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
-                request.setAttribute("proposable", proposable);
+        if (userGame.getIsDay() == 1) {
+            List<Player> proposable = playerDAO.getListPlayersProposable(gameID);
+            request.setAttribute("proposable", proposable);
 
-                List<Player> votable = playerDAO.getListPlayersVotable(gameID);
-                request.setAttribute("votable", votable);
-                request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
-            } else {
-                List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
-                request.setAttribute("lg", lg);
+            List<Player> votable = playerDAO.getListPlayersVotable(gameID);
+            request.setAttribute("votable", votable);
+            request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
+        } else {
+            List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
+            request.setAttribute("lg", lg);
 
-                List<Player> proposable = playerDAO.getListHumansProposable(gameID);
-                request.setAttribute("proposable", proposable);
+            List<Player> proposable = playerDAO.getListHumansProposable(gameID);
+            request.setAttribute("proposable", proposable);
 
-                List<Player> votable = playerDAO.getListHumansVotable(gameID);
-                request.setAttribute("votable", votable);
-                System.out.println(request.getAttribute("message1"));
-                System.out.println(request.getAttribute("message3"));
-                System.out.println(request.getAttribute("message4"));
-                request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
-            }
+            List<Player> votable = playerDAO.getListHumansVotable(gameID);
+            request.setAttribute("votable", votable);
+            System.out.println(request.getAttribute("message1"));
+            System.out.println(request.getAttribute("message3"));
+            System.out.println(request.getAttribute("message4"));
+            request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
+        
     }
     
    
@@ -496,11 +497,6 @@ public class GameControleur extends HttpServlet {
         
         // On crée le résultat du vote (que ce soit vote de jour où de nuit)
         List<Integer> resultat = gameDAO.depouiller(gameId);
-        //List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
-        //
-        //Player playerdead = null;
-        
-
         
         if (isDay == 1) {
             int elim = 0;
@@ -566,24 +562,19 @@ public class GameControleur extends HttpServlet {
         }
     }
     
-    private boolean actionCheckerFinPartie(HttpServletRequest request,
+    private void actionCheckerFinPartie(HttpServletRequest request,
         HttpServletResponse response,
         GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
         
         int gameId = SessionManager.getGameSession(request);
-        boolean check = false;
-        if(playerDAO.getListHumans(gameId).isEmpty()){
+        List<Player> humans = playerDAO.getListHumans(gameId);
+        if(humans.isEmpty()){
             request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
             gameDAO.endGame(gameId);
-            check = true;
         }else if (playerDAO.getListLG(gameId).isEmpty()){
             request.getRequestDispatcher("/WEB-INF/villageoiswin.jsp").forward(request, response);
-            check = true;
             gameDAO.endGame(gameId);
-        }else{
-            check = false;
         }
-        return check;
         
     }
 

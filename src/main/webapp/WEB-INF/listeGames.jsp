@@ -19,10 +19,6 @@
             <input type="hidden" name="action" value="seerules" />
         </form>
         
-        <form method="get" action="homecontroleur" accept-charset="UTF-8">
-            <button type="submit">BOUTONS POUR LES ADMINS</button>
-            <input type="hidden" name="action" value="admin" />
-        </form>
                 
         <table>
             <tr>
