@@ -57,7 +57,7 @@ public class GameControleur extends HttpServlet {
 
         try {
             if (action.equals("getChat")) {
-                actionAfficherChat(request, response, messageDAO, playerDAO);
+                actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
             } else if (action.equals("getGame")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("proposer")) {
@@ -96,7 +96,8 @@ public class GameControleur extends HttpServlet {
         lancement d'un chat parallele entre le 'player' et le joueur au pouvoir de spiritisme.
         le 'player' est notifié sur la page 'night.jsp' du message.
     */
-    private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+    private void actionPouvoirSpiritisme(HttpServletRequest request, HttpServletResponse response, 
+            GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
         
         //String username = request.getParameter("username");
         //int gameId = Integer.parseInt(request.getParameter("gameId"));
@@ -105,13 +106,14 @@ public class GameControleur extends HttpServlet {
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         String username = request.getParameter("username");
         Player player = playerDAO.getPlayer(username, gameId);
+        Game game = gameDAO.getGame(gameId);
         
         request.setAttribute("player", player);
         
         //on informe le mort qu'il est contacté.
         playerDAO.playerContacted(player.getId());
         
-        List<Message> messages = messageDAO.getListeMessages(2, gameId);
+        List<Message> messages = messageDAO.getListeMessages(2, gameId, game.getDayNb());
 
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
@@ -343,7 +345,7 @@ public class GameControleur extends HttpServlet {
                 //Rejoint chatLG2    une copie de chatLG sans barre de chat
                 //request.setAttribute("insomnie", "1");
                 request.setAttribute("pouvoir", "Vous etes invisibles, en mode insomnie");
-                actionAfficherChat(request, response, messageDAO, playerDAO);
+                actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
 
             } else {
 
@@ -398,17 +400,18 @@ public class GameControleur extends HttpServlet {
      */
     private void actionAfficherChat(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
 
         /* On interroge la base de données pour obtenir la liste des messages */
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
         String username = request.getParameter("username");
         Player player = playerDAO.getPlayer(username, gameId);
+        Game game = gameDAO.getGame(gameId);
         
         request.setAttribute("player", player);
 
-        List<Message> messages = messageDAO.getListeMessages(isLg, gameId);
+        List<Message> messages = messageDAO.getListeMessages(isLg, gameId, game.getDayNb());
 
         request.setAttribute("gameId", gameId);
         request.setAttribute("messages", messages);
@@ -464,7 +467,7 @@ public class GameControleur extends HttpServlet {
             if (action.equals("enterlist")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("newMessage")) {
-                actionNewMessage(request, response, messageDAO, playerDAO);
+                actionNewMessage(request, response, messageDAO, playerDAO, gameDAO);
             } else if (action.equals("newMessageSpiritisme")) {
                 actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
@@ -493,18 +496,19 @@ public class GameControleur extends HttpServlet {
      */
     private void actionNewMessage(HttpServletRequest request,
             HttpServletResponse response,
-            MessageDAO messageDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
         String username = request.getParameter("username");
         String text = request.getParameter("text");
         int gameId = Integer.parseInt(request.getParameter("gameId"));
         int isLg = Integer.parseInt(request.getParameter("isLg"));
-        // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
+        
+        Game game = gameDAO.getGame(gameId);
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
 
-        Message message = new Message(0, gameId, currentDate, username, text, isLg);//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
+        Message message = new Message(0, gameId, currentDate, username, text, isLg, game.getDayNb());   //On considère un insomniaque comme un LG qui ne peut pas écrire
         messageDAO.ajouterMessage(message);
 
-        actionAfficherChat(request, response, messageDAO, playerDAO);
+        actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
     }
     
     
@@ -528,8 +532,9 @@ public class GameControleur extends HttpServlet {
         //int isLg = Integer.parseInt(request.getParameter("isLg"));
         // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+        Game game = gameDAO.getGame(gameId);
 
-        Message message = new Message(0, gameId, currentDate, username, text, 2);//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
+        Message message = new Message(0, gameId, currentDate, username, text, 2, game.getDayNb());//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
         messageDAO.ajouterMessage(message);
 
         actionPouvoirSpiritisme(request, response, 
