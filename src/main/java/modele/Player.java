@@ -28,11 +28,12 @@ public class Player {
     private int usedInsomnie;
     private int proposed;
     private String voted;
+    private int nbVotes;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
             int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
-            int proposed, String voted) {
+            int proposed, String voted, int nbVotes) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -48,6 +49,7 @@ public class Player {
         this.usedInsomnie = usedInsomnie;
         this.proposed = proposed;
         this.voted = voted;
+        this.nbVotes = nbVotes;
     }
     
     public void setIsLg(int isLg) {
