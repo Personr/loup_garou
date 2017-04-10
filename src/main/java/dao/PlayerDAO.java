@@ -157,7 +157,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
         } catch (SQLException e) {
@@ -203,7 +203,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
                                 rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
                                 rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"));
+                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
         } catch (SQLException e) {
