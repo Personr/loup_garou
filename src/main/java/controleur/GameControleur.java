@@ -497,11 +497,6 @@ public class GameControleur extends HttpServlet {
         
         // On crée le résultat du vote (que ce soit vote de jour où de nuit)
         List<Integer> resultat = gameDAO.depouiller(gameId);
-        //List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
-        //
-        //Player playerdead = null;
-        
-
         
         if (isDay == 1) {
             int elim = 0;
