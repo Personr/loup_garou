@@ -78,18 +78,25 @@ public class Game {
     public void ajouterJoueur(String username, Player joueur) {
         mapJoueurs.put(username, joueur);
     }
-    
-    public void startGame(PlayerDAO playerDAO, GameDAO gameDAO) {
-        mapJoueurs = playerDAO.getMapPlayers(gameId);
-        
-        setRoles(playerDAO);
-        setContamination(playerDAO);
-        setInsomnie(playerDAO);
-        setVoyance(playerDAO);
-        setSpiritisme(playerDAO);
-        
-        started = 1;
-        gameDAO.startGame(gameId);
+
+    public boolean startGame(PlayerDAO playerDAO, GameDAO gameDAO) {
+        if (nbPlayers >= minPlayers) {
+            mapJoueurs = playerDAO.getMapPlayers(gameId);
+
+            setRoles(playerDAO);
+            setContamination(playerDAO);
+            setInsomnie(playerDAO);
+            setVoyance(playerDAO);
+            setSpiritisme(playerDAO);
+
+            started = 1;
+            gameDAO.startGame(gameId);
+            return true;
+        } else {
+            playerDAO.removePlayersFromGame(gameId);
+            gameDAO.deleteGame(gameId);
+            return false;
+        }
     }
     
     private int randIntBetween(int min, int max) {
@@ -140,30 +147,32 @@ public class Game {
                     player.getHasContamination(), player.getHasVoyance(), 1, player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
         }
     }
-    
+
     private void setVoyance(PlayerDAO playerDAO) {
         float seuil = randFloat0_1();
         if (seuil <= pVoyance) {
-
-            int indice = randIntBetween(0, sansPouvoir.size() - 1);
-            Player player = sansPouvoir.get(indice);
-            sansPouvoir.remove(indice);
-            player.setHasVoyance(1);
-            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(), 
-                    player.getHasContamination(), 1, player.getHasInsomnie(), player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+            if (sansPouvoir.size() > 0) {
+                int indice = randIntBetween(0, sansPouvoir.size() - 1);
+                Player player = sansPouvoir.get(indice);
+                sansPouvoir.remove(indice);
+                player.setHasVoyance(1);
+                playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(),
+                        player.getHasContamination(), 1, player.getHasInsomnie(), player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+            }
         }
     }
     
     private void setSpiritisme(PlayerDAO playerDAO) {
         float seuil = randFloat0_1();
         if (seuil <= pSpiritisme) {
-
-            int indice = randIntBetween(0, sansPouvoir.size() - 1);
-            Player player = sansPouvoir.get(indice);
-            sansPouvoir.remove(indice);
-            player.setHasSpiritisme(1);
-            playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(), 
-                    player.getHasContamination(), player.getHasVoyance(), player.getHasInsomnie(), 1, player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+            if (sansPouvoir.size() > 0) {
+                int indice = randIntBetween(0, sansPouvoir.size() - 1);
+                Player player = sansPouvoir.get(indice);
+                sansPouvoir.remove(indice);
+                player.setHasSpiritisme(1);
+                playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(),
+                        player.getHasContamination(), player.getHasVoyance(), player.getHasInsomnie(), 1, player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+            }
         }
     }
     

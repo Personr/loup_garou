@@ -350,10 +350,13 @@ public class GameControleur extends HttpServlet {
 
         int gameID = SessionManager.getGameSession(request);
         Game game = gameDAO.getGame(gameID);
-        game.startGame(playerDAO, gameDAO);
-        SessionManager.setGameSession(game.getGameId(), request);
-
-        actionAfficher(request, response, gameDAO, playerDAO);
+        if (game != null && game.startGame(playerDAO, gameDAO)) {
+            SessionManager.setGameSession(game.getGameId(), request);
+            actionAfficher(request, response, gameDAO, playerDAO);
+        } else {
+            request.setAttribute("message", "Nombre de joueurs insuffisant");
+            request.getRequestDispatcher("homecontroleur").forward(request, response);
+        }
     }
 
     /**
