@@ -120,6 +120,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("username", username);
         List<Player> morts = playerDAO.getListPlayersMorts(gameID);
         request.setAttribute("morts", morts);
+        request.setAttribute("isCreator", '1');
         
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
