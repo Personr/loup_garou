@@ -296,6 +296,7 @@ public class HomeControleur extends HttpServlet {
         } else {
             int nbJoueursMin = Integer.parseInt(request.getParameter("nombre_participants_min"));
             int nbJoueursMax = Integer.parseInt(request.getParameter("nombre_participants_max"));
+            int isManual = Integer.parseInt(request.getParameter("Automatique"));
             
             String dayDebut = request.getParameter("dl"); 
             
@@ -312,7 +313,7 @@ public class HomeControleur extends HttpServlet {
             String creator = SessionManager.getUserSession(request);
             
             if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, heureJour, heureNuit, debut, 
-                    creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous, dayDebut)){
+                    creator, pContamination, pSpiritisme, pVoyance, pInsomnie, proportionLoupsGarous, dayDebut, isManual)){
                 request.setAttribute("message", "Partie bien crée!");
                 actionAfficher(request, response,gameDAO);
             } else {

@@ -43,6 +43,7 @@ public class Game {
     private final java.sql.Time startTime;  
     private int isDay;
     private int dayNb;
+    private int isManual;
     
     //liste des objets player de la partie uniquement
     private Map<String, Player> mapJoueurs;
@@ -53,7 +54,7 @@ public class Game {
     public Game(int gameId, int minPlayers, int maxPlayers, int nbPlayers, int started, 
             Time startTime, int finished,
             String creator, Time dayTime, Time nightTime, float pContamination, 
-            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp, int isDay, int dayNb) {
+            float pInsomnie, float pVoyance, float pSpiritisme, float lgProp, int isDay, int dayNb, int isManual) {
         this.gameId = gameId;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -75,6 +76,7 @@ public class Game {
         this.sansPouvoir = new ArrayList<Player>();
         this.isDay = isDay;
         this.dayNb = dayNb;
+        this.isManual = isManual;
     }
     
     public boolean isVoteOver(GameDAO gameDAO) {

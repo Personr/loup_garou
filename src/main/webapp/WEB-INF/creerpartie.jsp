@@ -28,8 +28,8 @@
 
             <p>
                 <label for="Lancement">Lancement de partie et changement jour / nuit :</label>
-                <input type="radio" name="Automatique" value="A" checked="checked" /> Automatique
-                <input type="radio" name="Automatique" value="M" /> Manuel <br />
+                <input type="radio" name="Automatique" value=0 checked="checked" /> Automatique
+                <input type="radio" name="Automatique" value=1 /> Manuel <br />
             </p>
             
              <p>

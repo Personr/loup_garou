@@ -32,7 +32,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                                 rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                                 rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                                 rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                                rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
+                                rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"), rs.getInt("isManual"));
                 result.add(game);
             }
         } catch (SQLException e) {
@@ -56,7 +56,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                                 rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                                 rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                                 rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                                rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
+                                rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"), rs.getInt("isManual"));
                 result.add(game);
             }
         } catch (SQLException e) {
@@ -77,7 +77,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         rs.getInt("started"), rs.getTime("startTime"), rs.getInt("finished"),
                         rs.getString("creator"), rs.getTime("dayTime"), rs.getTime("nightTime"),
                         rs.getFloat("pContamination"), rs.getFloat("pVoyance"), rs.getFloat("pInsomnie"),
-                        rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"));
+                        rs.getFloat("pSpiritisme"), rs.getFloat("lgProp"), rs.getInt("isDay"), rs.getInt("dayNb"), rs.getInt("isManual"));
             } else {
                 return null;
             }
@@ -131,7 +131,7 @@ public class GameDAO extends AbstractDataBaseDAO {
      * @return 
      */
     public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, String heureJour, String heureNuit, String horaireDebutPartie, 
-            String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous, String dayDebut) {
+            String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous, String dayDebut, int isManual) {
         
         if (nbJoueursMin < 2 || nbJoueursMin > 20
                 ||  nbJoueursMax > 20 || nbJoueursMax < nbJoueursMin
@@ -142,7 +142,7 @@ public class GameDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
-                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay, dayNb)"
+                        + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay, dayNb, isManual)"
                         + " VALUES ("
                         + " ?,"
                         + " ?, "
@@ -157,7 +157,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " ?, "
                         + " ?, "
-                        + " ?, 1, 1)");) {
+                        + " ?, 1, 1, ?)");) {
 
             
             //12-04-2017 08:00:00
@@ -222,6 +222,7 @@ public class GameDAO extends AbstractDataBaseDAO {
             st.setFloat(9, pInsomnie);
             st.setFloat(10, pSpiritisme);
             st.setFloat(11, proportionLoupsGarous);
+            st.setInt(12, isManual);
 
             st.executeUpdate();
 
