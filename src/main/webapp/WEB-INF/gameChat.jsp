@@ -55,7 +55,7 @@
             <input type="hidden" name="action" value="getGame" />
             <input type="hidden" name="view" value="aller" />
             <input type="hidden" name="gameId" value=${gameId} />
-            <input type="submit" name="chat" value="Retour à la partie"/>
+            <input type="submit" name="chat" value="Retour partie"/>
         </form>
     </body>
     ${pouvoir}

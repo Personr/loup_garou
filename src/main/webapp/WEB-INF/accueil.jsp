@@ -2,18 +2,21 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />	
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <!--<link rel="stylesheet" type="text/css" href="./src/main/webapp/styles.css" />/>-->	
         <title>Accueil - Jeu</title>
     </head>
-    <body  background="images/village_grand.jpg"        >
+    <body>
 
-        <h2>Identification</h2>
+        <h1>Identification</h1>
 
 
 
 
         <form method="get" action="loginControleur" accept-charset="UTF-8">
-            <button type="submit">J'ai un compte je m'identifie</button>
+            
+                <button type="submit" style="width: 300px; height: 100px ">J'ai un compte je m'identifie</button>
+            
             <input type="hidden" name="action" value="login" />
             <input type="hidden" name="message" value="" />
             <!--<input type="submit" name="Login" />-->
@@ -21,7 +24,7 @@
 
         <form method="get" action="loginControleur" accept-charset="UTF-8">
             <div class="bouton">
-                <button type="submit">Je cree mon compte</button>
+                <button type="submit" style="width: 300px; height: 100px ">Je cree mon compte"</button>
             </div>
             <input type="hidden" name="action" value="compte" />
             <input type="hidden" name="message" value="" />

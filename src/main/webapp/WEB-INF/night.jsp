@@ -58,8 +58,9 @@
         </c:choose>
 
         <h2>Et la c'est la nuit</h2>
+        <div id="colonne1">
 
-        <h2>Voivi la liste des joueurs :</h2>
+        <h2>Voici la liste des joueurs :</h2>
         <table>
             <tr>
                 <th>Nom</th>
@@ -91,7 +92,8 @@
                                 </tr>
                             </c:forEach>
                         </table>
-
+        </div>
+             <div id="colonne2">
                         <h2>Vous pouvez proposer un villageois à tuer, en voici la liste :</h2>
 
                         <table>
@@ -124,6 +126,7 @@
                     </c:when>
 
                 </c:choose>
+</div>
 
                 <c:choose>
                     <c:when test="${(userPlayer.hasVoyance=='1' || userPlayer.hasContamination=='1' || 

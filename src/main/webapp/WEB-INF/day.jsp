@@ -4,7 +4,8 @@
     <head>
         <meta charset="UTF-8" />
         <link href="styles.css" media="all" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />	
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+
         <title>T'ES DANS LE GAME !</title>
     </head>
 
@@ -64,66 +65,86 @@
         </c:choose>
         <h2>C'est le jour, il va falloir voter</h2>
 
-        <h2>Voici la liste des joueurs :</h2>
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th>A vote pour</th>
-                <th>Nb de vote contre lui</th>
-            </tr>
-            <c:forEach items="${players}" var="player">
-                <tr>
-                    <td>${player.username}</td>
-                    <td>${player.voted}</td>
-                    <td>${player.nbVotes}</td>
+
+        <div id="colonne1">
+             <h2>Voici la liste des joueurs :</h2>
+            <table>
+                   <tr>
+                    <th>Nom</th>
+                    <th>A vote pour</th>
+                    <th>Nb de vote contre lui</th>
                 </tr>
-            </c:forEach>
-        </table>
-
-
-        <c:choose>
-            <c:when test="${userPlayer.alive == '1'}">
-                <h2>Vous pouvez proposer un joueur, en voici la liste :</h2>
-
-                <table>
+                <c:forEach items="${players}" var="player">
                     <tr>
-                        <th>Nom</th>
-                        <th><!-- Modifier --></th>
+                        <td>${player.username}</td>
+                        <td>${player.voted}</td>
+                        <td>${player.nbVotes}</td>
                     </tr>
-                    <c:forEach items="${proposable}" var="player">
-                        <tr>
-                            <td>${player.username}</td>
-                            <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
-                        </tr>
-                    </c:forEach>
-                </table>
-
-
-                <h2>Ou voter pour un joueur, en voici la liste :</h2>
-                <table>
+                </c:forEach>
+            </table>
+       
+             <h2>Voici la liste des joueurs morts:</h2>  
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Role</th>
+                    <th>Pouvoir</th>
+                </tr>
+                <c:forEach items="${morts}" var="mort">
                     <tr>
-                        <th>Nom</th>
-                        <th><!-- Modifier --></th>
+                        <td>${mort.username}</td>
+                        <td>${mort.getRole()}</td>
+                        <td>${mort.getPouvoir()}</td>
                     </tr>
-                    <c:forEach items="${votable}" var="player">
+                </c:forEach>
+            </table>
+        </div>
+             <div id="colonne2">
+            <c:choose>
+                <c:when test="${userPlayer.alive == '1'}">
+                    <h2>Vous pouvez proposer un joueur, en voici la liste :</h2>
+
+                    <table>
                         <tr>
-                            <td>${player.username}</td>
-                            <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
+                            <th>Nom</th>
+                            <th><!-- Modifier --></th>
                         </tr>
-                    </c:forEach>
-                </table>
+                        <c:forEach items="${proposable}" var="player">
+                            <tr>
+                                <td>${player.username}</td>
+                                <td><a href="gamecontroleur?action=proposer&toProposeId=${player.id}">Proposer au vote</a></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+
+
+                    <h2>Ou voter pour un joueur, en voici la liste :</h2>
+                    <table>
+                        <tr>
+                            <th>Nom</th>
+                            <th><!-- Modifier --></th>
+                        </tr>
+                        <c:forEach items="${votable}" var="player">
+                            <tr>
+                                <td>${player.username}</td>
+                                <td><a href="gamecontroleur?action=voter&toVoteId=${player.id}">Voter pour lui</a></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+
             </c:when>
             <c:when test="${userPlayer.alive == '1'}">
                 Vous ne pouvez pas participer aux votes, vous êtes mort...
             </c:when>
         </c:choose>
-
+</div>
+        <div id="colonnebas">
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getChat" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="hidden" name="username" value=${username} />
             <input type="hidden" name="isLg" value=0 />
-            <input type="submit" name="chat" value="voir le Chat du village"/>
+            <input type="submit" name="chat" value="Chat village"/>
         </form>
 
         <c:choose>
@@ -131,7 +152,7 @@
                 <form method="post" action="gamecontroleur" accept-charset="UTF-8">
                     <input type="hidden" name="action" value="changeDayNight" />
                     <input type="hidden" name="gameId" value=${gameId} />
-                    <input type="submit" name="night" value="Passer à  la nuit"/>
+                    <input type="submit" name="night" value="Passer à la nuit"/>
                 </form>
             </c:when>  
         </c:choose>
@@ -146,23 +167,8 @@
 
         ${message}
 
-
-        <h2>Voici la liste des joueurs morts, reposez en paix :</h2>
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th>Role</th>
-                <th>Pouvoir</th>
-            </tr>
-            <c:forEach items="${morts}" var="mort">
-                <tr>
-                    <td>${mort.username}</td>
-                    <td>${mort.getRole()}</td>
-                    <td>${mort.getPouvoir()}</td>
-                </tr>
-            </c:forEach>
-        </table>
-
+           </div>
+     
 
     </body>
 </html>
