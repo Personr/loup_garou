@@ -150,7 +150,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " 0, "
                         + " 0, "
-                        + " TO_DATE('01-02-2003 13:30:28','DD-MM-YYYY HH24:MI:SS'), "
+                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
                         + " 0, "
                         + " ?, "
                         + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
@@ -168,14 +168,10 @@ public class GameDAO extends AbstractDataBaseDAO {
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
             String current = format.format(currentDate);
             
-            System.out.println("Date courante: " + current);
-            
             String Date = current + " ";
             String horaireDebut= "";
 
             horaireDebut= Date + horaireDebutPartie + ":00";
-            System.out.println("Horaire début: " + horaireDebut);
-            horaireDebut = "01-04-2017 18:00:00";
             st.setString(3, horaireDebut);
             
             String horaireJour = Date + heureJour +":00";
@@ -274,7 +270,7 @@ public class GameDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
-                        + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0,"
+                        + "usedPower = 0,"
                         + "contacted = 0, nbVotes = 0, justDied = 0 WHERE gameID = ? ");) {
 
             st.setInt(1, gameID);           

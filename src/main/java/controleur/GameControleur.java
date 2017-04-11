@@ -69,15 +69,13 @@ public class GameControleur extends HttpServlet {
             } else if (action.equals("startGame")) {
                 actionStartGame(request, response, playerDAO, gameDAO);
             } else if (action.equals("activatePower")) {
-                actionPouvoir(request, response, gameDAO, userDAO, playerDAO, messageDAO);
+                actionPouvoir(request, response, playerDAO);
             } else if (action.equals("getContamination")) {
                 actionPouvoirContamination(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getVoyance")) {
                 actionPouvoirVoyance(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("getSpiritisme")) {
                 actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
-            } else if (action.equals("testSpiritisme")) {
-                actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);   
             } else {
                 invalidParameters(request, response);
             }
@@ -104,7 +102,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        List<Player> morts = playerDAO.getListPlayersMorts(gameID);
+        List<Player> morts = playerDAO.getListPlayers(gameID, 0); //dead okayers
         request.setAttribute("morts", morts);
       
         if (userPlayer.getUsername().equals(userGame.getCreator())) {
@@ -113,7 +111,7 @@ public class GameControleur extends HttpServlet {
             request.setAttribute("isCreator", 0);
         }
         
-        List<Player> players = playerDAO.getListPlayersAlive(gameID);
+        List<Player> players = playerDAO.getListPlayers(gameID, 1); //alive players
         request.setAttribute("players", players);
         
         actionCheckerFinPartie(request, response, gameDAO, playerDAO);
@@ -126,17 +124,14 @@ public class GameControleur extends HttpServlet {
             request.setAttribute("votable", votable);
             request.getRequestDispatcher("/WEB-INF/day.jsp").forward(request, response);
         } else {
-            List<Player> lg = playerDAO.getListPlayersRole(gameID, 1);
+            List<Player> lg = playerDAO.getListPlayersRole(gameID, 1, 1); //alive lg
             request.setAttribute("lg", lg);
 
             List<Player> proposable = playerDAO.getListHumansProposable(gameID);
             request.setAttribute("proposable", proposable);
 
-            List<Player> votable = playerDAO.getListHumansVotable(gameID);
+            List<Player> votable = playerDAO.getListPlayersVotable(gameID); //proposed players
             request.setAttribute("votable", votable);
-            System.out.println(request.getAttribute("message1"));
-            System.out.println(request.getAttribute("message3"));
-            System.out.println(request.getAttribute("message4"));
             request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
         }
         
@@ -201,11 +196,11 @@ public class GameControleur extends HttpServlet {
         Player calledPlayer = playerDAO.getPlayer(calledUsername, gameId);
         Game game = gameDAO.getGame(gameId);
         
-        playerDAO.pouvoirSpiritismeUtilise(myPlayer.getId(),1);
-        request.setAttribute("player", calledPlayer);
+        playerDAO.pouvoirUtilise(myPlayer.getId(),1);
         
-        //on informe le mort qu'il est contacté.
+        //on informe le mort qu'il est contacté, et on le "lie" à l'appelant
         playerDAO.playerContacted(calledPlayer.getId());
+        playerDAO.playerContacted(myPlayer.getId());
         
         List<Message> messages = messageDAO.getListeMessages(2, gameId, game.getDayNb());
 
@@ -235,7 +230,7 @@ public class GameControleur extends HttpServlet {
         Player contPlayer = playerDAO.getPlayer(contUsername, gameId);
         
         playerDAO.transformerLoupGarou(contPlayer.getId());
-        playerDAO.pouvoirContaminationUtilise(myPlayer.getId(), 1);
+        playerDAO.pouvoirUtilise(myPlayer.getId(), 1);
         request.setAttribute("message", "vous avez contamine : " + contUsername);
         actionAfficher(request, response, gameDAO, playerDAO);
         
@@ -261,7 +256,7 @@ public class GameControleur extends HttpServlet {
         Player myPlayer = playerDAO.getPlayer(myUsername, gameId);
         Player spiedPlayer = playerDAO.getPlayer(spiedUsername, gameId);
         
-        playerDAO.pouvoirVoyanceUtilise(myPlayer.getId(),1);
+        playerDAO.pouvoirUtilise(myPlayer.getId(),1);
         request.setAttribute("spieduser", spiedPlayer);
         request.getRequestDispatcher("/WEB-INF/voyancePlayer.jsp").forward(request, response);
     }
@@ -273,7 +268,7 @@ public class GameControleur extends HttpServlet {
      * 
      */
     private void actionPouvoir(HttpServletRequest request,
-            HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
+            HttpServletResponse response, PlayerDAO playerDAO) throws ServletException, IOException {
 
         /* On interroge la base de données pour obtenir le player et les caractéristiques de son pouvoir */
         String username = request.getParameter("username");
@@ -284,36 +279,19 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("username", username);
         
         if (joueur.getHasContamination() == 1) {
-            if (joueur.getUsedContamination() == 0) {
-                List<Player> mapHumains = playerDAO.getListPlayersRole(gameId, 0);
-                request.setAttribute("mapHumains", mapHumains);
-                request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
-
-            } else {
-                request.setAttribute("message", "Vous avez deja active votre pouvoir de contamination");
-                actionAfficher(request, response, gameDAO, playerDAO);
-            }          
+            List<Player> mapHumains = playerDAO.getListPlayersRole(gameId, 0, 1); //alive villagers
+            request.setAttribute("mapHumains", mapHumains);
+            request.getRequestDispatcher("/WEB-INF/contamination.jsp").forward(request, response);
         } else if (joueur.getHasVoyance() == 1) {
-            if (joueur.getUsedVoyance() == 0) {
-                
-                gameId = Integer.parseInt(request.getParameter("gameId")); 
-                List<Player> mapJoueurs = playerDAO.getListPlayers(gameId);
-                request.setAttribute("mapJoueurs", mapJoueurs);
-                request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
-            } else {
-                request.setAttribute("message", "Vous avez deja active votre pouvoir de voyance");
-                actionAfficher(request, response, gameDAO, playerDAO);
-            }
+            gameId = Integer.parseInt(request.getParameter("gameId"));
+            List<Player> mapJoueurs = playerDAO.getListPlayers(gameId, 1); //alive players
+            request.setAttribute("mapJoueurs", mapJoueurs);
+            request.getRequestDispatcher("/WEB-INF/voyance.jsp").forward(request, response);
         } else if (joueur.getHasSpiritisme() == 1) {
-            if (joueur.getUsedSpiritisme() == 0) {
-                gameId = Integer.parseInt(request.getParameter("gameId")); 
-                List<Player> joueursMorts = playerDAO.getListPlayersMorts(gameId);
-                request.setAttribute("joueursMorts", joueursMorts);
-                request.getRequestDispatcher("/WEB-INF/choisirSpiritisme.jsp").forward(request, response);
-            } else {
-                request.setAttribute("message", "Vous avez deja active votre pouvoir de spiritisme");
-                actionAfficher(request, response, gameDAO, playerDAO);
-            }
+            gameId = Integer.parseInt(request.getParameter("gameId"));
+            List<Player> joueursMorts = playerDAO.getListPlayers(gameId, 0); //dead players
+            request.setAttribute("joueursMorts", joueursMorts);
+            request.getRequestDispatcher("/WEB-INF/choisirSpiritisme.jsp").forward(request, response);
         }
     }
     
@@ -345,7 +323,11 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("messages", messages);
 
         request.setAttribute("isLg", isLg);
-        request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
+        if (isLg == 2) {
+            request.getRequestDispatcher("/WEB-INF/spiritisme.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/WEB-INF/gameChat.jsp").forward(request, response);
+        }
     }
     
     /**
@@ -396,8 +378,6 @@ public class GameControleur extends HttpServlet {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("newMessage")) {
                 actionNewMessage(request, response, messageDAO, playerDAO, gameDAO);
-            } else if (action.equals("newMessageSpiritisme")) {
-                actionNewMessageSpiritisme(request, response, messageDAO, playerDAO, gameDAO, userDAO);
             } else if (action.equals("changeDayNight")) {
                 actionChangeDayNight(request, response, gameDAO, playerDAO);
             } else {
@@ -437,36 +417,6 @@ public class GameControleur extends HttpServlet {
         messageDAO.ajouterMessage(message);
 
         actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
-    }
-    
-    
-    /**
-     * Ajoute un message au chat de spiritisme. (entre le mort et le player au pouvoir de spritisme).
-     * @param request
-     * @param response
-     * @param messageDAO
-     * @param playerDAO
-     * @param gameDAO
-     * @param userDAO
-     * @throws ServletException
-     * @throws IOException 
-     */
-    private void actionNewMessageSpiritisme(HttpServletRequest request,
-            HttpServletResponse response,
-            MessageDAO messageDAO, PlayerDAO playerDAO, GameDAO gameDAO, UserDAO userDAO) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String text = request.getParameter("text");
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
-        //int isLg = Integer.parseInt(request.getParameter("isLg"));
-        // int insomnie = Integer.parseInt(request.getParameter("insomnie"));
-        java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
-        Game game = gameDAO.getGame(gameId);
-
-        Message message = new Message(0, gameId, currentDate, username, text, 2, game.getDayNb());//+ insomnie));    //On considère un insomniaque comme un LG qui ne peut pas écrire
-        messageDAO.ajouterMessage(message);
-
-        actionPouvoirSpiritisme(request, response, 
-            gameDAO, userDAO, playerDAO, messageDAO);
     }
 
     /**
@@ -527,16 +477,15 @@ public class GameControleur extends HttpServlet {
 
             }
             
-            List<Player> listeJoueurs = playerDAO.getListPlayers(gameId);
+            List<Player> listeJoueurs = playerDAO.getListPlayers(gameId, 1); //alive players
             for (Player play : listeJoueurs) {
                 if (play.getJustContaminated() == 1) {
-                    request.setAttribute("message4", play.getUsername() + " a ete contamine");
                     request.setAttribute("message3", " vous venez de vous faire contaminer...");
                     contaminated = 1;
                 }
             }
             if(contaminated == 0 && bitten == 0){
-                request.setAttribute("message5", "Personne de mordu ou de contamine, bien calme tout ça!");
+                request.setAttribute("message5", "Personne de mordu, bien calme tout ça!");
             }
 
             
@@ -558,15 +507,19 @@ public class GameControleur extends HttpServlet {
         GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
         
         int gameId = SessionManager.getGameSession(request);
-        List<Player> humans = playerDAO.getListHumans(gameId);
-        if(humans.isEmpty()){
-            request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
-            gameDAO.endGame(gameId);
-        }else if (playerDAO.getListLG(gameId).isEmpty()){
-            request.getRequestDispatcher("/WEB-INF/villageoiswin.jsp").forward(request, response);
+        List<Player> humans = playerDAO.getListPlayersRole(gameId, 0, 1); //alive humans
+        List<Player> lg = playerDAO.getListPlayersRole(gameId, 1, 1); //alivelg
+        if (humans.isEmpty() || lg.isEmpty()) {
+            if (humans.isEmpty()) {
+                request.setAttribute("isLg", "1");
+            } else {
+                request.setAttribute("isLg", "0");
+            }
+            request.setAttribute("gameId", gameId);
+            request.getRequestDispatcher("/WEB-INF/endGame.jsp").forward(request, response);
             gameDAO.endGame(gameId);
         }
-        
+
     }
     
     private void actionCheckHour(HttpServletRequest request,

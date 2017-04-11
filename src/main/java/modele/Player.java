@@ -22,10 +22,7 @@ public class Player {
     private int hasInsomnie;
     private int hasVoyance;
     private int hasSpiritisme;
-    private int usedSpiritisme;
-    private int usedVoyance;
-    private int usedContamination;
-    private int usedInsomnie;
+    private int usedPower;
     private int proposed;
     private String voted;
     private int nbVotes;
@@ -33,11 +30,12 @@ public class Player {
     private int justContaminated;
     private int justBitten;
     private int contacted;
+    private int gameLeft;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
-            int usedSpiritisme, int usedVoyance, int usedInsomnie, int usedContamination,
-            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten, int contacted) {
+            int usedPower,
+            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten, int contacted, int gameLeft) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -47,10 +45,7 @@ public class Player {
         this.hasInsomnie = hasInsomnie;
         this.hasVoyance = hasVoyance;
         this.hasSpiritisme = hasSpiritisme;
-        this.usedContamination = usedContamination;
-        this.usedVoyance = usedVoyance;
-        this.usedSpiritisme = usedSpiritisme;
-        this.usedInsomnie = usedInsomnie;
+        this.usedPower = usedPower;
         this.proposed = proposed;
         this.voted = voted;
         this.nbVotes = nbVotes;
@@ -58,6 +53,29 @@ public class Player {
         this.justContaminated = justContaminated;
         this.justBitten = justBitten;
         this.contacted = contacted;
+        this.gameLeft = gameLeft;
+    }
+    
+    public String getPouvoir() {
+        if (hasContamination == 1) {
+            return "Contamination";
+        } else if (hasInsomnie == 1) {
+            return "Insomnie";
+        } else if (hasVoyance == 1) {
+            return "Voyance";
+        } else if (hasSpiritisme == 1) {
+            return "Spiritisme";
+        } else {
+            return "Pas de pouvoir";
+        }
+    }
+    
+    public String getRole() {
+        if (isLg == 1) {
+            return "Loup-Garou";
+        } else {
+            return "Villageois";
+        }
     }
     
     public void setIsLg(int isLg) {
@@ -71,8 +89,6 @@ public class Player {
     public void setHasInsomnie(int hasInsomnie) {
         this.hasInsomnie = hasInsomnie;
     }
-
-
 
     public void setProposed(int proposed) {
         this.proposed = proposed;
@@ -98,7 +114,9 @@ public class Player {
         this.justBitten = justBitten;
     }
 
-
+    public int getGameLeft() {
+        return gameLeft;
+    }
 
     public void setHasVoyance(int hasVoyance) {
         this.hasVoyance = hasVoyance;
@@ -108,20 +126,8 @@ public class Player {
         this.hasSpiritisme = hasSpiritisme;
     }
 
-    public void setUsedContamination(int usedContamination) {
-        this.usedContamination = usedContamination;
-    }
-
-    public void setUsedVoyance(int usedVoyance) {
-        this.usedVoyance = usedVoyance;
-    }
-
-    public void setUsedSpiritisme(int usedSpiritisme) {
-        this.usedSpiritisme = usedSpiritisme;
-    }
-
-    public void setUsedInsomnie(int usedInsomnie) {
-        this.usedInsomnie = usedInsomnie;
+    public void setUsedPower(int usedPower) {
+        this.usedPower = usedPower;
     }
 
     public void setContacted(int contacted){
@@ -164,20 +170,8 @@ public class Player {
         return hasSpiritisme;
     }
 
-    public int getUsedContamination() {
-        return usedContamination;
-    }
-
-    public int getUsedVoyance() {
-        return usedVoyance;
-    }
-
-    public int getUsedSpiritisme() {
-        return usedSpiritisme;
-    }
-
-    public int getUsedInsomnie() {
-        return usedInsomnie;
+    public int getUsedPower() {
+        return usedPower;
     }
 
     public int getProposed() {
@@ -206,10 +200,10 @@ public class Player {
     public int getJustBitten() {
         return justBitten;
     }
-    
+
     @Override
     public String toString() {
-        return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
+        return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + ", usedPower=" + usedPower + ", proposed=" + proposed + ", voted=" + voted + ", nbVotes=" + nbVotes + ", justDied=" + justDied + ", justContaminated=" + justContaminated + ", justBitten=" + justBitten + ", contacted=" + contacted + ", gameLeft=" + gameLeft + '}';
     }
 
 }

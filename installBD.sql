@@ -51,14 +51,8 @@ CREATE TABLE player (
        		   CHECK (hasInsomnie IN(0, 1)) NOT NULL,
        hasSpiritisme int CONSTRAINT hasSpiritisme
        		   CHECK (hasSpiritisme IN(0, 1)) NOT NULL,
-       usedContamination int CONSTRAINT usedContaminationValid
-       		   CHECK (usedContamination IN(0, 1)) NOT NULL,
-       usedVoyance int CONSTRAINT usedVoyanceValid
-       		   CHECK (usedVoyance IN(0, 1)) NOT NULL,
-       usedInsomnie int CONSTRAINT usedInsomnieValid
-       		   CHECK (usedInsomnie IN(0, 1)) NOT NULL,
-       usedSpiritisme int CONSTRAINT usedSpiritismeValid
-       		   CHECK (usedSpiritisme IN(0, 1)) NOT NULL,
+       usedPower int CONSTRAINT usedPowerValid
+       		   CHECK (usedPower IN(0, 1)) NOT NULL,
        proposed int CONSTRAINT proposedValid
        		   CHECK (proposed IN(0, 1)) NOT NULL,
        voted varchar(100) NOT NULL,
@@ -70,7 +64,9 @@ CREATE TABLE player (
        justBitten int CONSTRAINT justBittenValid
        		   CHECK (justBitten IN(0, 1)) NOT NULL,
        contacted int CONSTRAINT contactedValid
-       		   CHECK (contacted IN(0, 1)) NOT NULL	
+       		   CHECK (contacted IN(0, 1)) NOT NULL,
+       gameLeft int CONSTRAINT gameLeftValid
+       		   CHECK (gameLeft IN(0, 1)) NOT NULL
 );
 
 CREATE TABLE message (

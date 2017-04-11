@@ -8,7 +8,7 @@
     </head>
     <body>
 
-        <h1>T'ES DANS LE CHAT DE LA GAME n°${gameId} !</h1>
+        <h1>T'ES DANS LE CHAT DE LA MORT !</h1>
         <table>
             <tr>
                 <th>Auteur</th>
@@ -32,9 +32,10 @@
 
         <form method="post" action="gamecontroleur" accept-charset="UTF-8">
             Nouveau message : <input type="text" name="text"/>
-            <input type="hidden" name="action" value="newMessageSpiritisme" />
+            <input type="hidden" name="action" value="newMessage" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="hidden" name="username" value=${username} />
+            <input type="hidden" name="isLg" value=2 />
             <input type="submit" name="Envoyer" value="Envoyer"/>
         </form> 
 

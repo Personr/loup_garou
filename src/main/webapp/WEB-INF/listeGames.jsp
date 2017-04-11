@@ -43,7 +43,7 @@
                     <td>${game.nbPlayers}</td>
                     <td>${game.minPlayers}</td>
                     <td>${game.maxPlayers}</td>
-                    <td>${game.prettyStartTime}</td>
+                    <td>${game.startTime}</td>
                     <td>${game.dayTime}</td>
                     <td>${game.nightTime}</td>
                     <td>${game.pContamination}</td>
