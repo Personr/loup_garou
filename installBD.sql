@@ -64,7 +64,9 @@ CREATE TABLE player (
        justBitten int CONSTRAINT justBittenValid
        		   CHECK (justBitten IN(0, 1)) NOT NULL,
        contacted int CONSTRAINT contactedValid
-       		   CHECK (contacted IN(0, 1)) NOT NULL	
+       		   CHECK (contacted IN(0, 1)) NOT NULL,
+       gameLeft int CONSTRAINT gameLeftValid
+       		   CHECK (gameLeft IN(0, 1)) NOT NULL
 );
 
 CREATE TABLE message (

@@ -91,7 +91,7 @@ public class UserDAO extends AbstractDataBaseDAO {
         int gameId;
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT p.gameID FROM lgUser u, player p, game g WHERE u.username = ? AND p.username = ? AND p.gameID = g.gameID AND g.finished = 0");) {
+                PreparedStatement st = conn.prepareStatement("SELECT p.gameID FROM lgUser u, player p, game g WHERE u.username = ? AND p.username = ? AND p.gameID = g.gameID AND p.gameLeft = 0");) {
             st.setString(1, username);
             st.setString(2, username);
             ResultSet rs = st.executeQuery();

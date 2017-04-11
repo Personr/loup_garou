@@ -7,10 +7,10 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="styles.css" />	
-        <title>CONTAMINE UN HUMAIN ! </title>
+        <title>VOYANCE ! </title>
     </head>
     <body>
-        <h1>T'ES DANS LA GAME n°${gameId}, ${username} - VOYANCE!</h1>
+        <h1>UTILISE TON POUVOIR DE VOYANCE!</h1>
 
         <table>
             <tr>

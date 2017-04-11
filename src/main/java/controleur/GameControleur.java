@@ -522,14 +522,18 @@ public class GameControleur extends HttpServlet {
         
         int gameId = SessionManager.getGameSession(request);
         List<Player> humans = playerDAO.getListPlayersRole(gameId, 0, 1); //alive humans
-        if(humans.isEmpty()){
-            request.getRequestDispatcher("/WEB-INF/lgwin.jsp").forward(request, response);
-            gameDAO.endGame(gameId);
-        }else if (playerDAO.getListPlayersRole(gameId, 1, 1).isEmpty()) { //alive lg
-            request.getRequestDispatcher("/WEB-INF/villageoiswin.jsp").forward(request, response);
+        List<Player> lg = playerDAO.getListPlayersRole(gameId, 1, 1); //alivelg
+        if (humans.isEmpty() || lg.isEmpty()) {
+            if (humans.isEmpty()) {
+                request.setAttribute("isLg", "1");
+            } else {
+                request.setAttribute("isLg", "0");
+            }
+            request.setAttribute("gameId", gameId);
+            request.getRequestDispatcher("/WEB-INF/endGame.jsp").forward(request, response);
             gameDAO.endGame(gameId);
         }
-        
+
     }
 
 

@@ -94,6 +94,8 @@ public class HomeControleur extends HttpServlet {
             } else if (action.equals("getWaitingGame")) {
                 request.setAttribute("inGame", true);
                 actionAfficher(request, response, gameDAO);  
+            } else if (action.equals("gameLeft")) {
+                actionGameLeft(request, response, playerDAO, gameDAO);  
             } else {
                 invalidParameters(request, response);
             }
@@ -131,6 +133,18 @@ public class HomeControleur extends HttpServlet {
         GameDAO gameDAO) throws ServletException, IOException {
         gameDAO.deleteGames();
         request.setAttribute("message", "Parties Supprimees");
+        actionAfficher(request,response,gameDAO);
+    }
+    
+    private void actionGameLeft(HttpServletRequest request,
+        HttpServletResponse response,
+        PlayerDAO playerDAO, GameDAO gameDAO) throws ServletException, IOException {
+        
+        String myUsername = SessionManager.getUserSession(request);
+        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        Player myPlayer = playerDAO.getPlayer(myUsername, gameId);
+        playerDAO.leaveGame(myPlayer.getId());
+        
         actionAfficher(request,response,gameDAO);
     }
     
