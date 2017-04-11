@@ -74,6 +74,10 @@
                      <option value="50">50</option>
                      <option value="55">55</option>
                  </select>
+                 <select name="dl" id="dl">
+                     <option value="a">Aujourd'hui</option>
+                     <option value="d" selected >Demain</option>
+                 </select>
              </p>
              
              <p>

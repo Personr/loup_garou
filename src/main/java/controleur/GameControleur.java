@@ -540,10 +540,17 @@ public class GameControleur extends HttpServlet {
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
         Time dayTime = game.getDayTime();
         Time nightTime = game.getNightTime();
-        SimpleDateFormat format = new SimpleDateFormat("HH");
-        int current = Integer.parseInt(format.format(currentDate));
-        int day = Integer.parseInt(format.format(dayTime));
-        int night = Integer.parseInt(format.format(nightTime));
+        SimpleDateFormat formatH = new SimpleDateFormat("HH");
+        SimpleDateFormat formatM = new SimpleDateFormat("mm");
+        int hCurrent = Integer.parseInt(formatH.format(currentDate));
+        int mCurrent = Integer.parseInt(formatM.format(currentDate));
+        int hDay = Integer.parseInt(formatH.format(dayTime));
+        int mDay = Integer.parseInt(formatM.format(dayTime));
+        int hNight = Integer.parseInt(formatH.format(nightTime));
+        int mNight = Integer.parseInt(formatM.format(nightTime));
+        int current = 60 * hCurrent + mCurrent;
+        int day = 60 * hDay + mDay;
+        int night = 60 * hNight + mNight;
         
         System.out.println("Day = " + day + " & night = " + night + " & current = " + current);
         
