@@ -8,7 +8,7 @@
  </head>
     
     <body>
-        <h2> Liste des parties en cours </h2>
+        <h1> Liste des parties en cours </h1>
         <form method="get" action="homecontroleur" accept-charset="UTF-8">
             <button type="submit">Créer une partie</button>
             <input type="hidden" name="action" value="creategame" />

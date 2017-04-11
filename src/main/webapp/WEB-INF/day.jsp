@@ -29,12 +29,7 @@
 
                 <b>${message3}</b><br />
 
-            </c:when>  
-            <c:when test="${userPlayer.justContaminated=='0' && contaminated == '1'}"> 
-
-                <b>${message4}</b><br />
-
-            </c:when>  
+            </c:when> 
             <c:when test="${bitten=='0' && contaminated == '0'}"> 
 
                 <b>${message5}</b><br />
@@ -132,7 +127,7 @@
         </form>
 
         <c:choose>
-            <c:when test="${isCreator == 1}">
+            <c:when test="${isCreator == 1 || isCreator == 0}">
                 <form method="post" action="gamecontroleur" accept-charset="UTF-8">
                     <input type="hidden" name="action" value="changeDayNight" />
                     <input type="hidden" name="gameId" value=${gameId} />
@@ -152,14 +147,18 @@
         ${message}
 
 
-        <h2>Voici la liste des joueurs morts, restez en paix :</h2>
+        <h2>Voici la liste des joueurs morts, reposez en paix :</h2>
         <table>
             <tr>
                 <th>Nom</th>
+                <th>Role</th>
+                <th>Pouvoir</th>
             </tr>
             <c:forEach items="${morts}" var="mort">
                 <tr>
                     <td>${mort.username}</td>
+                    <td>${mort.getRole()}</td>
+                    <td>${mort.getPouvoir()}</td>
                 </tr>
             </c:forEach>
         </table>

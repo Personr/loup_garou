@@ -126,8 +126,8 @@
                 </c:choose>
 
                 <c:choose>
-                    <c:when test="${userPlayer.hasVoyance=='1' || userPlayer.hasContamination=='1' || 
-                                    userPlayer.hasSpiritisme=='1'}"> 
+                    <c:when test="${(userPlayer.hasVoyance=='1' || userPlayer.hasContamination=='1' || 
+                                    userPlayer.hasSpiritisme=='1') && userPlayer.usedPower=='0'}"> 
                             <form method="get" action="gamecontroleur" accept-charset="UTF-8">
                                 <input type="hidden" name="action" value="activatePower" />
                                 <input type="hidden" name="gameId" value=${gameId} />
@@ -160,33 +160,26 @@
             </c:when>  
         </c:choose>
 
-
-
-
-        <!--   <c:choose>
-            <c:when test="${userPlayer.alive=='0'}"> 
-                <form method="get" action="gamecontroleur" accept-charset="UTF-8">
-                    <input type="hidden" name="action" value="testSpiritisme" />
-                    <input type="hidden" name="gameId" value=${gameId} />
-                    <input type="hidden" name="username" value=${username} />
-                    <input type="submit" name="power" value="Un spiritisme pourrait vous parler!!"/>
-                </form>
-            </c:when>  
-        </c:choose> -->
-
         <c:choose>
             <c:when test="${userPlayer.contacted=='1'}"> 
                 <form method="get" action="gamecontroleur" accept-charset="UTF-8">
-                    <input type="hidden" name="action" value="testSpiritisme" />
+                    <input type="hidden" name="action" value="getSpiritisme" />
                     <input type="hidden" name="gameId" value=${gameId} />
                     <input type="hidden" name="username" value=${username} />
-                    <input type="submit" name="power" value="Un spiritisme vous parle!"/>
+                    <c:choose>
+                        <c:when test="${userPlayer.alive=='1'}"> 
+                            <input type="submit" name="power" value="Parlez avec la mort..."/>
+                        </c:when> 
+                        <c:otherwise>
+                            <input type="submit" name="power" value="Un vivant vous contacte !"/>
+                        </c:otherwise>
+                    </c:choose>
                 </form>
-            </c:when>  
+            </c:when> 
         </c:choose>
         
         <c:choose>
-            <c:when test="${isCreator == 1}">
+            <c:when test="${isCreator == 1 || isCreator == 0}">
                 <form method="post" action="gamecontroleur" accept-charset="UTF-8">
                     <input type="hidden" name="action" value="changeDayNight" />
                     <input type="hidden" name="gameId" value=${gameId} />
@@ -203,14 +196,18 @@
         </form>
         ${message}
 
-        <h2>Voici la liste des joueurs morts, restez en paix :</h2>
+        <h2>Voici la liste des joueurs morts, reposez en paix :</h2>
         <table>
             <tr>
                 <th>Nom</th>
+                <th>Role</th>
+                <th>Pouvoir</th>
             </tr>
             <c:forEach items="${morts}" var="mort">
                 <tr>
                     <td>${mort.username}</td>
+                    <td>${mort.getRole()}</td>
+                    <td>${mort.getPouvoir()}</td>
                 </tr>
             </c:forEach>
         </table>
