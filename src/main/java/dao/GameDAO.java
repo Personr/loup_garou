@@ -302,7 +302,7 @@ public class GameDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("UPDATE player SET proposed = 0, voted = ' ',"
-                        + "usedContamination = 0, usedVoyance = 0, usedSpiritisme = 0, usedInsomnie = 0,"
+                        + "usedPower = 0,"
                         + "contacted = 0, nbVotes = 0, justDied = 0 WHERE gameID = ? ");) {
 
             st.setInt(1, gameID);           

@@ -159,7 +159,7 @@ public class Game {
             player.setHasContamination(1);
 
             playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(), 
-                    1, player.getHasVoyance(), player.getHasInsomnie(), player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+                    1, player.getHasVoyance(), player.getHasInsomnie(), player.getHasSpiritisme());
         }
     }
     /**
@@ -175,7 +175,7 @@ public class Game {
             player.setHasInsomnie(1);
 
             playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(), 
-                    player.getHasContamination(), player.getHasVoyance(), 1, player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+                    player.getHasContamination(), player.getHasVoyance(), 1, player.getHasSpiritisme());
         }
     }
 
@@ -188,7 +188,7 @@ public class Game {
                 sansPouvoir.remove(indice);
                 player.setHasVoyance(1);
                 playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(),
-                        player.getHasContamination(), 1, player.getHasInsomnie(), player.getHasSpiritisme(), player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+                        player.getHasContamination(), 1, player.getHasInsomnie(), player.getHasSpiritisme());
             }
         }
     }
@@ -202,7 +202,7 @@ public class Game {
                 sansPouvoir.remove(indice);
                 player.setHasSpiritisme(1);
                 playerDAO.modifierPlayer(player.getId(), player.getIsLg(), player.getAlive(),
-                        player.getHasContamination(), player.getHasVoyance(), player.getHasInsomnie(), 1, player.getUsedContamination(), player.getUsedVoyance(), player.getUsedInsomnie(), player.getUsedSpiritisme());
+                        player.getHasContamination(), player.getHasVoyance(), player.getHasInsomnie(), 1);
             }
         }
     }
@@ -223,7 +223,7 @@ public class Game {
             if (indices.contains(i)) {
                 player.setIsLg(1);
                 lg.add(player);
-                playerDAO.modifierPlayer(player.getId(), 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+                playerDAO.modifierPlayer(player.getId(), 1, 1, 0, 0, 0, 0);
             } else {
                 villageois.add(player);
             }

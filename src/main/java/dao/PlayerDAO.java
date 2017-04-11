@@ -31,8 +31,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.put(rs.getString("username"), player);
             }
@@ -43,65 +42,39 @@ public class PlayerDAO extends AbstractDataBaseDAO {
     }
 
 
-    public List<Player> getListPlayers(int gameId) {
+//    public List<Player> getListPlayers(int gameId) {
+//        List<Player> result = new ArrayList<Player>();
+//        try (
+//                Connection conn = getConn();
+//                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ?");) {
+//            st.setInt(1, gameId);
+//
+//            ResultSet rs = st.executeQuery();
+//            while (rs.next()) {
+//                Player player
+//                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+//                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+//                                rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
+//                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), 
+//                                rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+//                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
+//
+//
+//                result.add(player);
+//            }
+//        } catch (SQLException e) {
+//            throw new DAOException("Erreur BD " + e.getMessage(), e);
+//        }
+//        return result;
+//    }
+    
+    public List<Player> getListPlayers(int gameId, int alive) {
         List<Player> result = new ArrayList<Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ?");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? and alive = ?");) {
             st.setInt(1, gameId);
-
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Player player
-                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), 
-                                rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
-
-
-                result.add(player);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-        return result;
-    }
-    
-    public List<Player> getListPlayersAlive(int gameId) {
-        List<Player> result = new ArrayList<Player>();
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND alive = 1");) {
-            st.setInt(1, gameId);
-
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Player player
-                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), 
-                                rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
-
-
-                result.add(player);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-        return result;
-    }
-    
-    
-    public List<Player> getListPlayersMorts(int gameId) {
-        List<Player> result = new ArrayList<Player>();
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? and alive = 0");) {
-            st.setInt(1, gameId);
+            st.setInt(2, alive);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -109,8 +82,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                                 rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"),
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"),
-                                rs.getInt("usedInsomnie"), rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
 
                 result.add(player);
@@ -121,22 +93,22 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    public List<Player> getListPlayersRole(int gameId, int isLg) {
+    public List<Player> getListPlayersRole(int gameId, int isLg, int alive) {
         List<Player> result = new ArrayList<Player>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND isLG = ?");) {
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND isLG = ? AND alive = ?");) {
             st.setInt(1, gameId);
             st.setInt(2, isLg);
+            st.setInt(3, alive);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Player player
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"),  
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
@@ -157,9 +129,8 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                 Player player
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"),  
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
@@ -180,55 +151,8 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                 Player player
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
-                result.add(player);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-        return result;
-    }
-    
-    public List<Player> getListHumans(int gameId) {
-        List<Player> result = new ArrayList<Player>();
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND alive = 1 AND isLG = 0");) {
-            st.setInt(1, gameId);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Player player
-                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
-                result.add(player);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-        return result;
-    }
-    
-        public List<Player> getListLG(int gameId) {
-        List<Player> result = new ArrayList<Player>();
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND alive = 1 AND isLG = 1");) {
-            st.setInt(1, gameId);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Player player
-                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"),  
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
@@ -250,8 +174,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                         = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                                 rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                                 rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                                rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
                 result.add(player);
             }
@@ -261,28 +184,28 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         return result;
     }
     
-    public List<Player> getListHumansVotable(int gameId) {
-        List<Player> result = new ArrayList<Player>();
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 1 AND isLG = 0");) {
-            st.setInt(1, gameId);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Player player
-                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
-                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
-                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
-                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
-                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
-                result.add(player);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-        return result;
-    }
+//    public List<Player> getListHumansVotable(int gameId) {
+//        List<Player> result = new ArrayList<Player>();
+//        try (
+//                Connection conn = getConn();
+//                PreparedStatement st = conn.prepareStatement("SELECT * FROM player WHERE gameID = ? AND proposed = 1 AND isLG = 0");) {
+//            st.setInt(1, gameId);
+//            ResultSet rs = st.executeQuery();
+//            while (rs.next()) {
+//                Player player
+//                        = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
+//                                rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
+//                                rs.getInt("hasVoyance"), rs.getInt("hasInsomnie"), rs.getInt("hasSpiritisme"), 
+//                                rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
+//                                rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+//                                rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
+//                result.add(player);
+//            }
+//        } catch (SQLException e) {
+//            throw new DAOException("Erreur BD " + e.getMessage(), e);
+//        }
+//        return result;
+//    }
 
 
     public boolean ajouterPlayer(String username, int gameID){
@@ -293,9 +216,9 @@ public class PlayerDAO extends AbstractDataBaseDAO {
         try (
 	     Connection conn = getConn();
 	     PreparedStatement st = conn.prepareStatement("INSERT INTO player (username, gameID, isLG, "
-                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, "
-                     + "usedSpiritisme, usedVoyance, usedInsomnie, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) "
-                     + "VALUES (?,?,0,1,0,0,0,0,0,0,0,0,0,' ', 0, 0, 0, 0, 0)");) {   
+                     + "alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedPower, "
+                     + "proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) "
+                     + "VALUES (?,?,0,1,0,0,0,0,0,0,' ', 0, 0, 0, 0, 0)");) {   
             st.setString(1, username);
             st.setInt(2, gameID);
             st.executeUpdate(); 
@@ -319,8 +242,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
                 player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                         rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                         rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
-                        rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                        rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                        rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                     rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));                
             }
 
@@ -341,8 +263,7 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             player = new Player(rs.getInt("id"), rs.getInt("gameID"), rs.getString("username"),
                     rs.getInt("isLG"), rs.getInt("alive"), rs.getInt("hasContamination"),
                     rs.getInt("hasInsomnie"), rs.getInt("hasVoyance"), rs.getInt("hasSpiritisme"), 
-                    rs.getInt("usedSpiritisme"), rs.getInt("usedVoyance"), rs.getInt("usedInsomnie"), 
-                    rs.getInt("usedContamination"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
+                    rs.getInt("usedPower"), rs.getInt("proposed"), rs.getString("voted"), rs.getInt("nbVotes"),
                                 rs.getInt("justDied"), rs.getInt("justContaminated"), rs.getInt("justBitten"), rs.getInt("contacted"));
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -351,22 +272,17 @@ public class PlayerDAO extends AbstractDataBaseDAO {
     }
 
     public void modifierPlayer(int id, int isLG, int alive, int hasContamination,
-            int hasVoyance, int hasInsomnie, int hasSpiritisme, int usedContamination,
-            int usedVoyance, int usedInsomnie, int usedSpiritisme) {
+            int hasVoyance, int hasInsomnie, int hasSpiritisme) {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("UPDATE player SET isLG = ?, "
-                        + "hasContamination = ?, hasVoyance = ?, hasInsomnie = ?, hasSpiritisme = ?, usedContamination = ?, usedVoyance = ?, usedInsomnie = ?, usedSpiritisme = ? WHERE id = ?");) {
+                        + "hasContamination = ?, hasVoyance = ?, hasInsomnie = ?, hasSpiritisme = ? WHERE id = ?");) {
             st.setInt(1, isLG);
             st.setInt(2, hasContamination);
             st.setInt(3, hasVoyance);
             st.setInt(4, hasInsomnie);
             st.setInt(5, hasSpiritisme);
-            st.setInt(6, usedContamination);
-            st.setInt(7, usedVoyance);
-            st.setInt(8, usedInsomnie);
-            st.setInt(9, usedSpiritisme);
-            st.setInt(10, id);
+            st.setInt(6, id);
 
             st.executeUpdate();
         } catch (SQLException e) {
@@ -427,59 +343,14 @@ public class PlayerDAO extends AbstractDataBaseDAO {
     
     //0 : pas utilise -> valable pour la nuit
     //1 : utilise la nuit et tte la journee
-    public void pouvoirContaminationUtilise(int userId, int utilise) {
+    public void pouvoirUtilise(int userId, int utilise) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedContamination = ? WHERE id = ?");) {
+                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedPower = ? WHERE id = ?");) {
 
             st.setInt(1, utilise);
             st.setInt(2, userId);
             
-            st.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-    }
-    
-        //0 : pas utilise -> valable pour la nuit
-    //1 : utilise la nuit et tte la journee
-    public void pouvoirVoyanceUtilise(int userId, int utilise) {
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedVoyance = ? WHERE id = ?");) {
-
-            st.setInt(1, utilise);
-            st.setInt(2, userId);
-            st.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-    }
-    
-            //0 : pas utilise -> valable pour la nuit
-    //1 : utilise la nuit et tte la journee
-    public void pouvoirSpiritismeUtilise(int userId, int utilise) {
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedSpiritisme = ? WHERE id = ?");) {
-
-            st.setInt(1, utilise);
-            st.setInt(2, userId);
-            st.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }
-    }
-    
-                //0 : pas utilise -> valable pour la nuit
-    //1 : utilise la nuit et tte la journee
-    public void pouvoirInsomnieUtilise(int userId, int utilise) {
-        try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE player SET usedInsomnie = ? WHERE id = ?");) {
-
-            st.setInt(1, utilise);
-            st.setInt(2, userId);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -568,25 +439,6 @@ public class PlayerDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         }        
     }
-
-    //SELECT COUNT(*) FROM table
-//    
-//    public boolean vivantsLG(int gameId){
-//        try (
-//                Connection conn = getConn();
-//                PreparedStatement st = conn.prepareStatement("SELECT COUNT (*) FROM player where alive = 1");) {
-//
-//            
-//            ResultSet rs = st.executeQuery();
-//            int nb vivants;
-//            if(rs.next()){
-//                 rs.getInt(1);
-//            }
-//            
-//        } catch (SQLException e) {
-//            throw new DAOException("Erreur BD " + e.getMessage(), e);
-//        }         
-//    }
     
     
 }

@@ -28,12 +28,7 @@
 
                 <b>${message3}</b><br />
 
-            </c:when>  
-            <c:when test="${userPlayer.justContaminated=='0' && contaminated == '1'}"> 
-
-                <b>${message4}</b><br />
-
-            </c:when>  
+            </c:when> 
             <c:when test="${bitten=='0' && contaminated == '0'}"> 
 
                 <b>${message5}</b><br />
@@ -149,14 +144,18 @@
         ${message}
 
 
-        <h2>Voici la liste des joueurs morts, restez en paix :</h2>
+        <h2>Voici la liste des joueurs morts, reposez en paix :</h2>
         <table>
             <tr>
                 <th>Nom</th>
+                <th>Role</th>
+                <th>Pouvoir</th>
             </tr>
             <c:forEach items="${morts}" var="mort">
                 <tr>
                     <td>${mort.username}</td>
+                    <td>${mort.getRole()}</td>
+                    <td>${mort.getPouvoir()}</td>
                 </tr>
             </c:forEach>
         </table>
