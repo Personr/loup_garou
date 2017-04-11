@@ -249,8 +249,12 @@ public class HomeControleur extends HttpServlet {
         } else {
             int gameId = SessionManager.getGameSession(request);
             Game game = gameDAO.getGame(gameId);
-            request.setAttribute("game", game);
-            request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+            if (game.getStarted() == 0) {
+                request.setAttribute("game", game);
+                request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("gamecontroleur").forward(request, response);
+            }
         }
     }
     

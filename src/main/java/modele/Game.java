@@ -77,6 +77,14 @@ public class Game {
         this.dayNb = dayNb;
     }
     
+    public boolean isVoteOver(GameDAO gameDAO) {
+        int seuil = nbPlayers/2;
+        seuil += 1;
+        int maxVotes = gameDAO.getMaxVotes(gameId);
+        System.out.println("maxVotes = " + maxVotes);
+        return  maxVotes >= seuil;
+    }
+    
     /**
      * ajoute un joueur a la game
      * @param username
