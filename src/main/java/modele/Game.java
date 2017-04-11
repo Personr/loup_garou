@@ -317,8 +317,9 @@ public class Game {
         return lgProp;
     }
 
-    public Time getStartTime() {
-        return startTime;
+    public String getStartTime() {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH24:MM:SS");
+        return format.format(startTime);
     }  
 
     public int getIsDay() {

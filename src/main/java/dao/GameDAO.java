@@ -130,17 +130,19 @@ public class GameDAO extends AbstractDataBaseDAO {
      * @param pVoyance
      * @param pInsomnie
      * @param proportionLoupsGarous
+     * @param dayDebut
      * @return 
      */
     public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, String heureJour, String heureNuit, String horaireDebutPartie, 
-            String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
+            String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous, String dayDebut) {
+        
         if (      nbJoueursMin < 2 || nbJoueursMin > 20
                 ||  nbJoueursMax > 20 || nbJoueursMax < nbJoueursMin
                 || pContamination >1 || pSpiritisme > 1 || pVoyance > 1 || pInsomnie > 1 || proportionLoupsGarous > 1
                 ) {
             return false;
         }
-        
+
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
@@ -150,30 +152,50 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " 0, "
                         + " 0, "
-                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
+                        + " TO_DATE(?,'dd/MM/YYYY HH24:MI:SS'), "
                         + " 0, "
                         + " ?, "
-                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
-                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'),"
+                        + " TO_DATE(?,'dd/MM/YYYY HH24:MI:SS'), "
+                        + " TO_DATE(?,'dd/MM/YYYY HH24:MI:SS'),"
                         + " ?, "
                         + " ?, "
                         + " ?, "
                         + " ?, "
                         + " ?, 1, 1)");) {
             
-            
+            //12-04-2017 08:00:00
+            //TO_DATE(?,'DD-MM-YYYY HH:MI:SS')
             st.setInt(1, nbJoueursMin);
             st.setInt(2, nbJoueursMax);
-            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
-            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-            String current = format.format(currentDate);
+
+            java.util.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            Calendar c = Calendar.getInstance();
+            c.setTime(currentDate);
+            
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY");
+            String current = null;
+            
+            if (dayDebut.equals("a")) {
+                //aujourdhui
+                currentDate = (java.util.Date) c.getTime();
+                //format.format(currentDate)
+                current = format.format(currentDate);
+                
+            }else if (dayDebut.equals("d")){
+                //demain
+                c.add(Calendar.DATE, 1);
+                currentDate = (java.util.Date) c.getTime();
+                current = format.format(currentDate);
+            } else{
+                System.err.println("erreur de jour");
+            }
+            
             
             String Date = current + " ";
-            String horaireDebut= "";
 
-            horaireDebut= Date + horaireDebutPartie + ":00";
+            String horaireDebut = Date + horaireDebutPartie + ":00";
             st.setString(3, horaireDebut);
-            
+            System.out.println(horaireDebut);
             String horaireJour = Date + heureJour +":00";
             String horaireNuit = Date + heureNuit + ":00";
             
