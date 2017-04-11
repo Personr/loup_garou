@@ -267,24 +267,22 @@ public class HomeControleur extends HttpServlet {
             HttpServletResponse response,
             GameDAO gameDAO) throws ServletException, IOException {
         
-        if(request.getParameter("nombre_participants_min").isEmpty()
-                || request.getParameter("nombre_participants_max").isEmpty()
-                || request.getParameter("duree_jour").isEmpty()     || request.getParameter("duree_nuit").isEmpty()
-                || request.getParameter("horaire_debut").isEmpty()  || request.getParameter("pContamination").isEmpty()
+        if (request.getParameter("nombre_participants_min").isEmpty()
+                || request.getParameter("nombre_participants_max").isEmpty() || request.getParameter("pContamination").isEmpty()
                 || request.getParameter("pSpiritisme").isEmpty()    || request.getParameter("pVoyance").isEmpty()
                 || request.getParameter("pInsomnie").isEmpty()      || request.getParameter("proportion_loup_garou").isEmpty()){
             
             request.setAttribute("message", "Remplir tous les champs");
             actionCreatePartieAfficher(request,response, gameDAO);
                 
-        }else{
+        } else {
             int nbJoueursMin = Integer.parseInt(request.getParameter("nombre_participants_min"));
             int nbJoueursMax = Integer.parseInt(request.getParameter("nombre_participants_max"));
-            int dureeJour = Integer.parseInt(request.getParameter("duree_jour"));
-            int dureeNuit = Integer.parseInt(request.getParameter("duree_nuit"));
             
-
-            int horaireDebutPartie = Integer.parseInt(request.getParameter("horaire_debut"));
+            String heureJour = request.getParameter("hd") + ":" + request.getParameter("md");
+            String heureNuit = request.getParameter("hn") + ":" + request.getParameter("mn");
+            String debut = request.getParameter("hl") + ":" + request.getParameter("ml");
+            
             float pContamination = Float.parseFloat(request.getParameter("pContamination"));
             float pSpiritisme = Float.parseFloat(request.getParameter("pSpiritisme"));
             float pVoyance = Float.parseFloat(request.getParameter("pVoyance"));
@@ -293,10 +291,11 @@ public class HomeControleur extends HttpServlet {
             float proportionLoupsGarous = Float.parseFloat(request.getParameter("proportion_loup_garou"));
             String creator = SessionManager.getUserSession(request);
             
-            if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, dureeJour, dureeNuit, horaireDebutPartie, creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous)){
+            if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, heureJour, heureNuit, debut, 
+                    creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous)){
                 request.setAttribute("message", "Partie bien crée!");
                 actionAfficher(request, response,gameDAO);
-            }else{
+            } else {
                 request.setAttribute("message", "Attention, respectez les conditions de jeu");
                 actionCreatePartieAfficher(request,response, gameDAO);
             }

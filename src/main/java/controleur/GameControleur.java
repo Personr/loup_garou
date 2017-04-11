@@ -16,6 +16,8 @@ import modele.Game;
 import tools.SessionManager;
 import modele.Message;
 import java.sql.Date;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import modele.Player;
 
@@ -75,32 +77,13 @@ public class GameControleur extends HttpServlet {
             } else if (action.equals("getSpiritisme")) {
                 actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
             } else if (action.equals("testSpiritisme")) {
-                actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);
-            } else if (action.equals("toNight")) {
-                actionToNight(request, response, gameDAO, userDAO, playerDAO, messageDAO);    
-            } else if (action.equals("toDay")) {
-                actionToDay(request, response, gameDAO, userDAO, playerDAO, messageDAO);    
+                actionPouvoirSpiritisme(request, response, gameDAO, userDAO, playerDAO, messageDAO);   
             } else {
                 invalidParameters(request, response);
             }
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
-    }
-
-    private void actionToNight(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
-        actionAfficher(request,response, gameDAO, playerDAO);
-
-
-        //request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
-    }
-    
-    private void actionToDay(HttpServletRequest request, HttpServletResponse response, GameDAO gameDAO, UserDAO userDAO, PlayerDAO playerDAO, MessageDAO messageDAO) throws ServletException, IOException {
-        //actionAfficher(request,response, gameDAO, playerDAO);
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
-//        gameDAO.startDay(gameId);
-        actionAfficher(request,response, gameDAO, playerDAO);
-        //request.getRequestDispatcher("/WEB-INF/night.jsp").forward(request, response);
     }
     
     /**
@@ -113,6 +96,9 @@ public class GameControleur extends HttpServlet {
         String username = SessionManager.getUserSession(request);
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
+        
+        actionCheckHour(request, response, gameDAO, playerDAO);
+        
         Player userPlayer = playerDAO.getPlayer(username, gameID);
               
         request.setAttribute("userPlayer", userPlayer);
@@ -581,6 +567,35 @@ public class GameControleur extends HttpServlet {
             gameDAO.endGame(gameId);
         }
         
+    }
+    
+    private void actionCheckHour(HttpServletRequest request,
+        HttpServletResponse response,
+        GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
+        
+        int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
+        
+        java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+        Time dayTime = game.getDayTime();
+        Time nightTime = game.getNightTime();
+        SimpleDateFormat format = new SimpleDateFormat("HH");
+        int current = Integer.parseInt(format.format(currentDate));
+        int day = Integer.parseInt(format.format(dayTime));
+        int night = Integer.parseInt(format.format(nightTime));
+        
+        System.out.println("Day = " + day + " & night = " + night + " & current = " + current);
+        
+        if (day < current && night > current && game.getIsDay() == 0) {
+            // on est à la nuit dans le jeu mais au jour en réalité
+            System.out.println("Changer nuit en jour ");
+        } else if ((day > current || night < current) && game.getIsDay() == 1) {
+            // on est au jour dans le jeu mais à la nuit en réalité
+            System.out.println("Changer jour en nuit");
+        } else {
+            System.out.println("Tout va bien");
+        }
+
     }
 
 
