@@ -120,6 +120,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("username", username);
         List<Player> morts = playerDAO.getListPlayersMorts(gameID);
         request.setAttribute("morts", morts);
+        request.setAttribute("isCreator", '1');
         
         List<Player> players = playerDAO.getListPlayersAlive(gameID);
         request.setAttribute("players", players);
@@ -496,11 +497,6 @@ public class GameControleur extends HttpServlet {
         
         // On crée le résultat du vote (que ce soit vote de jour où de nuit)
         List<Integer> resultat = gameDAO.depouiller(gameId);
-        //List<Player> listeMorts = playerDAO.getListPlayersMorts(gameId);
-        //
-        //Player playerdead = null;
-        
-
         
         if (isDay == 1) {
             int elim = 0;
