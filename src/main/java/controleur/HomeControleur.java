@@ -249,8 +249,12 @@ public class HomeControleur extends HttpServlet {
         } else {
             int gameId = SessionManager.getGameSession(request);
             Game game = gameDAO.getGame(gameId);
-            request.setAttribute("game", game);
-            request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+            if (game.getStarted() == 0) {
+                request.setAttribute("game", game);
+                request.getRequestDispatcher("/WEB-INF/waitingGame.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("gamecontroleur").forward(request, response);
+            }
         }
     }
     
@@ -292,6 +296,9 @@ public class HomeControleur extends HttpServlet {
         } else {
             int nbJoueursMin = Integer.parseInt(request.getParameter("nombre_participants_min"));
             int nbJoueursMax = Integer.parseInt(request.getParameter("nombre_participants_max"));
+            int isManual = Integer.parseInt(request.getParameter("Automatique"));
+            
+            String dayDebut = request.getParameter("dl"); 
             
             String heureJour = request.getParameter("hd") + ":" + request.getParameter("md");
             String heureNuit = request.getParameter("hn") + ":" + request.getParameter("mn");
@@ -306,7 +313,7 @@ public class HomeControleur extends HttpServlet {
             String creator = SessionManager.getUserSession(request);
             
             if(gameDAO.creerPartie(nbJoueursMin, nbJoueursMax, heureJour, heureNuit, debut, 
-                    creator, pContamination,pSpiritisme,pVoyance,pInsomnie, proportionLoupsGarous)){
+                    creator, pContamination, pSpiritisme, pVoyance, pInsomnie, proportionLoupsGarous, dayDebut, isManual)){
                 request.setAttribute("message", "Partie bien crée!");
                 actionAfficher(request, response,gameDAO);
             } else {

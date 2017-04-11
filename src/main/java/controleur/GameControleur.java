@@ -60,7 +60,7 @@ public class GameControleur extends HttpServlet {
         try {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
-            } else if (action.equals("getGame")) {
+            } else if (action.equals("getGame") || action.equals("getWaitingGame")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("proposer")) {
                 actionProposer(request, response, gameDAO, playerDAO);
@@ -95,14 +95,12 @@ public class GameControleur extends HttpServlet {
         int gameID = SessionManager.getGameSession(request);
         Game userGame = gameDAO.getGame(gameID);
         
-        actionCheckHour(request, response, gameDAO, playerDAO);
-        
         Player userPlayer = playerDAO.getPlayer(username, gameID);
               
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        List<Player> morts = playerDAO.getListPlayers(gameID, 0); //dead okayers
+        List<Player> morts = playerDAO.getListPlayers(gameID, 0); //dead players
         request.setAttribute("morts", morts);
       
         if (userPlayer.getUsername().equals(userGame.getCreator())) {
@@ -114,6 +112,8 @@ public class GameControleur extends HttpServlet {
         List<Player> players = playerDAO.getListPlayers(gameID, 1); //alive players
         request.setAttribute("players", players);
         
+        System.out.println("gameID: " + request.getAttribute("gameId"));
+        actionCheckHour(request, response, gameDAO, playerDAO);
         actionCheckerFinPartie(request, response, gameDAO, playerDAO);
 
         if (userGame.getIsDay() == 1) {
@@ -145,11 +145,14 @@ public class GameControleur extends HttpServlet {
     private void actionProposer(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO)
             throws ServletException, IOException {
-
+        
         int userId = Integer.parseInt(request.getParameter("toProposeId"));
-        playerDAO.proposer(userId);
+        int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
+        if (!game.isVoteOver(gameDAO)) {         
+            playerDAO.proposer(userId);          
+        }
         actionVoter(request, response, gameDAO, playerDAO, userId);
-
     }
     
     /**
@@ -165,18 +168,23 @@ public class GameControleur extends HttpServlet {
         }
         String username = SessionManager.getUserSession(request);
         int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
         Player player = playerDAO.getPlayer(username, gameId);
         int userId = player.getId();
         
         // On récupère l'ancien vote
         String voted = player.getVoted();
-        if (voted.equals(" ")) {
-            // n'avait pas voté
-            playerDAO.voter(userId, cibleId);
+        if (!game.isVoteOver(gameDAO)) {
+            if (voted.equals(" ")) {
+                // n'avait pas voté
+                playerDAO.voter(userId, cibleId);
+            } else {
+                int ancienVoteId = playerDAO.getPlayer(voted, gameId).getId();
+                playerDAO.changeVote(userId, ancienVoteId);
+                playerDAO.voter(userId, cibleId);
+            }
         } else {
-            int ancienVoteId = playerDAO.getPlayer(voted, gameId).getId();
-            playerDAO.changeVote(userId, ancienVoteId);
-            playerDAO.voter(userId, cibleId);
+            request.setAttribute("message", "La majorite a parle, vous ne pouvez plus voter !");
         }
         actionAfficher(request, response, gameDAO, playerDAO);
 
@@ -432,7 +440,7 @@ public class GameControleur extends HttpServlet {
             HttpServletResponse response,
             GameDAO gameDAO, PlayerDAO playerDAO) throws ServletException, IOException {
 
-        int gameId = Integer.parseInt(request.getParameter("gameId"));
+        int gameId = SessionManager.getGameSession(request);
         Game gameCourante = gameDAO.getGame(gameId);
         int isDay = gameCourante.getIsDay();
         
@@ -532,21 +540,31 @@ public class GameControleur extends HttpServlet {
         java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
         Time dayTime = game.getDayTime();
         Time nightTime = game.getNightTime();
-        SimpleDateFormat format = new SimpleDateFormat("HH");
-        int current = Integer.parseInt(format.format(currentDate));
-        int day = Integer.parseInt(format.format(dayTime));
-        int night = Integer.parseInt(format.format(nightTime));
+        SimpleDateFormat formatH = new SimpleDateFormat("HH");
+        SimpleDateFormat formatM = new SimpleDateFormat("mm");
+        int hCurrent = Integer.parseInt(formatH.format(currentDate));
+        int mCurrent = Integer.parseInt(formatM.format(currentDate));
+        int hDay = Integer.parseInt(formatH.format(dayTime));
+        int mDay = Integer.parseInt(formatM.format(dayTime));
+        int hNight = Integer.parseInt(formatH.format(nightTime));
+        int mNight = Integer.parseInt(formatM.format(nightTime));
+        int current = 60 * hCurrent + mCurrent;
+        int day = 60 * hDay + mDay;
+        int night = 60 * hNight + mNight;
         
-        System.out.println("Day = " + day + " & night = " + night + " & current = " + current);
+        //System.out.println("Day = " + day + " & night = " + night + " & current = " + current);
         
-        if (day < current && night > current && game.getIsDay() == 0) {
+        if (day <= current && current < night && game.getIsDay() == 0) {
             // on est à la nuit dans le jeu mais au jour en réalité
-            System.out.println("Changer nuit en jour ");
-        } else if ((day > current || night < current) && game.getIsDay() == 1) {
+            //System.out.println("Changer nuit en jour ");
+            actionChangeDayNight(request, response, gameDAO, playerDAO);
+        } else if ((day > current || night <= current) && game.getIsDay() == 1) {
             // on est au jour dans le jeu mais à la nuit en réalité
-            System.out.println("Changer jour en nuit");
+            //System.out.println("Changer jour en nuit");
+            actionChangeDayNight(request, response, gameDAO, playerDAO);
         } else {
-            System.out.println("Tout va bien");
+            // Rien à faire
+            //System.out.println("Tout va bien");
         }
 
     }

@@ -32,6 +32,8 @@ CREATE TABLE game (
        isDay int CONSTRAINT isDayValid 
        		   CHECK (isDay IN(0, 1)) NOT NULL,
        dayNb int NOT NULL,
+       isManual int CONSTRAINT isManualValid 
+       		   CHECK (isManual IN(0, 1)) NOT NULL,
        CONSTRAINT maxSuperieurToMin CHECK (maxPlayer >= minPlayer) 
 );
 
