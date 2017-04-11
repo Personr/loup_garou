@@ -33,7 +33,7 @@
             </p>
             
              <p>
-                 <label for="HL">Heure de lancement</label><br />
+                 <label for="HL">Date de lancement</label><br />
                  <select name="hl" id="hl">
                      <option value="00">0</option>
                      <option value="01">1</option>

@@ -1,7 +1,9 @@
 package dao;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.sql.DataSource;
 import modele.Ouvrage;
@@ -119,8 +121,8 @@ public class GameDAO extends AbstractDataBaseDAO {
      *
      * @param nbJoueursMin
      * @param nbJoueursMax
-     * @param dureeJour
-     * @param dureeNuit
+     * @param heureJour
+     * @param heureNuit
      * @param horaireDebutPartie
      * @param creator
      * @param pContamination
@@ -128,6 +130,7 @@ public class GameDAO extends AbstractDataBaseDAO {
      * @param pVoyance
      * @param pInsomnie
      * @param proportionLoupsGarous
+     * @return 
      */
     public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, String heureJour, String heureNuit, String horaireDebutPartie, 
             String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
@@ -147,7 +150,7 @@ public class GameDAO extends AbstractDataBaseDAO {
                         + " ?, "
                         + " 0, "
                         + " 0, "
-                        + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
+                        + " TO_DATE('01-02-2003 13:30:28','DD-MM-YYYY HH24:MI:SS'), "
                         + " 0, "
                         + " ?, "
                         + " TO_DATE(?,'DD-MM-YYYY HH24:MI:SS'), "
@@ -161,11 +164,18 @@ public class GameDAO extends AbstractDataBaseDAO {
             
             st.setInt(1, nbJoueursMin);
             st.setInt(2, nbJoueursMax);
-            String Date = "01-01-2017 ";
+            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            String current = format.format(currentDate);
+            
+            System.out.println("Date courante: " + current);
+            
+            String Date = current + " ";
             String horaireDebut= "";
 
             horaireDebut= Date + horaireDebutPartie + ":00";
             System.out.println("Horaire début: " + horaireDebut);
+            horaireDebut = "01-04-2017 18:00:00";
             st.setString(3, horaireDebut);
             
             String horaireJour = Date + heureJour +":00";

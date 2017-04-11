@@ -43,12 +43,6 @@
             </c:when>
         </c:choose>
 
-        
-        
-
-        
-        
-        
         <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getChat" />
             <input type="hidden" name="gameId" value=${gameId} />
@@ -57,18 +51,12 @@
             <input type="submit" name="Rafraichir" Value="Rafraichir"/>
         </form> 
 
-
-
-
-
-
-
-    <form method="get" action="gamecontroleur" accept-charset="UTF-8">
+        <form method="get" action="gamecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getGame" />
             <input type="hidden" name="view" value="aller" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="chat" value="Retour à la partie"/>
         </form>
     </body>
-        ${pouvoir}
+    ${pouvoir}
 </html>

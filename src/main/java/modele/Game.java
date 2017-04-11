@@ -9,6 +9,7 @@ import dao.GameDAO;
 import dao.PlayerDAO;
 import static java.lang.Math.ceil;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -319,6 +320,11 @@ public class Game {
     public Time getStartTime() {
         return startTime;
     }  
+    
+    public String getPrettyStartTime() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(startTime);
+    }
 
     public int getIsDay() {
         return isDay;
