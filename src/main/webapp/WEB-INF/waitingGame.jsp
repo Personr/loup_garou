@@ -50,7 +50,6 @@
             
         <form method="get" action="homecontroleur" accept-charset="UTF-8">
             <input type="hidden" name="action" value="getWaitingGame" />
-            <input type="hidden" name="view" value="aller" />
             <input type="hidden" name="gameId" value=${gameId} />
             <input type="submit" name="chat" value="Rafraichir"/>
         </form>

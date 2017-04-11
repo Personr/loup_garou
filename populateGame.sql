@@ -1,7 +1,30 @@
-DELETE FROM player WHERE gameID = 81;
+DELETE FROM player WHERE gameID = 223;
 
-INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('y',81,0,1,0,0,0,0,0,0,0,0,0,' ', 0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('y',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('u',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('i',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('o',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('p',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('q',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('s',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('d',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('f',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('g',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('h',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('j',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('k',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('l',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('m',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('w',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('x',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('c',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameID, isLG, alive, hasContamination, hasVoyance, hasInsomnie, hasSpiritisme, usedContamination, usedVoyance, usedInsomnie, usedSpiritisme, proposed, voted, nbVotes, justDied, justContaminated, justBitten, contacted) VALUES ('v',223,0,1,0,0,0,0,0,0,0,0,0,' ',0,0,0,0,0);
+INSERT INTO player (username, gameI
 
 
-UPDATE game SET started = 0 WHERE gameID = 81;
-UPDATE game SET nbPlayer = 20 WHERE gameID = 81;
+UPDATE game SET started = 0 WHERE gameID = 223;
+UPDATE game SET nbPlayer = 20 WHERE gameID = 223;
+ 
