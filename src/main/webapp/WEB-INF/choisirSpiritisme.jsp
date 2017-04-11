@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="styles.css" />	
-        <title>CONTAMINE UN HUMAIN ! </title>
+        <title>DISCUTE AVEC UN MORT ! </title>
     </head>
     <body>
         <h1>T'ES DANS LA GAME n°${gameId}, ${username} - SPIRITISME!</h1>

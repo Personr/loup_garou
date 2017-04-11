@@ -1,7 +1,9 @@
 package dao;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.sql.DataSource;
 import modele.Ouvrage;
@@ -119,8 +121,8 @@ public class GameDAO extends AbstractDataBaseDAO {
      *
      * @param nbJoueursMin
      * @param nbJoueursMax
-     * @param dureeJour
-     * @param dureeNuit
+     * @param heureJour
+     * @param heureNuit
      * @param horaireDebutPartie
      * @param creator
      * @param pContamination
@@ -128,11 +130,12 @@ public class GameDAO extends AbstractDataBaseDAO {
      * @param pVoyance
      * @param pInsomnie
      * @param proportionLoupsGarous
+     * @return 
      */
-    public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, int dureeJour, int dureeNuit, int horaireDebutPartie, String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
+    public boolean creerPartie(int nbJoueursMin, int nbJoueursMax, String heureJour, String heureNuit, String horaireDebutPartie, 
+            String creator, float pContamination, float pSpiritisme,float pVoyance,float pInsomnie, float proportionLoupsGarous) {
         if (      nbJoueursMin < 2 || nbJoueursMin > 20
                 ||  nbJoueursMax > 20 || nbJoueursMax < nbJoueursMin
-                || dureeJour < 0 || dureeJour > 23 || dureeNuit < 0 || dureeNuit > 23 || horaireDebutPartie <0 || horaireDebutPartie > 23 || dureeJour > dureeNuit
                 || pContamination >1 || pSpiritisme > 1 || pVoyance > 1 || pInsomnie > 1 || proportionLoupsGarous > 1
                 ) {
             return false;
@@ -140,11 +143,6 @@ public class GameDAO extends AbstractDataBaseDAO {
         
         try (
                 Connection conn = getConn();
-
-// 	VALUES (2, 5, 4, 0, TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 
-//                0, 'val', TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 
-//                TO_DATE('01-01-2004 13:38:11','DD-MM-YYYY HH24:MI:SS'), 0.5, 0.5, 0.5, 0.5, 0.5);
-                //finished = 0  ; started = 0 
                 PreparedStatement st = conn.prepareStatement("INSERT INTO game (minPlayer, maxPlayer, nbPlayer, started, startTime, "
                         + " finished, creator, dayTime, nightTime, pContamination, pVoyance, pInsomnie, pSpiritisme, lgProp, isDay, dayNb)"
                         + " VALUES ("
@@ -166,50 +164,20 @@ public class GameDAO extends AbstractDataBaseDAO {
             
             st.setInt(1, nbJoueursMin);
             st.setInt(2, nbJoueursMax);
-            String Date = "01-01-2017 ";
+            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            String current = format.format(currentDate);
+            
+            String Date = current + " ";
             String horaireDebut= "";
-            
-            if (horaireDebutPartie < 10){
-               horaireDebut = "0"+String.valueOf(horaireDebutPartie);
-            }else{
-               horaireDebut =String.valueOf(horaireDebutPartie);
-            }
-            horaireDebut= Date+horaireDebut+":00:00";
-           
-            System.out.println(horaireDebut);
-            
-            
+
+            horaireDebut= Date + horaireDebutPartie + ":00";
             st.setString(3, horaireDebut);
             
-            
-            //TO_DATE('01-01-2099 ?','DD-MM-YYYY HH24:MI:SS')
-            //TO_DATE('?','HH24:MI:SS')
-            // TO_DATE('?','HH24:MI:SS')
-            
-            String dureeJ = "";
-            if(dureeJour < 10) {
-                dureeJ = dureeJ+"0"+String.valueOf(dureeJour);
-            }else{
-                dureeJ = dureeJ+String.valueOf(dureeJour);
-            }
-            
-            String dureeN = "";
-            if(dureeNuit < 10) {
-                dureeN = "0"+String.valueOf(dureeNuit);
-            }else{
-                dureeN = String.valueOf(dureeNuit);
-            }
-            
-            String horaireJour = Date+dureeJ+":00:00";
-            String horaireNuit = Date+dureeN+":00:00";
-            
-            
+            String horaireJour = Date + heureJour +":00";
+            String horaireNuit = Date + heureNuit + ":00";
             
             st.setString(4, creator);
-            
-            System.out.println(horaireJour);
-            System.out.println(horaireNuit);
-            
             st.setString(5, horaireJour);
             st.setString(6, horaireNuit);
             

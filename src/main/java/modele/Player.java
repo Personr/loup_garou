@@ -30,11 +30,12 @@ public class Player {
     private int justContaminated;
     private int justBitten;
     private int contacted;
+    private int gameLeft;
     
     public Player(int id, int gameId, String username, int isLg, int alive, 
             int hasContamination, int hasInsomnie, int hasVoyance, int hasSpiritisme, 
             int usedPower,
-            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten, int contacted) {
+            int proposed, String voted, int nbVotes, int justDied, int justContaminated, int justBitten, int contacted, int gameLeft) {
         this.id = id;
         this.gameId = gameId;
         this.username = username;
@@ -52,6 +53,7 @@ public class Player {
         this.justContaminated = justContaminated;
         this.justBitten = justBitten;
         this.contacted = contacted;
+        this.gameLeft = gameLeft;
     }
     
     public String getPouvoir() {
@@ -112,7 +114,9 @@ public class Player {
         this.justBitten = justBitten;
     }
 
-
+    public int getGameLeft() {
+        return gameLeft;
+    }
 
     public void setHasVoyance(int hasVoyance) {
         this.hasVoyance = hasVoyance;
@@ -196,10 +200,10 @@ public class Player {
     public int getJustBitten() {
         return justBitten;
     }
-    
+
     @Override
     public String toString() {
-        return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + '}';
+        return "Player{" + "id=" + id + ", gameId=" + gameId + ", username=" + username + ", isLg=" + isLg + ", alive=" + alive + ", hasContamination=" + hasContamination + ", hasInsomnie=" + hasInsomnie + ", hasVoyance=" + hasVoyance + ", hasSpiritisme=" + hasSpiritisme + ", usedPower=" + usedPower + ", proposed=" + proposed + ", voted=" + voted + ", nbVotes=" + nbVotes + ", justDied=" + justDied + ", justContaminated=" + justContaminated + ", justBitten=" + justBitten + ", contacted=" + contacted + ", gameLeft=" + gameLeft + '}';
     }
 
 }

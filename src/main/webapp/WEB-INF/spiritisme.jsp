@@ -8,7 +8,7 @@
     </head>
     <body>
 
-        <h1>T'ES DANS LE CHAT DE LA GAME n°${gameId} !</h1>
+        <h1>T'ES DANS LE CHAT DE LA MORT !</h1>
         <table>
             <tr>
                 <th>Auteur</th>
