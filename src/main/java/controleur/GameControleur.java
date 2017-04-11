@@ -60,7 +60,7 @@ public class GameControleur extends HttpServlet {
         try {
             if (action.equals("getChat")) {
                 actionAfficherChat(request, response, messageDAO, playerDAO, gameDAO);
-            } else if (action.equals("getGame")) {
+            } else if (action.equals("getGame") || action.equals("getWaitingGame")) {
                 actionAfficher(request, response, gameDAO, playerDAO);
             } else if (action.equals("proposer")) {
                 actionProposer(request, response, gameDAO, playerDAO);
@@ -102,7 +102,7 @@ public class GameControleur extends HttpServlet {
         request.setAttribute("userPlayer", userPlayer);
         request.setAttribute("gameId", userGame.getGameId());
         request.setAttribute("username", username);
-        List<Player> morts = playerDAO.getListPlayers(gameID, 0); //dead okayers
+        List<Player> morts = playerDAO.getListPlayers(gameID, 0); //dead players
         request.setAttribute("morts", morts);
       
         if (userPlayer.getUsername().equals(userGame.getCreator())) {
@@ -145,11 +145,14 @@ public class GameControleur extends HttpServlet {
     private void actionProposer(HttpServletRequest request,
             HttpServletResponse response, GameDAO gameDAO, PlayerDAO playerDAO)
             throws ServletException, IOException {
-
+        
         int userId = Integer.parseInt(request.getParameter("toProposeId"));
-        playerDAO.proposer(userId);
+        int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
+        if (!game.isVoteOver(gameDAO)) {         
+            playerDAO.proposer(userId);          
+        }
         actionVoter(request, response, gameDAO, playerDAO, userId);
-
     }
     
     /**
@@ -165,18 +168,23 @@ public class GameControleur extends HttpServlet {
         }
         String username = SessionManager.getUserSession(request);
         int gameId = SessionManager.getGameSession(request);
+        Game game = gameDAO.getGame(gameId);
         Player player = playerDAO.getPlayer(username, gameId);
         int userId = player.getId();
         
         // On récupère l'ancien vote
         String voted = player.getVoted();
-        if (voted.equals(" ")) {
-            // n'avait pas voté
-            playerDAO.voter(userId, cibleId);
+        if (!game.isVoteOver(gameDAO)) {
+            if (voted.equals(" ")) {
+                // n'avait pas voté
+                playerDAO.voter(userId, cibleId);
+            } else {
+                int ancienVoteId = playerDAO.getPlayer(voted, gameId).getId();
+                playerDAO.changeVote(userId, ancienVoteId);
+                playerDAO.voter(userId, cibleId);
+            }
         } else {
-            int ancienVoteId = playerDAO.getPlayer(voted, gameId).getId();
-            playerDAO.changeVote(userId, ancienVoteId);
-            playerDAO.voter(userId, cibleId);
+            request.setAttribute("message", "La majorite a parle, vous ne pouvez plus voter !");
         }
         actionAfficher(request, response, gameDAO, playerDAO);
 
