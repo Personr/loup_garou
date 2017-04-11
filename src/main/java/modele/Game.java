@@ -77,6 +77,14 @@ public class Game {
         this.dayNb = dayNb;
     }
     
+    public boolean isVoteOver(GameDAO gameDAO) {
+        int seuil = nbPlayers/2;
+        seuil += 1;
+        int maxVotes = gameDAO.getMaxVotes(gameId);
+        System.out.println("maxVotes = " + maxVotes);
+        return  maxVotes >= seuil;
+    }
+    
     /**
      * ajoute un joueur a la game
      * @param username
@@ -317,8 +325,9 @@ public class Game {
         return lgProp;
     }
 
-    public Time getStartTime() {
-        return startTime;
+    public String getStartTime() {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH24:MM:SS");
+        return format.format(startTime);
     }  
 
     public int getIsDay() {
